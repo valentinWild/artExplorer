@@ -1,7 +1,6 @@
 <template>
-
-    <h2>Register</h2>
-    <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
+    <h2>Login</h2>
+    <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit()">
 
         <UFormGroup label="Email" name="email">
             <UInput v-model="state.email" />
@@ -12,13 +11,16 @@
         </UFormGroup>
 
         <UButton type="submit">
-            Register
+            Sign In
         </UButton>
     </UForm>
-    <small>Already have an Account? <ULink to="/user/login">Login</ULink></small>
+    <small>You don't have an Account? <ULink to="/user/register">Register</ULink></small>
 </template>
 
 <script setup>
+definePageMeta({
+    middleware: ['auth'],
+});
 
 const state = reactive({
   email: undefined,
@@ -26,6 +28,15 @@ const state = reactive({
 });
 
 const client = useSupabaseClient();
+const user = useSupabaseUser();
+
+onMounted(() => {
+  watchEffect(() => {
+    if (user.value) {
+      navigateTo('/dashboard');
+    }
+  });
+});
 
 const validate = (state) => {
   const errors = []
@@ -34,11 +45,13 @@ const validate = (state) => {
   return errors;
 }
 
-async function onSubmit (event) {
-  const { user, error } = await client.auth.signUp({
+async function onSubmit(event) {
+  const { user, session, error } = await client.auth.signInWithPassword({
     email: state.email,
     password: state.password,
   });  
 }
+
+
 
 </script>

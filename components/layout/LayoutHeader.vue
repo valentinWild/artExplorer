@@ -28,13 +28,33 @@
                         inactive-class="text-gray-800 hover:text-primary font-semibold"
                     >Contact</ULink>
                </li>
+               <li>
+                    <UButton
+                        v-if="!user"
+                        to="/user/login"
+                    >Login</UButton>
+                    <UButton
+                        v-if="user"
+                        @click="signOut"
+                    >Logout</UButton>
+               </li>
            </ul>
        </nav>
     </header>
 </template>
    
 
-<script setup lang="ts">
+<script setup>
+
+const user = useSupabaseUser();
+const client = useSupabaseClient();
+
+const signOut = async () => {
+    const {error} = await client.auth.signOut();
+    if (error) {
+        console.error(error);
+    }
+}
 
 </script>
    

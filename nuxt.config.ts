@@ -4,17 +4,6 @@
 export default defineNuxtConfig(
   {
     devtools: { enabled: true },
-/*     nitro: {
-      plugins: ['~/server/index.js'],
-      preset: 'node-server',
-    },
- */
-/*     hooks: {
-      'nitro:config': async () => {
-        await mongodb()
-      },
-    }, */
-
     runtimeConfig: {
       mongoUri: process.env.MONGO_URI,
       jwtSecret: process.env.JWT_SECRET,
@@ -23,16 +12,19 @@ export default defineNuxtConfig(
 
     modules: [
       '@nuxt/ui',
-      "nuxt-server-utils",
-      "@sidebase/nuxt-auth",
+      '@nuxtjs/supabase',
     ],
-    nuxtServerUtils: {
-      mongodbUri: process.env.MONGODB_URI,
-    },
-    auth: {
-      baseURL: process.env.AUTH_ORIGIN,
-      provider: {
-        type: 'authjs',
+
+    supabase: {
+      redirectOptions: {
+        login: '/user/login',
+        callback: '/confirm',
+        include: undefined,
+        exclude: [
+          '/user/register',
+          '/',
+        ],
+        cookieRedirect: false,
       }
     }
   }

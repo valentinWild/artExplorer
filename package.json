@@ -16,13 +16,9 @@
   },
   "devDependencies": {
     "@nuxt/ui": "^2.16.0",
-    "@sidebase/nuxt-auth": "^0.7.2",
+    "@nuxtjs/supabase": "^1.2.2",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
-    "dotenv": "^16.4.5",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.4.1",
-    "next-auth": "^4.21.1",
-    "nuxt-server-utils": "^0.0.7"
+    "dotenv": "^16.4.5"
   }
 }
