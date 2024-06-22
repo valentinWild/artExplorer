@@ -23,6 +23,7 @@
                <li>
                     <ULink 
                         to="/contact"
+                        class=""
                         active-class="text-primary font-semibold"
                         inactive-class="text-gray-800 hover:text-primary font-semibold"
                     >Contact</ULink>

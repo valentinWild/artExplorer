@@ -3,6 +3,7 @@
         <h1>About Page</h1>
     </div>
     Random Number:<span>{{ randomString }}</span>
+    <Test></Test>
 </template>
 
 <script setup>
