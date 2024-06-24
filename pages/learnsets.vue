@@ -1,5 +1,5 @@
 <script>
-import QuizComponent from './index.vue';
+import QuizComponent from './quiz.vue';
 
 export default {
   name: 'App',
