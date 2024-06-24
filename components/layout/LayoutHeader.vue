@@ -61,7 +61,8 @@ const signOut = async () => {
 <style scoped>
  
 header {
-    width: 100%
+    width: 100%;
+    background-color:aquamarine;
 }
 
 ul {
