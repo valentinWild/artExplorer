@@ -21,6 +21,15 @@
                     </ULink>
                </li>
                <li>
+                   <ULink 
+                        to="/learnsets" 
+                        active-class="text-primary font-semibold"
+                        inactive-class="text-gray-800 hover:text-primary font-semibold"
+                    >
+                        Learning
+                    </ULink>
+               </li>
+               <li>
                     <ULink 
                         to="/contact"
                         class=""
