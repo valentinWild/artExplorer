@@ -7,9 +7,20 @@
           <h2>{{ question.title }}</h2>
           <div v-for="(answer, answerIndex) in question.answers" :key="answerIndex">
             <label>
-              <input type="radio" :name="'question' + index" :value="answer" v-model="userAnswers[index]">
+              <input 
+                type="radio" 
+                :name="'question' + index" 
+                :value="answer" 
+                v-model="userAnswers[index]" 
+                @change="checkAnswer(index, answer)"
+              >
               {{ answer }}
             </label>
+          </div>
+          <div v-if="userAnswers[index] !== null">
+            <p :class="{'correct': userAnswers[index] === question.correctAnswer, 'incorrect': userAnswers[index] !== question.correctAnswer}">
+              {{ userAnswers[index] === question.correctAnswer ? 'Richtig!' : 'Falsch, die richtige Antwort ist: ' + question.correctAnswer }}
+            </p>
           </div>
         </div>
         <button @click="submitQuiz">Quiz abschließen</button>
@@ -61,6 +72,7 @@
       // Umwandlung der Kunstwerk-Daten in Quiz-Fragen
       questions.value = filteredArtworks.map(artwork => ({
         title: `Wer hat das Kunstwerk "${artwork.title}" geschaffen?`,
+        correctAnswer: artwork.artist_title || 'Künstler unbekannt',
         answers: generateRandomAnswers(artwork.artist_title || 'Künstler unbekannt', impressionistArtists.value)
       }));
   
@@ -69,6 +81,11 @@
     } catch (error) {
       console.error('Fehler beim Abrufen der Fragen:', error);
     }
+  };
+  
+  // Antwort überprüfen
+  const checkAnswer = (questionIndex, selectedAnswer) => {
+    userAnswers.value[questionIndex] = selectedAnswer;
   };
   
   // Quiz abschließen
@@ -92,6 +109,14 @@
   
   .question {
     margin-bottom: 20px;
+  }
+  
+  .correct {
+    color: green;
+  }
+  
+  .incorrect {
+    color: red;
   }
   </style>
   
