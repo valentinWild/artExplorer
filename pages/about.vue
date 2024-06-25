@@ -112,18 +112,17 @@
 import { ref, onMounted } from 'vue';
 
 const items = ref([]); // State to hold the images
-//const sections = ref([1, 2, 3]); // Example array for sections
 
 // Function to fetch images from the API
 async function fetchImages() {
   try {
-    const response = await fetch('https://api.artic.edu/api/v1/artworks?page=1&limit=20');
+    const response = await fetch('https://api.artic.edu/api/v1/artworks?page=1&limit=100');
     const data = await response.json();
     const uniqueImageUrls = new Set();
-    //items.value = data.data
+    
     data.data.forEach(image => {
-      if (image.image_id && (image.style_title === "Modernism" && image.style_title === "Impressionism")) {
-        const imageUrl = `${iiifBaseUrl}/${image.image_id}/full/!400,400/0/default.jpg`;
+      if (image.image_id && (image.style_title === "Modernism" || image.style_title === "Impressionism")) {
+        const imageUrl = `${iiifBaseUrl}/${image.image_id}/full/400,400/0/default.jpg`;
         uniqueImageUrls.add(imageUrl);
       }
     });
@@ -140,22 +139,6 @@ const iiifBaseUrl = 'https://www.artic.edu/iiif/2'; // Base URL for IIIF images
 
 //const {data: randomString} = await useFetch('/api/randomString/');
 
-//const items = [
-  /*'/pictures/image1.jpg',
-  '/pictures/image2.jpg',
-  '/pictures/image3.jpg',
-  '/pictures/image1.jpg',
-  '/pictures/image2.jpg',
-  '/pictures/image3.jpg',
-  '/pictures/image1.jpg',
-  '/pictures/image2.jpg',
-  '/pictures/image3.jpg',
-  '/pictures/image1.jpg',
-  '/pictures/image2.jpg',
-  '/pictures/image3.jpg',
-  '/pictures/image1.jpg',
-  '/pictures/image2.jpg',
-]*/
 </script>
 
 
