@@ -6,7 +6,7 @@
                    <ULink 
                         to="/" 
                         active-class="text-primary font-semibold"
-                        inactive-class="text-gray-800 hover:text-primary font-semibold"
+                        inactive-class="text-stone-100 hover:text-primary font-semibold"
                     >
                         Home
                     </ULink>
@@ -15,7 +15,7 @@
                    <ULink 
                         to="/about"
                         active-class="text-primary font-semibold"
-                        inactive-class="text-gray-800 hover:text-primary font-semibold"
+                        inactive-class="text-stone-100 hover:text-primary font-semibold"
                     >
                         About
                     </ULink>
@@ -25,7 +25,7 @@
                         to="/contact"
                         class=""
                         active-class="text-primary font-semibold"
-                        inactive-class="text-gray-800 hover:text-primary font-semibold"
+                        inactive-class="text-stone-100 hover:text-primary font-semibold"
                     >Contact</ULink>
                </li>
                <li>
@@ -62,16 +62,16 @@ const signOut = async () => {
  
 header {
     width: 100%;
-    background-color:aquamarine;
+    background-color: #121421;
 }
 
 ul {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 1rem;
+    gap: 5rem;
     position: sticky;
-    top: 0px
+    top: 10px
 }
 
 </style>
