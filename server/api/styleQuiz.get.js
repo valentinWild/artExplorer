@@ -24,30 +24,34 @@ export default defineEventHandler(async (event) => {
 
   const quizId = quiz[0].id;
 
-  const quizItems = db.fetchQuizItems(client, quizId);
+  const quizItems = await db.fetchQuizItems(client, quizId);
 
   return quizItems;
   
 });
 
-// Methode zum Abrufen der Kunstwerk-Daten
+// Create Quiz-Items from External API (api.artic.edu)
 const createMCQs = async (numOfQuestions) => {
 
   let selectedArtworks = [];
 
   try {
+
     const params = {
       q:'Impressionism',
       fields:'id,title,artist_title,date_display,image_id,style_title,style_titles',
       limit:100,
     }
+  
+    // Fetch Artworks Data from external API
     const response = await axios.get(baseUrl, { params });
     if (response.status === 200 && response.data.data.length > 0) {
       const artworks = response.data.data;
+      // Get random artworks (depending on num of Questions) out of the 100 fetched ones
       selectedArtworks = getRandomArtworks(artworks, numOfQuestions);
     }
 
-    // Umwandlung der Kunstwerk-Daten in Quiz-Fragen
+    // Create Questions from Artworks-Data
     const questions = selectedArtworks.map(artwork => {
       const correctAnswerId = uuidv4();
       return {
@@ -92,6 +96,7 @@ const getRandomArtworks = (artworks, amount) => {
   return randomArtworks;
 };
 
+// Create Answers for the Questions with random distractors
 const createAnswers = (artworks, amount, fieldName, correctAnswer) => {
   const answers = [];
   const uniqueValues = new Set();
@@ -113,22 +118,15 @@ const createAnswers = (artworks, amount, fieldName, correctAnswer) => {
   // Add the correct answer at a random position
   const randomPosition = Math.floor(Math.random() * (amount + 1));
   answers.splice(randomPosition, 0, correctAnswer);
-
   return answers;
 };
 
+
+// Save the whole Quiz in Database
 const saveQuiz = async (client, userId, questions) => {
 
-  const { data: quiz, error: quizError } = await client
-    .from('quizzes')
-    .insert([
-        { score: 0.0, owner: userId },
-    ])
-    .select();
-
-  if (quizError) {
-    return error;
-  } 
+  // Insert a new Quiz to the Database
+  const quiz = await db.instertQuiz(client, userId);
 
   const quizId = quiz[0].id;
 
@@ -138,12 +136,9 @@ const saveQuiz = async (client, userId, questions) => {
     content: question.content,
   }));
 
-  const {data: items, error: itemError} = await client
-    .from('quiz_items')
-    .insert(quizItems);
+  // Insert all QuizItems to the Database
+  const items = await db.insertQuizItems(client, quizItems);
 
-  if (itemError) {
-    return itemError;
-  } else return quiz;
+  return quiz;
 
 }
