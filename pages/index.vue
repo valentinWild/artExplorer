@@ -43,6 +43,8 @@
             <div class="bg-zinc-300">
                 <h1 class="text-2xl font-sans font-semibold text-cyan-200">All Tools & Learning Materials for Maximum Learning Success</h1>
                 <p class="text-stone-100 font-normal">Bleib organisiert und motiviert </p>
+                <br>
+                <p class="text-stone-100 text-sm">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
 
                 <div class="avatar-text-group">
                     <div class="avatars">
@@ -73,10 +75,11 @@
                 <UButton>Visit Learnsets</UButton>
             </div>
 
-            <div>
-                <h2>Zwei</h2>
-                <p>Lorum ipsum</p>
-                <UButton>Analytics</UButton>
+            <div class="videoContainer">
+                <video width="300" controls loop autoplay muted>
+                    <source src="/pictures/video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
             
             
@@ -96,12 +99,12 @@
         <div class="two-columns">
 
             <div>
-                <h1>Hello Petra</h1>
+                <h1>TBA</h1>
                 <p>Lorum ipsum</p>
                 <UButton>Visit Learnsets</UButton>
             </div>
             <div>
-                <h2>Zwei</h2>
+                <h2>TBA</h2>
                 <p>Lorum ipsum</p>
                 <UButton>Analytics</UButton>
             </div>
@@ -118,12 +121,12 @@
         <div class="two-columns">
 
             <div>
-                <h1>Hello Petra</h1>
+                <h1>TBA</h1>
                 <p>Lorum ipsum</p>
                 <UButton>Visit Learnsets</UButton>
             </div>
-            <div>
-                <h2>Zwei</h2>
+            <div class="videoMaterial">
+                <h2>TBA</h2>
                 <p>Lorum ipsum</p>
                 <UButton>Analytics</UButton>
             </div>
@@ -245,6 +248,10 @@ body{
     padding-right: 5rem;
     padding-top: 2rem;
     padding-bottom: 2rem;
+}
+
+.videoContainer {
+    display: flex;
 }
 
 .two-columns > div {
