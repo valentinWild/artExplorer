@@ -51,6 +51,7 @@ const fetchQuestions = async () => {
 
     userAnswers.value = new Array(questions.value.length).fill(null);
     answeredQuestions.value = new Array(questions.value.length).fill(false);
+    console.log(questions.value);
     loading.value = false;
   } catch (error) {
     console.error('Fehler beim Abrufen der Fragen:', error);

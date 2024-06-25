@@ -8,6 +8,9 @@ export default defineNuxtConfig(
       mongoUri: process.env.MONGO_URI,
       jwtSecret: process.env.JWT_SECRET,
       authSecret: process.env.AUTH_SECRET,
+      public: {
+        baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+      },
     },
 
     modules: [
