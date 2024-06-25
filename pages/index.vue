@@ -76,12 +76,15 @@
             </div>
 
             <div class="videoContainer">
-                <video width="300" controls loop autoplay muted>
-                    <source src="/pictures/video.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+                <div class="videotext">
+                    <h1 class="text-2xl font-sans font-semibold text-cyan-200">Discover all the tasks we can offer you.</h1>
+                </div>
+                <div class="video">
+                    <video width="300" controls loop autoplay muted>
+                        <source src="/pictures/video.mp4" type="video/mp4">
+                    </video>
+                </div>
             </div>
-            
             
         </div>
 
@@ -220,11 +223,11 @@ body{
 }
 
 .carousel {
-  margin-top: 3rem; /* Abstand nach oben */
+  margin-top: 3rem; 
 }
 
 .initialButton {
-  margin-top: 1.5rem; /* Abstand nach unten */
+  margin-top: 1.5rem; 
 }
 
 .separator {
@@ -252,16 +255,25 @@ body{
 
 .videoContainer {
     display: flex;
+    align-items: center; /* Center items vertically */
+    justify-content: space-between; /* Optional: adds space between items */
+    gap: 1rem; /* Optional: gap between the two divs */
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.09); 
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
 }
 
 .two-columns > div {
     flex: 1;
     padding: 3rem; /* Optional Innenabstand */
-    background: rgba(255, 255, 255, 0.09); /* Light color with transparency */
-    border-radius: 15px; /* Optional Abgerundete Ecken */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional Schatten */
-    backdrop-filter: blur(10px); /* Frosted glass effect */
-    -webkit-backdrop-filter: blur(10px); /* Frosted glass effect for Safari */
+    background: rgba(255, 255, 255, 0.09); 
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); 
 }
 
 .avatar-text-group {

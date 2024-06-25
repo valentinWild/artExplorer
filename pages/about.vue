@@ -1,9 +1,10 @@
 <template>
     <body>
     <section class="section1">
-        <div>
-            <h1>Dive into the Fascinating World of Art History</h1>
-            <h2>Our learning application offers you the opportunity to gain deeper insights into the masterpieces and epochs of art.</h2>
+        <div class="initialText">
+            <h1 class="text-5xl text-cyan-300 font-extrabold tracking-normal font-sans">Dive into the Fascinating World of Art History</h1>
+            <br>
+            <h2 class="font-semibold font-sans text-xl text-stone-100">Our learning application offers you the opportunity to gain deeper insights into the masterpieces and epochs of art.</h2>
         </div>
 
         <div class="features">
@@ -14,11 +15,13 @@
             <span>Receive feedback</span>
         </div>
 
-        <div>
-            <UButton>Get Started Now</UButton>
+        <div class="initialButton">
+            <UButton to="/user/login" :ui="{ label: 'font-medium' }">
+                Get Started Now
+            </UButton>
         </div>
 
-        <div>
+        <div class="carousel">
             <UCarousel v-slot="{ item }" :items="items" class="full-width-carousel">
                 <img :src="item" width="300" height="400" draggable="false">
             </UCarousel>
@@ -27,16 +30,84 @@
     </section>
 
     <section class="section2">
-        <UDivider label="DISCOVER" />
+        <div>
+            <UDivider 
+            label="A PLACE TO LEARN"
+            size="sm"
+            :ui="{ label: 'text-cyan-300' }"
+            />
+        </div>
+        
+        <div class="two-columns">
+
+            <div class="bg-zinc-300">
+                <h1 class="text-2xl font-sans font-semibold text-cyan-200">All Tools & Learning Materials for Maximum Learning Success</h1>
+                <p class="text-stone-100 font-normal">Bleib organisiert und motiviert </p>
+                <br>
+                <p class="text-stone-100 text-sm">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+
+                <div class="avatar-text-group">
+                    <div class="avatars">
+                        <UAvatarGroup size="sm" :max="3">
+                            <UAvatar
+                            src="https://avatars.githubusercontent.com/u/739984?v=4"
+                            alt="benjamincanac"
+                            />
+                            <UAvatar
+                            src="https://avatars.githubusercontent.com/u/904724?v=4"
+                            alt="Atinux"
+                            />
+                            <UAvatar
+                            src="https://avatars.githubusercontent.com/u/7547335?v=4"
+                            alt="smarroufin"
+                            />
+                        </UAvatarGroup>
+                    </div>  
+
+                    <div class="text-group">
+                        <h1 class="font-semibold text-stone-100">150+</h1>
+                        <br>
+                        <p class="font-semibold text-stone-100">nutzen ArtExplorer</p>
+                    </div>
+                </div>
+
+            
+                <UButton>Visit Learnsets</UButton>
+            </div>
+
+            <div class="videoContainer">
+                <div class="videotext">
+                    <h1 class="text-2xl font-sans font-semibold text-cyan-200">Discover all the tasks we can offer you.</h1>
+                </div>
+                <div class="video">
+                    <video width="300" controls loop autoplay muted>
+                        <source src="/pictures/video.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+            
+        </div>
+
+    </section>
+
+    <section class="section2">
+        <div>
+            <UDivider 
+            label="DISCOVER"
+            size="xs"
+            :ui="{ label: 'text-cyan-300' }"
+            />
+        </div>
+        
         <div class="two-columns">
 
             <div>
-                <h1>Hello Petra</h1>
+                <h1>TBA</h1>
                 <p>Lorum ipsum</p>
                 <UButton>Visit Learnsets</UButton>
             </div>
             <div>
-                <h2>Zwei</h2>
+                <h2>TBA</h2>
                 <p>Lorum ipsum</p>
                 <UButton>Analytics</UButton>
             </div>
@@ -53,34 +124,12 @@
         <div class="two-columns">
 
             <div>
-                <h1>Hello Petra</h1>
+                <h1>TBA</h1>
                 <p>Lorum ipsum</p>
                 <UButton>Visit Learnsets</UButton>
             </div>
-            <div>
-                <h2>Zwei</h2>
-                <p>Lorum ipsum</p>
-                <UButton>Analytics</UButton>
-            </div>
-            
-            
-        </div>
-
-        <!---Random Number:<span>{{ randomString }}</span>-->
-        <!---<Test></Test>-->
-    </section>
-
-    <section class="section2">
-        <UDivider label="DISCOVER" />
-        <div class="two-columns">
-
-            <div>
-                <h1>Hello Petra</h1>
-                <p>Lorum ipsum</p>
-                <UButton>Visit Learnsets</UButton>
-            </div>
-            <div>
-                <h2>Zwei</h2>
+            <div class="videoMaterial">
+                <h2>TBA</h2>
                 <p>Lorum ipsum</p>
                 <UButton>Analytics</UButton>
             </div>
@@ -145,11 +194,10 @@ const iiifBaseUrl = 'https://www.artic.edu/iiif/2'; // Base URL for IIIF images
 <style scoped>
 
 body{
-    background-color:#64748b;
+    background-color: #121421;
 }
 
 .section1{
-    background-color: #64748b;
     background-image: url('/public/pictures/Background.png');
     background-size: cover;
     display: flex;
@@ -164,16 +212,6 @@ body{
     padding-bottom: 5rem;
 }
 
-.section1 h1 {
-    font-size: 2.5rem;
-    color: #fff;
-}
-
-.section1 h2 {
-    font-size: 1.2rem; 
-    color: #fff;
-}
-
 .features {
   display: flex;
   justify-content: center;
@@ -181,6 +219,15 @@ body{
   gap: 2rem; 
   font-size: 1rem; 
   color: white; 
+  margin-top: 5rem;
+}
+
+.carousel {
+  margin-top: 3rem; 
+}
+
+.initialButton {
+  margin-top: 1.5rem; 
 }
 
 .separator {
@@ -189,7 +236,7 @@ body{
 
 
 .section2{
-    background-color: #64748b;
+    background-color: #121421;
 }
 
 .full-width-carousel {
@@ -200,18 +247,52 @@ body{
     display: flex;
     justify-content: space-between;
     gap: 5rem; /* Optional: Abstand zwischen den Spalten */
-    padding-left: 5rem;
+    padding-left: 5em;
     padding-right: 5rem;
     padding-top: 2rem;
     padding-bottom: 2rem;
 }
 
+.videoContainer {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    justify-content: space-between; /* Optional: adds space between items */
+    gap: 1rem; /* Optional: gap between the two divs */
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.09); 
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+}
+
 .two-columns > div {
     flex: 1;
-    padding: 5rem; /* Optional Innenabstand */
-    background-color: #fff; /* Optional Hintergrundfarbe der Spalten */
-    border-radius: 8px; /* Optional Abgerundete Ecken */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional Schatten */
+    padding: 3rem; /* Optional Innenabstand */
+    background: rgba(255, 255, 255, 0.09); 
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); 
+}
+
+.avatar-text-group {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem; /* Abstand zwischen den Avatars und dem Text */
+}
+
+.avatars {
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.text-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 
