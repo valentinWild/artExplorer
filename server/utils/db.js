@@ -11,6 +11,17 @@ const fetchQuizItems = async (client, quizId) => {
     return quizItems;
 }
 
+const fetchSingleQuizItem = async (client, itemId) => {
+    const { data: quizItem, error: error } = await client
+        .from('quiz_items')
+        .select('*')
+        .eq('id', itemId);
+    if (error) {
+        return {'Error fetching quiz items from db': error};
+    } 
+    return quizItem;
+}
+
 const updateQuizItems = async (client, fieldsToUpdate) => {
     const { data: quizItems, error: error } = await client
         .from('quiz_items')
@@ -21,6 +32,19 @@ const updateQuizItems = async (client, fieldsToUpdate) => {
     } 
     return quizItems;
 }
+
+const updateSingleQuizItem = async (client, itemId, fieldsToUpdate) => {
+    const { data: quizItems, error: error } = await client
+        .from('quiz_items')
+        .update(fieldsToUpdate) 
+        .eq('id', itemId)
+        .select('*');
+    if (error) {
+        return new Error({'Error updating quizItems': error});
+    } 
+    return quizItems;
+}
+
 
 const insertQuizItems = async(client, quizItems) => {
     const {data: items, error: itemError} = await client
@@ -64,6 +88,8 @@ const updateQuiz = async (client, quizId, fieldsToUpdate) => {
 
 
 export default {
+    fetchSingleQuizItem,
+    updateSingleQuizItem,
     fetchQuizItems,
     updateQuizItems,
     insertQuizItems,

@@ -26,6 +26,14 @@ export default defineEventHandler(async (event) => {
 
   const quizItems = await db.fetchQuizItems(client, quizId);
 
+  // Remove the correct answers (so they are not exposed to frontend)
+  const userQuizItems = quizItems.map(item => {
+    const { content, ...rest } = item;
+    delete content.correct_answers;
+    return { ...rest, content };
+  });
+
+  return userQuizItems;
   return quizItems;
   
 });
