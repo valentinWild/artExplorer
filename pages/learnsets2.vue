@@ -1,17 +1,30 @@
 <template>
-    <div>{{ response }}</div>
+    <div>{{ quizData }}</div>
+    <UButton
+        @click="fetchQuestions"
+    >Fetch Questions</UButton>
 </template>
 
 <script setup>
 
-import axios from 'axios';
-    const client = useSupabaseClient();
-    const user = useSupabaseUser();
-    console.log(user.value.id);
+    const quizData = ref();
 
-    const response = await axios.get('http://localhost:3000/api/styleQuiz?limit=5');
+    const { data } = await useFetch('api/styleQuiz?limit=5', {
+        headers: useRequestHeaders(['cookie'])
+    });
 
-    console.log(response);
+    const fetchQuestions = async() => {
+        const { data } = await useFetch('api/styleQuiz?limit=5', {
+            headers: useRequestHeaders(['cookie'])
+        });
+
+        if (data.value) {
+            quizData.value = data.value;
+            console.log(quizData.value);
+        }
+    }
+
+
 
 </script>
 
