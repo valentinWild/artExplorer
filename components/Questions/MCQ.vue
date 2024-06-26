@@ -47,9 +47,20 @@
     ]; */
 
     watch(() => props.itemResult, (newValue) => {
-        if (props.itemResult.answered === true) {
+        if (props.itemResult?.answered === true) {
             console.log(props.itemResult);
             generateResultText();
+        } else {
+            resultText.value = "";
+            selected.value = null;
+        }
+    });
+
+    watch(() => props.quizData, (newValue) => {
+        if (props.quizData?.answers_options) {
+            getOptions();
+        } else {
+
         }
     });
 
@@ -61,8 +72,6 @@
             resultText.value = "Wrong!"
         }
     }
-
-
 
 </script>
 

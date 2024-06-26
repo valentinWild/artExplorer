@@ -11,6 +11,17 @@ const fetchQuizItems = async (client, quizId) => {
     return quizItems;
 }
 
+const fetchQuizItemsResults = async (client, quizId) => {
+    const { data: quizItems, error: error } = await client
+        .from('quiz_items')
+        .select('points')
+        .eq('quiz_id', quizId);
+    if (error) {
+        return {'Error fetching quiz items from db': error};
+    } 
+    return quizItems;
+}
+
 const fetchSingleQuizItem = async (client, itemId) => {
     const { data: quizItem, error: error } = await client
         .from('quiz_items')
@@ -91,6 +102,7 @@ export default {
     fetchSingleQuizItem,
     updateSingleQuizItem,
     fetchQuizItems,
+    fetchQuizItemsResults,
     updateQuizItems,
     insertQuizItems,
     updateQuiz,

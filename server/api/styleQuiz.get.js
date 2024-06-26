@@ -108,8 +108,10 @@ const getRandomArtworks = (artworks, amount) => {
 const createAnswers = (artworks, amount, fieldName, correctAnswer) => {
   const answers = [];
   const uniqueValues = new Set();
+  answers.push(correctAnswer);
+  uniqueValues.add(correctAnswer.value);
 
-  while (answers.length < amount-1) {
+  while (answers.length < amount) {
     const randomArtwork = artworks[Math.floor(Math.random() * artworks.length)];
     const fieldValue = randomArtwork[fieldName];
 
@@ -123,10 +125,10 @@ const createAnswers = (artworks, amount, fieldName, correctAnswer) => {
     }
   }
 
-  // Add the correct answer at a random position
-  const randomPosition = Math.floor(Math.random() * (amount + 1));
-  answers.splice(randomPosition, 0, correctAnswer);
-  return answers;
+  // Shuffle the answers so the correct answer is not always at first position
+  const shuffledAnswers = shuffleArray(answers);
+  return shuffledAnswers;
+
 };
 
 
@@ -149,4 +151,14 @@ const saveQuiz = async (client, userId, questions) => {
 
   return quiz;
 
+}
+
+// Function to shuffle an array
+const shuffleArray = (array) => {
+  const shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
 }
