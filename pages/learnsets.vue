@@ -1,21 +1,23 @@
 <template>
-    <div>
-      <div class="container">
-        <header>
-          <h1>Learning Sets</h1>
-          <input type="text" placeholder="Search ...">
-        </header>
-        <div class="options-container">
-          <Card
-            v-for="item in cardItems"
-            :key="item.id"
-            :image-src="item.imageSrc"
-            :title="item.title"
-            :description="item.description"
-          />
+    <body>
+        <div>
+        <div class="container">
+            <header>
+            <h1>Learning Sets</h1>
+            <input type="text" placeholder="Search ...">
+            </header>
+            <div class="options-container">
+            <Card
+                v-for="item in cardItems"
+                :key="item.id"
+                :image-src="item.imageSrc"
+                :title="item.title"
+                :description="item.description"
+            />
+            </div>
         </div>
-      </div>
-    </div>
+        </div>
+    </body>
   </template>
   
   <script>
@@ -71,6 +73,11 @@
   </script>
   
   <style scoped>
+   body {
+    background-color: #121421;
+    color: #ffffff; /* Textfarbe auf Weiß setzen */
+    }
+
   .container {
     max-width: 1000px;
     margin: 0 auto;
@@ -80,6 +87,7 @@
   }
   
   header {
+    background-color: #121421;
     margin-bottom: 10px;
     margin-top: 10px;
     display: flex;
@@ -105,4 +113,6 @@
     justify-content: center;
   }
   </style>
+
+  
   

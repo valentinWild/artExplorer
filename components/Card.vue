@@ -29,6 +29,8 @@
   
   <style scoped>
   .card {
+    background-color: #1a1c28; 
+    color: #ffffff; 
     width: 310px;
     overflow: hidden;
     border-radius: 2%;
