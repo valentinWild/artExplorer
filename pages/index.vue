@@ -115,8 +115,6 @@
             
         </div>
 
-        <!---Random Number:<span>{{ randomString }}</span>-->
-        <!---<Test></Test>-->
     </section>
 
     <section class="section2">
@@ -137,8 +135,7 @@
             
         </div>
 
-        <!---Random Number:<span>{{ randomString }}</span>-->
-        <!---<Test></Test>-->
+    
     </section>
 
 
@@ -161,6 +158,7 @@
 import { ref, onMounted } from 'vue';
 
 const items = ref([]); // State to hold the images
+const iiifBaseUrl = 'https://www.artic.edu/iiif/2'; // Base URL for IIIF images
 
 // Function to fetch images from the API
 async function fetchImages() {
@@ -184,9 +182,7 @@ async function fetchImages() {
 // Fetch images when the component is mounted
 onMounted(fetchImages);
 
-const iiifBaseUrl = 'https://www.artic.edu/iiif/2'; // Base URL for IIIF images
 
-//const {data: randomString} = await useFetch('/api/randomString/');
 
 </script>
 
