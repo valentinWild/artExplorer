@@ -85,6 +85,9 @@ nav {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    border: none;
+    outline: none;
+    box-shadow: none;
 }
 
 .logo img {

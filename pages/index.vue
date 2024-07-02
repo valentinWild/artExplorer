@@ -140,14 +140,6 @@
 
 
     <section class="section3">
-        <!--<UDivider label="DISCOVER" />
-        <div>
-            <h1>Hello Petra</h1>
-        </div>
-
-        <div>
-
-        </div>-->
 
     </section>
 </body>
@@ -182,8 +174,6 @@ async function fetchImages() {
 // Fetch images when the component is mounted
 onMounted(fetchImages);
 
-
-
 </script>
 
 
@@ -200,7 +190,7 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2rem; /* Abstand zwischen den Elementen */
+    gap: 2rem; 
     text-align: center;
     padding-left:5rem;
     padding-right: 5rem;
@@ -242,7 +232,7 @@ body{
 .two-columns {
     display: flex;
     justify-content: space-between;
-    gap: 5rem; /* Optional: Abstand zwischen den Spalten */
+    gap: 5rem; 
     padding-left: 5em;
     padding-right: 5rem;
     padding-top: 2rem;
@@ -251,9 +241,9 @@ body{
 
 .videoContainer {
     display: flex;
-    align-items: center; /* Center items vertically */
-    justify-content: space-between; /* Optional: adds space between items */
-    gap: 1rem; /* Optional: gap between the two divs */
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 1rem; 
     padding: 3rem;
     background: rgba(255, 255, 255, 0.09); 
     border-radius: 15px;
@@ -264,7 +254,7 @@ body{
 
 .two-columns > div {
     flex: 1;
-    padding: 3rem; /* Optional Innenabstand */
+    padding: 3rem; 
     background: rgba(255, 255, 255, 0.09); 
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
@@ -275,7 +265,7 @@ body{
 .avatar-text-group {
   display: flex;
   align-items: center;
-  gap: 1.2rem; /* Abstand zwischen den Avatars und dem Text */
+  gap: 1.2rem;
 }
 
 .avatars {
