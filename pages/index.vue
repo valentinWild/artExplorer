@@ -42,7 +42,7 @@
 
             <div class="bg-zinc-300">
                 <h1 class="text-2xl font-sans font-semibold text-cyan-200">All Tools & Learning Materials for Maximum Learning Success</h1>
-                <p class="text-stone-100 font-normal" style="text-align: justify;">Bleib organisiert und motiviert </p>
+                <p class="text-stone-100 font-normal" style="text-align: justify;"> Stay organized and motivated with us!</p>
                 <br>
                 <p class="text-stone-100 text-sm" style="text-align: justify;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
 
@@ -65,9 +65,9 @@
                     </div>  
 
                     <div class="text-group">
-                        <h1 class="font-semibold text-stone-100">150+</h1>
+                        <h1 class="font-semibold text-stone-100" style="color: #FEC52D;">150+</h1>
                         <br>
-                        <p class="font-semibold text-stone-100">nutzen ArtExplorer</p>
+                        <p class="font-semibold text-stone-100" style="color: #FEC52D;">nutzen ArtExplorer</p>
                     </div>
                 </div>
 
@@ -109,19 +109,29 @@
             <div class="funcionality">
                 <h1 class="text-2xl font-sans font-semibold" style="margin-bottom: 20px;">Discover the Magic of Art History with Learning Sets!</h1>
                 <p class="text-stone-100 text-sm" style="margin-bottom: 20px; text-align: justify; font-style: italic;">Unlock the secrets of different art epochs with our interactive Learning Sets. Dive into the era of your choice and explore various quiz sets designed to help you memorize artists and their masterpieces, match them accurately, and much more. Through Multiple Choice questions, Task Orders, Matching exercises, and Fill-in-the-Blank challenges, you'll become a master of each unique artistic period.</p>
-                <p class="text-stone-100 text-m font-semibold" style="margin-bottom: 20px; text-align: justify; font-style: italic;">Ready to ignite your passion for art and history?
+                <p class="text-stone-100 text-m font-semibold text-cyan-300" style="margin-bottom: 20px; text-align: justify; font-style: italic;">Ready to ignite your passion for art and history?
                     <br>
                     Start learning now and transform your knowledge!</p>
-                <UButton  style="margin-top: 20px;" :ui="{ label: 'font-medium' }">Become a member!</UButton>
+
+                <img src="/pictures/Epoche.png" alt="Art History" class="functionality-image">
+                <UButton to="/user/login"  style="margin-top: 20px;" :ui="{ label: 'font-medium' }">Become a Member</UButton>
             </div>
 
             <div class="analytics">
-                <h1>TBA</h1>
-                <p>Lorum ipsum</p>
-                <UButton>Analytics</UButton>
+                <div class="analyticstext-image">
+                <div class="analyticstext">
+                    <h1 class="text-2xl font-sans font-semibold text-cyan-200" style="margin-bottom: 30px;">Track Your Progress with Smart Analytics</h1>
+                    <p class="text-stone-100 text-sm" style="margin-bottom: 40px; text-align: justify;">Track your learning progress effortlessly with our comprehensive dashboard. 
+                    Our app automatically analyzes your learning success, presenting it in various ways to help you understand your strengths and areas for improvement. See your progress in real-time and stay motivated on your journey to becoming an art history expert.</p>
+
+                    <p class="text-stone-100 text-m font-semibold text-cyan-300" style="margin-bottom: 20px; text-align: justify; font-style: italic;">Start practicing today and receive feedback on your learning process!</p>
+                    <UButton to="/user/login"  style="margin-top: 20px;" :ui="{ label: 'font-medium' }">Log In and Discover Your Dashboard</UButton>
+                </div>
+                <div class="analyticsImage">
+                    <img src="/pictures/Analytics.png" alt="Art History" class="analytics-image">
+                </div>
             </div>
-            
-            
+        </div>
         </div>
 
     </section>
@@ -281,8 +291,40 @@ body{
     color: #FEC52D;
 }
 
+.funcionality img.functionality-image {
+    width: 70%; 
+    height: auto; 
+    margin-bottom: 10px; 
+    margin-left: 6rem;
+    margin-top: 1.5rem;
+}
+
 .analytics h1{
     color:#67E8F9;
+}
+
+.analytics {
+    display: flex;
+    align-items: center;
+}
+
+.analyticstext-image {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.analyticstext {
+    flex: 1;
+}
+
+.analyticsImage {
+    flex: 1;
+}
+
+.analytics img.analytics-image {
+    max-width: 100%;
+    height: auto;
 }
 
 
