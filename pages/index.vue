@@ -42,9 +42,9 @@
 
             <div class="bg-zinc-300">
                 <h1 class="text-2xl font-sans font-semibold text-cyan-200">All Tools & Learning Materials for Maximum Learning Success</h1>
-                <p class="text-stone-100 font-normal">Bleib organisiert und motiviert </p>
+                <p class="text-stone-100 font-normal" style="text-align: justify;">Bleib organisiert und motiviert </p>
                 <br>
-                <p class="text-stone-100 text-sm">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                <p class="text-stone-100 text-sm" style="text-align: justify;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
 
                 <div class="avatar-text-group">
                     <div class="avatars">
@@ -98,16 +98,25 @@
             :ui="{ label: 'text-cyan-300' }"
             />
         </div>
+
+        <div class="image-container">
+        <img src="/pictures/Students.png" alt="Students Studying" class="centered-image">
+        </div>
+
         
         <div class="two-columns">
 
-            <div>
-                <h1>TBA</h1>
-                <p>Lorum ipsum</p>
-                <UButton>Visit Learnsets</UButton>
+            <div class="funcionality">
+                <h1 class="text-2xl font-sans font-semibold" style="margin-bottom: 20px;">Discover the Magic of Art History with Learning Sets!</h1>
+                <p class="text-stone-100 text-sm" style="margin-bottom: 20px; text-align: justify; font-style: italic;">Unlock the secrets of different art epochs with our interactive Learning Sets. Dive into the era of your choice and explore various quiz sets designed to help you memorize artists and their masterpieces, match them accurately, and much more. Through Multiple Choice questions, Task Orders, Matching exercises, and Fill-in-the-Blank challenges, you'll become a master of each unique artistic period.</p>
+                <p class="text-stone-100 text-m font-semibold" style="margin-bottom: 20px; text-align: justify; font-style: italic;">Ready to ignite your passion for art and history?
+                    <br>
+                    Start learning now and transform your knowledge!</p>
+                <UButton  style="margin-top: 20px;" :ui="{ label: 'font-medium' }">Become a member!</UButton>
             </div>
-            <div>
-                <h2>TBA</h2>
+
+            <div class="analytics">
+                <h1>TBA</h1>
                 <p>Lorum ipsum</p>
                 <UButton>Analytics</UButton>
             </div>
@@ -117,31 +126,6 @@
 
     </section>
 
-    <section class="section2">
-        <UDivider label="DISCOVER" />
-        <div class="two-columns">
-
-            <div>
-                <h1>TBA</h1>
-                <p>Lorum ipsum</p>
-                <UButton>Visit Learnsets</UButton>
-            </div>
-            <div class="videoMaterial">
-                <h2>TBA</h2>
-                <p>Lorum ipsum</p>
-                <UButton>Analytics</UButton>
-            </div>
-            
-            
-        </div>
-
-    
-    </section>
-
-
-    <section class="section3">
-
-    </section>
 </body>
 </template>
 
@@ -281,6 +265,25 @@ body{
   justify-content: center;
 }
 
+.image-container {
+  display: flex;
+  justify-content: center;
+  padding: 3.5rem 0;
+}
+
+.centered-image {
+  max-width: 70%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.funcionality h1 {
+    color: #FEC52D;
+}
+
+.analytics h1{
+    color:#67E8F9;
+}
 
 
 </style>
