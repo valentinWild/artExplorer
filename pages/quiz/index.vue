@@ -1,30 +1,28 @@
 <template>
-    <h1>{{ "QuizTitle" }}</h1>
-    <UButton
-        @click="initQuiz"
-    >Start new Quiz</UButton>
-
-    <QuestionsMCQ
-        v-if="currentQuizItem?.type === 'mcq'"
-        :quiz-data="currentQuizItem.content"
-        @submit-item="(e) => handleItemSubmit(e)"
-        :question-answered="questionAnswered"
-        :item-result="quizItemResult"
-    ></QuestionsMCQ>
-
-    <div
-        class="quiz-result"
-        v-if="quizResultText"
-    >{{ quizResultText }}</div>
-
-    <div>
-        <UButton
-            @click="loadNextItem"
-        >Next Question</UButton>
-    </div>
-
-
-</template>
+    <body>
+        <div class="container">
+        <h1>{{ "Impressionism" }}</h1>
+        <UButton @click="initQuiz" class="button">Start new Quiz</UButton>
+    
+        <QuestionsMCQ class="questionsMCQ"
+            v-if="currentQuizItem?.type === 'mcq'"
+            :quiz-data="currentQuizItem.content"
+            @submit-item="handleItemSubmit"
+            :question-answered="questionAnswered"
+            :item-result="quizItemResult"
+        ></QuestionsMCQ>
+    
+        <div class="quiz-result" v-if="quizResultText">
+            {{ quizResultText }}
+        </div>
+    
+        <div>
+            <UButton @click="loadNextItem" class="button">Next Question</UButton>
+        </div>
+        </div>
+    </body>
+  </template>
+  
   
 <script setup>
 
@@ -128,6 +126,52 @@ const submitQuizResult = async () => {
         quizResultText.value = `You have finished the Quiz with ${data.totalPoints} points in total and a score of ${data.score}!`
     }
 }
-
-
 </script>
+
+
+<style scoped>
+body {
+  background-color: #121421;
+  color: #ffffff;
+  margin: 0;
+}
+
+.container {
+  background-color: #121421;
+  color: #ffffff;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: x-large;
+  margin-bottom: 20px;
+}
+
+.button {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.questionsMCQ{
+    background-color: rgb(255, 255, 255);
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 600px;
+    border-radius: 10px;
+}
+
+</style>
+
+
+  
+  

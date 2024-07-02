@@ -65,7 +65,7 @@ const createMCQs = async (numOfQuestions) => {
       return {
       type: 'mcq',
       content: {
-        stem: `Wer hat das Kunstwerk "${artwork.title}" geschaffen?`,
+        stem: `Who created the artwork "${artwork.title}"?`,
         correct_answers: [{
           id: correctAnswerId,
           value: artwork.artist_title || 'Künstler unbekannt'
