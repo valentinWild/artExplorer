@@ -1,5 +1,7 @@
 <script setup>
 import { ref, watch, defineProps, defineEmits } from 'vue';
+import Icons from '../Icons.vue'; 
+import ProgressBar from './ProgressBar.vue'; 
 
 const props = defineProps({
   quizData: {
@@ -13,6 +15,16 @@ const props = defineProps({
   itemResult: {
     type: Object,
     required: false,
+  },
+  totalQuestions: {
+    type: Number,
+    required: true,
+    default: 1
+  },
+  currentQuestionIndex: {
+    type: Number,
+    required: true,
+    default: 0
   }
 });
 
@@ -24,6 +36,12 @@ const selected = ref();
 const resultText = ref('');
 const resultClass = ref('');
 const correctAnswer = ref('');
+const correctAnswersCount = ref(0);
+const incorrectAnswersCount = ref(0);
+
+const updateProgress = () => {
+  // Berechnung des Fortschritts wird hier nicht mehr benötigt
+}
 
 const getOptions = () => {
   if (!props.quizData || !props.quizData.answers_options) {
@@ -37,6 +55,11 @@ getOptions();
 watch(() => props.itemResult, (newValue) => {
   if (props.itemResult?.answered === true) {
     generateResultText();
+    if (props.itemResult.points > 0) {
+      correctAnswersCount.value++;
+    } else {
+      incorrectAnswersCount.value++;
+    }
   } else {
     resultText.value = "";
     resultClass.value = "";
@@ -72,6 +95,7 @@ const selectOption = (optionValue) => {
 <template>
   <div class="questions-container">
     <img v-if="props.quizData.image_url" :src="props.quizData.image_url" alt="Quiz Image" class="quiz-image" />
+    <ProgressBar :correct="correctAnswersCount" :incorrect="incorrectAnswersCount" :total="props.totalQuestions" /> <!-- Progress Bar -->
     <div class="question-stem">{{ stem }}</div>
     <div v-for="option in options" :key="option.value" class="option-container">
       <UButton
@@ -83,31 +107,36 @@ const selectOption = (optionValue) => {
         {{ option.label }}
       </UButton>
     </div>
-    <div class="result-container" :class="resultClass">{{ resultText }}</div>
+    <div class="result-container" :class="resultClass">
+      <Icons v-if="resultClass === 'correct'" class="result-icon" type="happy" />
+      <Icons v-if="resultClass === 'wrong'" class="result-icon" type="sad" />
+      <span class="result-text">{{ resultText }}</span>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .quiz-image {
-  max-height: 500px; 
-  margin-bottom: 1px; 
+  max-height: 500px;
+  margin-bottom: 1px;
   align-self: center;
   border-radius: 10px;
 }
 
 .question-stem {
-  margin-bottom: 10px; 
-  font-size: 1.2em;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: #333;
 }
 
 .option-container {
-  margin-bottom: 8px; 
+  margin-bottom: 8px;
 }
 
 .option-button {
   background-color: white;
   color: #333;
-  border: 1px solid #bbb; 
+  border: 1px solid #bbb;
   padding: 10px;
   width: 100%;
   text-align: left;
@@ -117,7 +146,7 @@ const selectOption = (optionValue) => {
 
 .option-button:hover {
   background-color: #f0f0f0;
-  border-color: #999; 
+  border-color: #999;
 }
 
 .option-button.selected {
@@ -128,14 +157,17 @@ const selectOption = (optionValue) => {
   cursor: not-allowed;
   background-color: #e0e0e0;
   color: #a0a0a0;
-  border-color: #ccc; 
+  border-color: #ccc;
 }
 
 .result-container {
-  margin-top: 10px; 
+  margin-top: 10px;
   padding: 10px;
   text-align: center;
   border-radius: 5px;
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
 }
 
 .correct {
@@ -146,5 +178,14 @@ const selectOption = (optionValue) => {
 .wrong {
   background-color: lightcoral;
   color: rgb(104, 0, 0);
+}
+
+.result-icon {
+  margin-right: 5px; 
+  vertical-align: middle; 
+}
+
+.result-text {
+  display: inline-block; 
 }
 </style>
