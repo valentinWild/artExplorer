@@ -118,10 +118,8 @@
       headers: useRequestHeaders(['cookie']),
       body: body,
     });
-    if (data?.score) {
-      resetQuiz();
-      quizResultText.value = `You have finished the Quiz with ${data.totalPoints} points in total and a score of ${data.score}!`
-    }
+    quizResultText.value = `You have finished the Quiz with ${quizScore.value} points in total!`
+    resetQuiz();
   }
   </script>
   

@@ -124,6 +124,7 @@ const selectOption = (optionValue) => {
 }
 
 .question-stem {
+    text-align: center;
   margin-top: 10px;
   margin-bottom: 10px;
   color: #333;
