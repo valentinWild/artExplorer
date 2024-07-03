@@ -62,43 +62,89 @@ const generateResultText = () => {
     resultClass.value = "wrong";
   }
 }
+
+const selectOption = (optionValue) => {
+  selected.value = optionValue;
+  emit('submitItem', selected.value);
+}
 </script>
 
 <template>
   <div class="questions-container">
     <img v-if="props.quizData.image_url" :src="props.quizData.image_url" alt="Quiz Image" class="quiz-image" />
-    <URadioGroup v-model="selected" :legend="stem" :options="options" />
-    <div class="button-container">
-      <UButton class="button-done"
-        v-show="!questionAnswered"
-        @click="$emit('submitItem', selected)"
-      >Done</UButton>
+    <div class="question-stem">{{ stem }}</div>
+    <div v-for="option in options" :key="option.value" class="option-container">
+      <UButton
+        class="option-button"
+        :class="{ 'selected': selected === option.value }"
+        @click="selectOption(option.value)"
+        :disabled="questionAnswered"
+      >
+        {{ option.label }}
+      </UButton>
     </div>
-    <div :class="['result', resultClass]">{{ resultText }}</div>
+    <div class="result-container" :class="resultClass">{{ resultText }}</div>
   </div>
 </template>
 
 <style scoped>
 .quiz-image {
-  max-height: 500px;
-  margin-bottom: 20px;
+  max-height: 500px; 
+  margin-bottom: 1px; 
   align-self: center;
   border-radius: 10px;
 }
 
-.button-done {
-  margin-top: 20px;
+.question-stem {
+  margin-bottom: 10px; 
+  font-size: 1.2em;
 }
 
-.result {
-  color: #050505;
+.option-container {
+  margin-bottom: 8px; 
+}
+
+.option-button {
+  background-color: white;
+  color: #333;
+  border: 1px solid #bbb; 
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.option-button:hover {
+  background-color: #f0f0f0;
+  border-color: #999; 
+}
+
+.option-button.selected {
+  background-color: #d3d3d3;
+}
+
+.option-button:disabled {
+  cursor: not-allowed;
+  background-color: #e0e0e0;
+  color: #a0a0a0;
+  border-color: #ccc; 
+}
+
+.result-container {
+  margin-top: 10px; 
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
 }
 
 .correct {
+  background-color: lightgreen;
   color: green;
 }
 
 .wrong {
-  color: red;
+  background-color: lightcoral;
+  color: rgb(104, 0, 0);
 }
 </style>
