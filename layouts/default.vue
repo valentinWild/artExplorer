@@ -12,7 +12,7 @@
 
 .default {
     display: grid;
-    grid-template-columns: 1fr minmax(300px, 1000px) 1fr;
+    grid-template-columns: 1fr 100% 1fr;
 }
 
 main {
