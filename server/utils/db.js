@@ -1,5 +1,4 @@
 
-
 const fetchQuizItems = async (client, quizId) => {
     const { data: quizItems, error: error } = await client
         .from('quiz_items')
@@ -68,11 +67,11 @@ const insertQuizItems = async(client, quizItems) => {
     return items;
 }
 
-const instertQuiz = async(client, userId) => {
+const insertQuiz = async(client, userId, styleCategory) => {
     const { data: quiz, error: quizError } = await client
         .from('quizzes')
         .insert([
-            { score: 0.0, owner: userId },
+            { score: 0.0, owner: userId, style_category: styleCategory },
         ])
         .select();
 
@@ -106,5 +105,5 @@ export default {
     updateQuizItems,
     insertQuizItems,
     updateQuiz,
-    instertQuiz,
+    insertQuiz,
 };

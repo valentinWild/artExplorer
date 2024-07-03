@@ -28,7 +28,14 @@
   
 <script setup>
 
-const quizQuery = ref('/api/styleQuiz?limit=5');
+const route = useRoute();
+
+const baseQuery = '/api/styleQuiz?';
+const queryParams = reactive({
+  limit: 10,
+  style_category: 'Modernism'
+});
+
 const submitItemQuery = '/api/submitItem';
 const submitQuizResultsQuery = '/api/submitQuizResults';
 const quizData = ref();
@@ -43,7 +50,8 @@ const quizResultText = ref(null);
 
 
 const fetchQuestions = async() => {
-    const { data } = await useFetch(quizQuery, {
+    const url = generateUrl();
+    const { data } = await useFetch(url, {
         headers: useRequestHeaders(['cookie'])
     });
     if (data.value) {
@@ -127,6 +135,14 @@ const submitQuizResult = async () => {
         resetQuiz();
         quizResultText.value = `You have finished the Quiz with ${data.totalPoints} points in total and a score of ${data.score}!`
     }
+}
+
+const generateUrl = () => {
+    if (route.query.style_category) {
+        queryParams.style_category = route.query.style_category;
+    }
+    const queryString = new URLSearchParams(queryParams).toString()
+    return `${baseQuery}${queryString}`
 }
 
 
