@@ -11,6 +11,7 @@ definePageMeta({
 
 const user = useSupabaseUser();
 
+
 onMounted(() => {
     watchEffect(() => {
         if (!user.value) {

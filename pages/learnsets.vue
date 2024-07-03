@@ -13,6 +13,7 @@
                 :image-src="item.imageSrc"
                 :title="item.title"
                 :description="item.description"
+                @click="openQuiz(item.title)"
             />
             </div>
         </div>
@@ -71,6 +72,20 @@
     }
   };
   </script>
+
+<script setup>
+
+const router = useRouter();
+const quizPath = '/quiz';
+
+const openQuiz = (styleTitle) => {
+  const params = {style_category: styleTitle}
+  navigateTo({ path: quizPath, query: params });
+}
+
+
+
+</script>
   
   <style scoped>
    body {
