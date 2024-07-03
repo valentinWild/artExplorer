@@ -40,7 +40,6 @@ const correctAnswersCount = ref(0);
 const incorrectAnswersCount = ref(0);
 
 const updateProgress = () => {
-  // Berechnung des Fortschritts wird hier nicht mehr benötigt
 }
 
 const getOptions = () => {
@@ -95,7 +94,7 @@ const selectOption = (optionValue) => {
 <template>
   <div class="questions-container">
     <img v-if="props.quizData.image_url" :src="props.quizData.image_url" alt="Quiz Image" class="quiz-image" />
-    <ProgressBar :correct="correctAnswersCount" :incorrect="incorrectAnswersCount" :total="props.totalQuestions" /> <!-- Progress Bar -->
+    <ProgressBar :correct="correctAnswersCount" :incorrect="incorrectAnswersCount" :total="props.totalQuestions" /> 
     <div class="question-stem">{{ stem }}</div>
     <div v-for="option in options" :key="option.value" class="option-container">
       <UButton
@@ -115,13 +114,13 @@ const selectOption = (optionValue) => {
   </div>
 </template>
 
-<style scoped>
-.quiz-image {
-  max-height: 500px;
-  margin-bottom: 1px;
-  align-self: center;
-  border-radius: 10px;
-}
+    <style scoped>
+    .quiz-image {
+    max-height: 500px;
+    margin-bottom: 1px;
+    align-self: center;
+    border-radius: 10px;
+    }
 
 .question-stem {
     text-align: center;
@@ -163,7 +162,7 @@ const selectOption = (optionValue) => {
 
 .result-container {
   margin-top: 10px;
-  padding: 10px;
+    padding: 10px;
   text-align: center;
   border-radius: 5px;
   display: flex;
@@ -173,10 +172,10 @@ const selectOption = (optionValue) => {
 
 .correct {
   background-color: lightgreen;
-  color: green;
+    color: rgb(0, 118, 0);
 }
 
-.wrong {
+    .wrong {
   background-color: lightcoral;
   color: rgb(104, 0, 0);
 }
