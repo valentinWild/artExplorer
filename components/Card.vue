@@ -10,7 +10,7 @@
   
   <script>
   export default {
-    props: {
+    props: { 
       imageSrc: {
         type: String,
         required: true
@@ -29,11 +29,12 @@
   
   <style scoped>
   .card {
-    background-color: #1a1c28; 
+    background-color: #1e1e2d;
     color: #ffffff; 
     width: 310px;
     overflow: hidden;
-    border-radius: 2%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 35px;
     margin-right: 20px;
@@ -56,7 +57,13 @@
   
   .card .card-text p {
     font-size: 14px;
-    color: #666666;
+    color: #a8a8a8;
   }
+
+  .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
   </style>
   

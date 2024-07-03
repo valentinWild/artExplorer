@@ -1,35 +1,36 @@
-<template>
+  <template>
     <body>
-        <div>
+      <div>
         <div class="container">
-            <header>
+          <header>
             <h1>Learning Sets</h1>
-            <input type="text" placeholder="Search ...">
-            </header>
-            <div class="options-container">
+            <input v-model="searchQuery" type="text" placeholder="Search ..." />
+          </header>
+          <div class="options-container">
             <Card
-                v-for="item in cardItems"
-                :key="item.id"
-                :image-src="item.imageSrc"
-                :title="item.title"
-                :description="item.description"
-                @click="openQuiz(item.title)"
+              v-for="item in filteredCardItems"
+              :key="item.id"
+              :image-src="item.imageSrc"
+              :title="item.title"
+              :description="item.description"
+              @click="openQuiz(item.title)"
             />
-            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </body>
   </template>
-  
+
   <script>
   import Card from '~/components/Card.vue';
-  
+
   export default {
     components: {
       Card
     },
     data() {
       return {
+        searchQuery: '',
         cardItems: [
           {
             id: 1,
@@ -69,6 +70,15 @@
           }
         ]
       };
+    },
+    computed: {
+      filteredCardItems() {
+        if (!this.searchQuery) {
+          return this.cardItems;
+        }
+        const query = this.searchQuery.toLowerCase();
+        return this.cardItems.filter(item => item.title.toLowerCase().includes(query));
+      }
     }
   };
   </script>
@@ -86,12 +96,12 @@ const openQuiz = (styleTitle) => {
 
 
 </script>
-  
+
   <style scoped>
-   body {
+  body {
     background-color: #121421;
-    color: #ffffff; /* Textfarbe auf Weiß setzen */
-    }
+    color: #ffffff; 
+  }
 
   .container {
     max-width: 1000px;
@@ -100,34 +110,44 @@ const openQuiz = (styleTitle) => {
     flex-direction: column;
     align-items: center;
   }
-  
+
   header {
     background-color: #121421;
     margin-bottom: 10px;
-    margin-top: 10px;
+    margin-top: 30px;
     display: flex;
     align-items: center;
   }
-  
+
   header h1 {
+    font-size: x-large;
     font-weight: bold;
     margin-right: 20px;
   }
-  
+
   header input {
     border: none;
-    background-color: rgba(128, 128, 128, 0.1);
-    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
     border-radius: 5px;
+    color: #ffffff;
+    width: 200px;
+    transition: background-color 0.3s ease;
   }
-  
+
+  header input::placeholder {
+    color: #ccc;
+  }
+
+  header input:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
   .options-container {
     display: flex;
     flex-wrap: wrap;
     margin-top: 40px;
     justify-content: center;
   }
-  </style>
 
-  
-  
+  </style>

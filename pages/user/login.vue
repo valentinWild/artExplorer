@@ -30,7 +30,7 @@
 
 <script setup>
 definePageMeta({
-    middleware: ['auth'],
+    // middleware: ['auth'],
 });
 
 const state = reactive({
@@ -44,7 +44,7 @@ const user = useSupabaseUser();
 onMounted(() => {
   watchEffect(() => {
     if (user.value) {
-      navigateTo('/dashboard');
+      // navigateTo('/dashboard');
     }
   });
 });
