@@ -1,34 +1,35 @@
-<template>
+  <template>
     <body>
-        <div>
+      <div>
         <div class="container">
-            <header>
+          <header>
             <h1>Learning Sets</h1>
-            <input type="text" placeholder="Search ...">
-            </header>
-            <div class="options-container">
+            <input v-model="searchQuery" type="text" placeholder="Search ..." />
+          </header>
+          <div class="options-container">
             <Card
-                v-for="item in cardItems"
-                :key="item.id"
-                :image-src="item.imageSrc"
-                :title="item.title"
-                :description="item.description"
+              v-for="item in filteredCardItems"
+              :key="item.id"
+              :image-src="item.imageSrc"
+              :title="item.title"
+              :description="item.description"
             />
-            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </body>
   </template>
-  
+
   <script>
   import Card from '~/components/Card.vue';
-  
+
   export default {
     components: {
       Card
     },
     data() {
       return {
+        searchQuery: '',
         cardItems: [
           {
             id: 1,
@@ -68,15 +69,24 @@
           }
         ]
       };
+    },
+    computed: {
+      filteredCardItems() {
+        if (!this.searchQuery) {
+          return this.cardItems;
+        }
+        const query = this.searchQuery.toLowerCase();
+        return this.cardItems.filter(item => item.title.toLowerCase().includes(query));
+      }
     }
   };
   </script>
-  
+
   <style scoped>
-   body {
+  body {
     background-color: #121421;
     color: #ffffff; 
-    }
+  }
 
   .container {
     max-width: 1000px;
@@ -85,7 +95,7 @@
     flex-direction: column;
     align-items: center;
   }
-  
+
   header {
     background-color: #121421;
     margin-bottom: 10px;
@@ -93,19 +103,19 @@
     display: flex;
     align-items: center;
   }
-  
+
   header h1 {
     font-weight: bold;
     margin-right: 20px;
   }
-  
+
   header input {
     border: none;
     background-color: rgba(128, 128, 128, 0.1);
     padding: 5px;
     border-radius: 5px;
   }
-  
+
   .options-container {
     display: flex;
     flex-wrap: wrap;
@@ -113,6 +123,3 @@
     justify-content: center;
   }
   </style>
-
-  
-  
