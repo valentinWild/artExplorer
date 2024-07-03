@@ -1,7 +1,7 @@
 <template>
     <body>
       <div class="container">
-        <h1>{{ "Impressionism" }}</h1>
+        <h1>{{ queryParams.style_category }}</h1>
         <UButton @click="initQuiz" class="button">Start new Quiz</UButton>
   
         <QuestionsMCQ class="questionsMCQ"
@@ -46,6 +46,12 @@ const quizItemResult = ref();
 const quizTotalItems = ref(0);
 const quizScore = ref(0);
 const quizResultText = ref(null);
+
+onMounted(() => {
+    if (route.query.style_category) {
+        queryParams.style_category = route.query.style_category;
+    }
+});
 
 
 const fetchQuestions = async() => {
@@ -119,7 +125,7 @@ const fetchQuestions = async() => {
     }
   }
 
-  const generateUrl = () => {
+const generateUrl = () => {
     if (route.query.style_category) {
         queryParams.style_category = route.query.style_category;
     }
