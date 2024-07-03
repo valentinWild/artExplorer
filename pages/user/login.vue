@@ -6,21 +6,21 @@
         </div>
       <div class="login-section">
         <h2 class="font-bold text-3xl">Login</h2>
-          <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit()">
-        
+    <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit()">
+
             <UFormGroup label="E-Mail" name="email" class="form-group" :ui="{ label: 'text-cyan-300' }">
               <UInput v-model="state.email" class="input-field" />
-            </UFormGroup>
-        
+        </UFormGroup>
+
             <UFormGroup label="Password" name="password" class="form-group" :ui="{ label: 'text-cyan-300' }">
               <UInput v-model="state.password" type="password" class="input-field" />
-            </UFormGroup>
+        </UFormGroup>
             <div class="button-container">
-              <UButton type="submit">
-                Sign In
-              </UButton>
+        <UButton type="submit">
+            Sign In
+        </UButton>
             </div>
-          </UForm>
+    </UForm>
         <small>You don't have an Account? <ULink to="/user/register" class="register-link">Register</ULink></small>
         
       </div>
