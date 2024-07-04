@@ -1,33 +1,30 @@
 import { v4 as uuidv4 } from 'uuid'
 import helpers from './helpers';
+import findTheWrongPicture from './FindTheWrongPicture';
 
 const iiifBaseUrl = 'https://www.artic.edu/iiif/2';
 
-const createQuestions = async (numOfQuestions, artworks) => {
+const createQuestions = async (numOfQuestions, artworks, epoch) => {
+  try {
+      let selectedArtworks = helpers.getRandomItems(artworks, numOfQuestions);
+      let questions = [];
 
-    let selectedArtworks = [];
-  
-    try {
-  
-      selectedArtworks = helpers.getRandomItems(artworks, numOfQuestions);
-  
-      let questions = []
-      let i = 0;
-      while(i < numOfQuestions) {
-        questions.push(createMCQType1(selectedArtworks[i], selectedArtworks));
-        i++;
-        if (i >= numOfQuestions) {
-          break;
-        }
-        questions.push(createMCQType2(selectedArtworks[i], selectedArtworks));
-        i++;
-        if (i >= numOfQuestions) {
-          break;
-        }
-        questions.push(createMCQType3(selectedArtworks[i], selectedArtworks));
-        i++;
+      // Erstellt 10 MCQ-Fragen
+      for (let i = 0; i < 10; i++) {
+          if (i % 3 === 0) {
+              questions.push(createMCQType1(selectedArtworks[i], selectedArtworks));
+          } else if (i % 3 === 1) {
+              questions.push(createMCQType2(selectedArtworks[i], selectedArtworks));
+          } else {
+              questions.push(createMCQType3(selectedArtworks[i], selectedArtworks));
+          }
       }
-      return questions;
+      
+       // Add 2 Find the Wrong Picture questions
+       const findTheWrongPictureQuestions = await findTheWrongPicture.createFindTheWrongPictureQuestions(artworks, epoch, 2);
+       questions = [...questions, ...findTheWrongPictureQuestions];
+ 
+       return questions;
   
     } catch (error) {
       console.error('Fehler beim Abrufen der Fragen:', error);

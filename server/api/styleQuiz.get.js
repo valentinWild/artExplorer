@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   const query = getQuery(event);
   const questionType = query.type;
-  let numOfQuestions = 10;
+  let numOfQuestions = 12;
   let styleCategory = 'Impressionism';
   if (query.limit) {
     numOfQuestions = query.limit;
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
   console.log('Create Quiz for Category',styleCategory);
 
   const artworks = await fetchExternalArtworks(numOfQuestions, styleCategory);
-  const questions = await mcq.createQuestions(numOfQuestions, artworks);
+  const questions = await mcq.createQuestions(numOfQuestions, artworks, styleCategory);
   const quiz = await saveQuiz(client, user.id, questions, styleCategory);
   const quizId = quiz[0].id;
   const quizItems = await db.fetchQuizItems(client, quizId);

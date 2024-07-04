@@ -13,7 +13,17 @@
             :total-questions="quizTotalItems"
             :current-question-index="currentQuizIndex"
         ></QuestionsMCQ>
-  
+
+        <QuestionsFindTheWrongPicture class="findTheWrongPicture"
+        v-if="currentQuizItem?.type === 'find_the_wrong_picture'"
+        :quiz-data="currentQuizItem.content"
+        @submit-item="handleItemSubmit"
+        :question-answered="quizItemAnswered"
+        :item-result="quizItemResult"
+        :total-questions="quizTotalItems"
+        :current-question-index="currentQuizIndex"
+      ></QuestionsFindTheWrongPicture>
+
         <div class="quiz-result" v-if="quizResultText">
           {{ quizResultText }}
         </div>
@@ -26,6 +36,11 @@
   </template>
   
 <script setup>
+import { ref, onMounted, reactive } from 'vue';
+import { useRoute } from 'vue-router';
+import QuestionsMCQ from '../../components/Questions/MCQ.vue';
+import QuestionsFindTheWrongPicture from '../../components/Questions/FindTheWrongPicture.vue';
+
 
 const route = useRoute();
 
@@ -103,10 +118,10 @@ const fetchQuestions = async() => {
     });
   
     if (data[0]?.answered === true) {
-      quizItemAnswered.value = true;
-      console.log(data[0]);
-      quizItemResult.value = data[0];
-      quizScore.value += quizItemResult.value.points;
+    quizItemAnswered.value = true;
+    console.log(data[0]);
+    quizItemResult.value = data[0];
+    quizScore.value += quizItemResult.value.points;
       console.log(quizScore.value);
       console.log(quizTotalItems.value);
     }

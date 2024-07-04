@@ -24,7 +24,8 @@ export default defineEventHandler(async (event) => {
         return updatedQuizItem;
 
     } catch (error) {
-        return error;
+        console.error('Error in submitItem handler:', error);
+        return { error: error.message };
     }
     
 });
