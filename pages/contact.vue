@@ -21,7 +21,7 @@
           </UFormGroup>
 
              <div class="button-container">
-         <UButton type="send">
+         <UButton type="submit">
              Send Message
          </UButton>
              </div>
