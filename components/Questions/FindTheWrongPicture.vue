@@ -127,7 +127,6 @@ getOptions();
   </template>
   
   <style scoped>
-
   .questions-container {
     background-color: white;
     padding: 20px;
@@ -135,8 +134,8 @@ getOptions();
     max-width: 600px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
+  }
+  
   .question-stem {
     text-align: center;
     margin-top: 10px;
@@ -145,9 +144,10 @@ getOptions();
   }
   
   .options-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    justify-items: center;
   }
   
   .option-container {
@@ -155,13 +155,14 @@ getOptions();
   }
   
   .option-image {
-    max-width: 200px;
-    max-height: 200px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: border-color 0.3s;
-  }
-  
+  width: 200px; /* Fixed width */
+  height: 200px; /* Fixed height */
+  object-fit: cover; /* Ensure images maintain aspect ratio */
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
   .option-image.selected {
     border-color: #d3d3d3;
   }
@@ -207,9 +208,8 @@ getOptions();
   .result-text {
     display: inline-block; 
   }
-
+  
   .button {
-  margin-top: 10px;
-}
-
+    margin-top: 10px;
+  }
   </style>
