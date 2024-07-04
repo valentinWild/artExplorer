@@ -26,7 +26,6 @@
          </UButton>
              </div>
      </UForm>
-         <small>You don't have an Account? <ULink to="/user/register" class="register-link">Register</ULink></small>
          
        </div>
      </div>
