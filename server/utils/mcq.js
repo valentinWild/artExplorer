@@ -19,10 +19,14 @@ const createQuestions = async (numOfQuestions, artworks, epoch) => {
               questions.push(createMCQType3(selectedArtworks[i], selectedArtworks));
           }
       }
+
+      console.log('MCQ Questions:', questions);
       
        // Add 2 Find the Wrong Picture questions
        const findTheWrongPictureQuestions = await findTheWrongPicture.createFindTheWrongPictureQuestions(artworks, epoch, 2);
        questions = [...questions, ...findTheWrongPictureQuestions];
+
+       console.log('All Questions:', questions);
  
        return questions;
   

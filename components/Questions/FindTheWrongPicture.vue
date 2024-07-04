@@ -39,7 +39,7 @@ const correctAnswer = ref('');
 const correctAnswersCount = ref(0);
 const incorrectAnswersCount = ref(0);
 
-//const updateProgress = () => {}
+const updateProgress = () => {}
 
 const getOptions = () => {
   if (!props.quizData || !props.quizData.artworks) {
@@ -54,24 +54,7 @@ const wrongOption = props.quizData.artworks.find(option => option.style_title !=
   }
 };
 
-//getOptions();
-
-const generateResultText = () => {
-  const result = props.itemResult;
-  if (result.points > 0) {
-    resultText.value = "Correct!";
-    resultClass.value = "correct";
-  } else {
-    resultText.value = "False!";
-    resultClass.value = "wrong";
-  }
-};
-
-const selectOption = (optionValue) => {
-  if (props.questionAnswered) return; // Verhindern, dass ein weiteres Bild ausgewählt wird
-  selected.value = optionValue;
-  emit('submitItem', { answer_ids: [optionValue] });
-};
+getOptions();
 
 watch(() => props.itemResult, (newValue) => {
   if (props.itemResult?.answered === true) {
@@ -95,8 +78,22 @@ watch(() => props.quizData, (newValue) => {
   }
 });
 
-getOptions();
+const generateResultText = () => {
+  const result = props.itemResult;
+  if (result.points > 0) {
+    resultText.value = "Correct!";
+    resultClass.value = "correct";
+  } else {
+    const correctOptionIndex = options.value.findIndex(option => option.value === correctAnswer.value);
+    resultText.value = "False!";
+    resultClass.value = "wrong";
+  }
+}
 
+const selectOption = (optionValue) => {
+  selected.value = optionValue;
+  emit('submitItem', { answer_ids: [optionValue] });
+}
 </script>
 
 <template>
@@ -111,10 +108,10 @@ getOptions();
             @click="selectOption(option.value)"
             :class="{
               'selected': selected === option.value,
-              'correct-border': props.questionAnswered && option.value === correctAnswer.value,
-              'wrong-border': props.questionAnswered && selected === option.value && option.value !== correctAnswer.value
+              'correct-border': questionAnswered && option.value === correctAnswer.value,
+              'wrong-border': questionAnswered && selected === option.value && option.value !== correctAnswer.value
             }"
-            :disabled="props.questionAnswered || selected.value"
+            :disabled="questionAnswered"
           />
         </div>
       </div>
