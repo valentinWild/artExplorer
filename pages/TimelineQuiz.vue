@@ -5,7 +5,7 @@
         <div class="date-container" v-for="(date, index) in dates" :key="date">
           <div 
             class="date" 
-            :class="{'selected': selectedField === index}"
+            :class="{'selected': selectedField === index, 'correct': checkStatus && placedImages[index] && placedImages[index].correct_order === index + 1, 'incorrect': checkStatus && (!placedImages[index] || placedImages[index].correct_order !== index + 1)}"
             @click="selectField(index)"
           >
             <div v-if="placedImages[index]" class="image-placeholder">
@@ -35,65 +35,73 @@
           <p>{{ image.artist_title }}</p>
         </div>
       </div>
-      <UButton @click="checkOrder" class="button">Überprüfen</UButton>
+      <button @click="checkOrder" class="button">Überprüfen</button>
+      <div v-if="showMessage" :class="['message', messageClass]">
+        {{ message }}
+      </div>
     </div>
   </template>
   
-  
-  
-  
-  
   <script>
-import { defineComponent, reactive } from 'vue'
-
-export default defineComponent({
-  data() {
-    return {
-      dates: ['date_display1', 'date_display2', 'date_display3', 'date_display4'],
-      images: reactive([
-        { id: 1, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title1', period: 'Impressionismus', correct_order: 1 },
-        { id: 2, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title2', period: 'Impressionismus', correct_order: 2 },
-        { id: 3, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title3', period: 'Moderne', correct_order: 3 },
-        { id: 4, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title4', period: 'Impressionismus', correct_order: 4 },
-      ]),
-      selectedImage: null,
-      selectedField: null,
-      placedImages: reactive({})
-    }
-  },
-  methods: {
-    selectImage(image) {
-      this.selectedImage = image;
-    },
-    selectField(index) {
-      if (this.selectedImage) {
-        this.placedImages[index] = this.selectedImage;
-        this.images = this.images.filter(img => img.id !== this.selectedImage.id);
-        this.selectedImage = null;
+  import { defineComponent, reactive } from 'vue'
+  
+  export default defineComponent({
+    data() {
+      return {
+        dates: ['date_display1', 'date_display2', 'date_display3', 'date_display4'],
+        images: reactive([
+          { id: 1, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title1', period: 'Impressionismus', correct_order: 1 },
+          { id: 2, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title2', period: 'Impressionismus', correct_order: 2 },
+          { id: 3, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title3', period: 'Moderne', correct_order: 3 },
+          { id: 4, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title4', period: 'Impressionismus', correct_order: 4 },
+        ]),
+        selectedImage: null,
+        selectedField: null,
+        placedImages: reactive({}),
+        checkStatus: false,
+        showMessage: false,
+        message: '',
+        messageClass: ''
       }
-      this.selectedField = index;
     },
-    checkOrder() {
-      let correct = true;
-      for (let i = 0; i < this.dates.length; i++) {
-        if (!this.placedImages[i] || this.placedImages[i].correct_order !== i + 1) {
-          correct = false;
-          break;
+    methods: {
+      selectImage(image) {
+        this.selectedImage = image;
+      },
+      selectField(index) {
+        if (this.selectedImage) {
+          this.placedImages[index] = this.selectedImage;
+          this.images = this.images.filter(img => img.id !== this.selectedImage.id);
+          this.selectedImage = null;
         }
-      }
-      if (correct) {
-        alert('Richtige Reihenfolge!');
-      } else {
-        alert('Falsche Reihenfolge, versuche es nochmal.');
+        this.selectedField = index;
+      },
+      checkOrder() {
+        this.checkStatus = true;
+        let correct = true;
+        for (let i = 0; i < this.dates.length; i++) {
+          if (!this.placedImages[i] || this.placedImages[i].correct_order !== i + 1) {
+            correct = false;
+          }
+        }
+        if (correct) {
+          this.showMessage = true;
+          this.message = 'Richtige Reihenfolge!';
+          this.messageClass = 'message-success';
+        } else {
+          this.showMessage = true;
+          this.message = 'Falsche Reihenfolge, versuche es nochmal.';
+          this.messageClass = 'message-error';
+        }
+        setTimeout(() => {
+          this.showMessage = false;
+        }, 3000);
       }
     }
-  }
-})
-</script>
-
+  })
+  </script>
   
-  
-<style scoped>
+  <style scoped>
 body {
   background-color: #1a202c;
   color: #ffffff;
@@ -102,13 +110,14 @@ body {
 }
 
 .timeline-container {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
   background-color: #2d3748;
   color: #ffffff;
   border-radius: 10px;
+  position: relative;
 }
 
 h1 {
@@ -122,7 +131,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin: 20px 0;
+  margin: 10px 0;
   position: relative;
 }
 
@@ -133,8 +142,8 @@ h1 {
 }
 
 .date {
-  width: 100px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   background-color: #4a5568;
   padding: 10px;
   border-radius: 5px;
@@ -146,11 +155,19 @@ h1 {
   cursor: pointer;
   transition: background-color 0.3s;
   position: relative;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .date.selected {
   background-color: #52B3D0;
+}
+
+.date.correct {
+  background-color: lightgreen;
+}
+
+.date.incorrect {
+  background-color: lightcoral;
 }
 
 .date .placeholder {
@@ -186,7 +203,7 @@ h1 {
   color: #e2e8f0;
   font-weight: bold;
   margin-top: 5px;
-  width: 100px;
+  width: 200px;
   text-align: center;
 }
 
@@ -194,11 +211,11 @@ h1 {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .image {
-  width: 100px;
+  width: 200px;
   text-align: center;
   padding: 10px;
   background-color: #4a5568;
@@ -225,13 +242,27 @@ h1 {
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  margin: 50px 0;
+  margin: 20px 0;
+  color: white;
+  font-weight: bold;
+  background-color: #52B3D0;
+}
+
+.message {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
   color: white;
   font-weight: bold;
 }
 
+.message-success {
+  background-color: lightgreen;
+  color: #ffffff;
+}
+
+.message-error {
+  background-color: lightcoral;
+  color: #ffffff;
+}
 </style>
-
-
-
-
