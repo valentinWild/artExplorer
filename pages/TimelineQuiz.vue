@@ -2,21 +2,26 @@
     <div class="timeline-container">
       <h1>Bringe die Bilder in die richtige zeitliche Reihenfolge:</h1>
       <div class="timeline">
-        <div 
-          class="date" 
-          v-for="(date, index) in dates" 
-          :key="date"
-          :class="{'selected': selectedField === index}"
-          @click="selectField(index)"
-        >
-          <div v-if="placedImages[index]">
-            <img :src="placedImages[index].src" :alt="placedImages[index].artist_title">
-            <p>{{ placedImages[index].artist_title }}</p>
-          </div>
-          <div v-else>
-            {{ date }}
+        <div class="date-container" v-for="(date, index) in dates" :key="date">
+          <div 
+            class="date" 
+            :class="{'selected': selectedField === index}"
+            @click="selectField(index)"
+          >
+            <div v-if="placedImages[index]" class="image-placeholder">
+              <img :src="placedImages[index].src" :alt="placedImages[index].artist_title">
+            </div>
+            <div v-else class="placeholder"></div>
           </div>
         </div>
+      </div>
+      <svg class="timeline-line" viewBox="0 0 100 10" preserveAspectRatio="none">
+        <line x1="0" y1="5" x2="100" y2="5" stroke="white" stroke-width="0.5"/>
+        <polygon points="95,3 100,5 95,7" fill="white" />
+        <polygon points="5,3 0,5 5,7" fill="white" />
+      </svg>
+      <div class="dates">
+        <span class="date-label" v-for="(date, index) in dates" :key="date">{{ date }}</span>
       </div>
       <div class="images">
         <div 
@@ -30,9 +35,12 @@
           <p>{{ image.artist_title }}</p>
         </div>
       </div>
-      <button @click="checkOrder">Überprüfen</button>
+      <UButton @click="checkOrder" class="button">Überprüfen</UButton>
     </div>
   </template>
+  
+  
+  
   
   
   <script>
@@ -85,63 +93,145 @@ export default defineComponent({
 
   
   
-  <style>
-  .timeline-container {
-    width: 80%;
-    margin: 0 auto;
-    text-align: center;
-  }
-  
-  .timeline {
-    display: flex;
-    justify-content: space-between;
-    margin: 20px 0;
-  }
-  
-  .date {
-    width: 100px;
-    height: 150px;
-    background-color: #ff6b6b;
-    padding: 10px;
-    border-radius: 5px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .date.selected {
-    background-color: #ff9b9b;
-  }
-  
-  .images {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-  
-  .image {
-    width: 100px;
-    text-align: center;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 5px;
-    transition: border 0.3s;
-  }
-  
-  .image.selected {
-    border: 2px solid #ff6b6b;
-  }
-  
-  .image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-  }
-  </style>
-  
+<style scoped>
+body {
+  background-color: #1a202c;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.timeline-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #2d3748;
+  color: #ffffff;
+  border-radius: 10px;
+}
+
+h1 {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: x-large;
+  margin-bottom: 20px;
+}
+
+.timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 20px 0;
+  position: relative;
+}
+
+.date-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.date {
+  width: 100px;
+  height: 150px;
+  background-color: #4a5568;
+  padding: 10px;
+  border-radius: 5px;
+  color: #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.date.selected {
+  background-color: #52B3D0;
+}
+
+.date .placeholder {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #a0aec0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.date .image-placeholder img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.timeline-line {
+  width: 100%;
+  height: 20px;
+  margin-top: 10px;
+}
+
+.dates {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.date-label {
+  background-color: #4a5568;
+  padding: 5px;
+  border-radius: 5px;
+  color: #e2e8f0;
+  font-weight: bold;
+  margin-top: 5px;
+  width: 100px;
+  text-align: center;
+}
+
+.images {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.image {
+  width: 100px;
+  text-align: center;
+  padding: 10px;
+  background-color: #4a5568;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+  transition: border 0.3s, background-color 0.3s;
+  color: #e2e8f0;
+}
+
+.image.selected {
+  border: 2px solid #52B3D0;
+  background-color: #2d3748;
+}
+
+.image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.button {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 50px 0;
+  color: white;
+  font-weight: bold;
+}
+
+</style>
+
+
+
+
