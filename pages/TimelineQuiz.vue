@@ -1,6 +1,6 @@
 <template>
     <div class="timeline-container">
-      <h1>Bringe die Bilder in die richtige zeitliche Reihenfolge:</h1>
+      <h1>Sort the pictures in the correct chronological order:</h1>
       <div class="timeline">
         <div class="date-container" v-for="(date, index) in dates" :key="date">
           <div 
@@ -35,73 +35,79 @@
           <p>{{ image.artist_title }}</p>
         </div>
       </div>
-      <button @click="checkOrder" class="button">Überprüfen</button>
+      <button @click="checkOrder" class="button">Done</button>
       <div v-if="showMessage" :class="['message', messageClass]">
+        <Icons v-if="messageClass === 'message-success'" class="result-icon" type="happy" />
+        <Icons v-if="messageClass === 'message-error'" class="result-icon" type="sad" />
         {{ message }}
       </div>
     </div>
   </template>
-  
-  <script>
-  import { defineComponent, reactive } from 'vue'
-  
-  export default defineComponent({
-    data() {
-      return {
-        dates: ['date_display1', 'date_display2', 'date_display3', 'date_display4'],
-        images: reactive([
-          { id: 1, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title1', period: 'Impressionismus', correct_order: 1 },
-          { id: 2, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title2', period: 'Impressionismus', correct_order: 2 },
-          { id: 3, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title3', period: 'Moderne', correct_order: 3 },
-          { id: 4, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title4', period: 'Impressionismus', correct_order: 4 },
-        ]),
-        selectedImage: null,
-        selectedField: null,
-        placedImages: reactive({}),
-        checkStatus: false,
-        showMessage: false,
-        message: '',
-        messageClass: ''
-      }
-    },
-    methods: {
-      selectImage(image) {
-        this.selectedImage = image;
-      },
-      selectField(index) {
-        if (this.selectedImage) {
-          this.placedImages[index] = this.selectedImage;
-          this.images = this.images.filter(img => img.id !== this.selectedImage.id);
-          this.selectedImage = null;
-        }
-        this.selectedField = index;
-      },
-      checkOrder() {
-        this.checkStatus = true;
-        let correct = true;
-        for (let i = 0; i < this.dates.length; i++) {
-          if (!this.placedImages[i] || this.placedImages[i].correct_order !== i + 1) {
-            correct = false;
-          }
-        }
-        if (correct) {
-          this.showMessage = true;
-          this.message = 'Richtige Reihenfolge!';
-          this.messageClass = 'message-success';
-        } else {
-          this.showMessage = true;
-          this.message = 'Falsche Reihenfolge, versuche es nochmal.';
-          this.messageClass = 'message-error';
-        }
-        setTimeout(() => {
-          this.showMessage = false;
-        }, 3000);
-      }
+
+<script>
+import { defineComponent, reactive } from 'vue'
+import Icons from '../components/Icons.vue'; 
+
+export default defineComponent({
+  components: {
+    Icons
+  },
+  data() {
+    return {
+      dates: ['date_display1', 'date_display2', 'date_display3', 'date_display4'],
+      images: reactive([
+        { id: 1, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title1', period: 'Impressionismus', correct_order: 1 },
+        { id: 2, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title2', period: 'Impressionismus', correct_order: 2 },
+        { id: 3, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title3', period: 'Moderne', correct_order: 3 },
+        { id: 4, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title4', period: 'Impressionismus', correct_order: 4 },
+      ]),
+      selectedImage: null,
+      selectedField: null,
+      placedImages: reactive({}),
+      checkStatus: false,
+      showMessage: false,
+      message: '',
+      messageClass: ''
     }
-  })
-  </script>
-  
-  <style scoped>
+  },
+  methods: {
+    selectImage(image) {
+      this.selectedImage = image;
+    },
+    selectField(index) {
+      if (this.selectedImage) {
+        this.placedImages[index] = this.selectedImage;
+        this.images = this.images.filter(img => img.id !== this.selectedImage.id);
+        this.selectedImage = null;
+      }
+      this.selectedField = index;
+    },
+    checkOrder() {
+      this.checkStatus = true;
+      let correct = true;
+      for (let i = 0; i < this.dates.length; i++) {
+        if (!this.placedImages[i] || this.placedImages[i].correct_order !== i + 1) {
+          correct = false;
+        }
+      }
+      if (correct) {
+        this.showMessage = true;
+        this.message = 'Correct order!';
+        this.messageClass = 'message-success';
+      } else {
+        this.showMessage = true;
+        this.message = 'Wrong order, try again.';
+        this.messageClass = 'message-error';
+      }
+      setTimeout(() => {
+        this.showMessage = false;
+      }, 3000);
+    }
+  }
+})
+</script>
+
+<style scoped>
 body {
   background-color: #1a202c;
   color: #ffffff;
@@ -253,16 +259,27 @@ h1 {
   padding: 10px 20px;
   border-radius: 5px;
   color: white;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .message-success {
   background-color: lightgreen;
-  color: #ffffff;
+  color: #2d3748;
 }
 
 .message-error {
   background-color: lightcoral;
-  color: #ffffff;
+  color: #2d3748;
+}
+
+.result-icon {
+  margin-right: 10px; 
+  vertical-align: middle; 
+  font-size: 20px; 
 }
 </style>
+
+
+  
