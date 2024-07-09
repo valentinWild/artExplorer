@@ -31,11 +31,14 @@ export default defineEventHandler(async (event) => {
 
   const epochArtworks = await fetchExternalArtworks(numOfQuestions, styleCategory);
   const otherEpochArtworks = await fetchExternalArtworks(numOfQuestions,'');
+  console.log('Fetched external Artworks');
+
   const mcqs = await mcq.createQuestions(numOfMCQs, epochArtworks, styleCategory);
   const findWrongPictureQuestions = await findThePicture.createFindTheWrongPictureQuestions(epochArtworks, otherEpochArtworks, styleCategory, numOfWrongPictureQuestions);
   const findCorrectPictureQuestions = await findThePicture.createFindTheCorrectPictureQuestions(epochArtworks, otherEpochArtworks, styleCategory, numOfCorrectPictureQuestions);
   
   const questions = [...mcqs, ...findWrongPictureQuestions, ...findCorrectPictureQuestions];
+  console.log('Created questions');
 
   const quiz = await saveQuiz(client, user.id, questions, styleCategory);
   const quizId = quiz[0].id;
