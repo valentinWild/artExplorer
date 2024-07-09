@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { serverSupabaseClient } from '#supabase/server'
 import { serverSupabaseUser } from '#supabase/server'
 import mcq from '../utils/mcq';
+import findTheWrongPicture from '../utils/findTheWrongPicture';
 
 const iiifBaseUrl = 'https://www.artic.edu/iiif/2';
 const baseUrl = 'https://api.artic.edu/api/v1/artworks/search';
@@ -13,6 +14,7 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event);
 
   const query = getQuery(event);
+  console.log(query);
   const questionType = query.type;
   let numOfQuestions = 12;
   let styleCategory = 'Impressionism';
@@ -24,8 +26,11 @@ export default defineEventHandler(async (event) => {
   }
   console.log('Create Quiz for Category',styleCategory);
 
-  const artworks = await fetchExternalArtworks(numOfQuestions, styleCategory);
-  const questions = await mcq.createQuestions(numOfQuestions, artworks, styleCategory);
+  const epochArtworks = await fetchExternalArtworks(numOfQuestions, styleCategory);
+  const otherEpochArtworks = await fetchExternalArtworks(10,'');
+  //const questions = await mcq.createQuestions(numOfQuestions, artworks, styleCategory);
+  const questions2 = await findTheWrongPicture.createFindTheWrongPictureQuestions(epochArtworks, otherEpochArtworks, styleCategory);
+  return questions2;
   const quiz = await saveQuiz(client, user.id, questions, styleCategory);
   const quizId = quiz[0].id;
   const quizItems = await db.fetchQuizItems(client, quizId);
@@ -54,7 +59,8 @@ const fetchExternalArtworks = async(numOfQuestions, styleCategory) => {
     const response = await axios.get(baseUrl, { params });
     if (response.status === 200 && response.data.data.length > 0) {
       const artworks = response.data.data;
-      return artworks;
+      const filteredArtworks = removeUndefinedArtworks(artworks);
+      return filteredArtworks;
     }
     else {
       throw new Error('Could not fetch artworks from external API.')
@@ -63,6 +69,14 @@ const fetchExternalArtworks = async(numOfQuestions, styleCategory) => {
     console.error(error);
   }
 }
+
+const removeUndefinedArtworks = (artworks) => {
+  return artworks.filter(artwork => {
+    const { id, title, artist_title, date_display, image_id, style_title } = artwork;
+    return image_id !== null && title !== null && artist_title !== null && date_display !== null && image_id !== null && style_title !== null;
+  });
+}
+
 
 
 // Save the whole Quiz in Database

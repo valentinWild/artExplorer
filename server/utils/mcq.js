@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import helpers from './helpers';
-import findTheWrongPicture from './FindTheWrongPicture';
+import findTheWrongPicture from './findTheWrongPicture';
 
 const iiifBaseUrl = 'https://www.artic.edu/iiif/2';
 
