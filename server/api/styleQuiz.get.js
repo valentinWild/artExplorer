@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { serverSupabaseClient } from '#supabase/server'
 import { serverSupabaseUser } from '#supabase/server'
 import mcq from '../utils/mcq';
-import findTheWrongPicture from '../utils/findTheWrongPicture';
+import findThePicture from '../utils/findThePicture';
 
 const iiifBaseUrl = 'https://www.artic.edu/iiif/2';
 const baseUrl = 'https://api.artic.edu/api/v1/artworks/search';
@@ -14,7 +14,6 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event);
 
   const query = getQuery(event);
-  console.log(query);
   const questionType = query.type;
   let numOfQuestions = 12;
   let styleCategory = 'Impressionism';
@@ -26,11 +25,18 @@ export default defineEventHandler(async (event) => {
   }
   console.log('Create Quiz for Category',styleCategory);
 
+  const numOfMCQs = Math.floor(numOfQuestions / 2);
+  const numOfWrongPictureQuestions = Math.floor((numOfQuestions - numOfMCQs) / 2);
+  const numOfCorrectPictureQuestions = numOfQuestions - numOfMCQs - numOfWrongPictureQuestions;
+
   const epochArtworks = await fetchExternalArtworks(numOfQuestions, styleCategory);
-  const otherEpochArtworks = await fetchExternalArtworks(10,'');
-  //const questions = await mcq.createQuestions(numOfQuestions, artworks, styleCategory);
-  const questions2 = await findTheWrongPicture.createFindTheWrongPictureQuestions(epochArtworks, otherEpochArtworks, styleCategory);
-  return questions2;
+  const otherEpochArtworks = await fetchExternalArtworks(numOfQuestions,'');
+  const mcqs = await mcq.createQuestions(numOfMCQs, epochArtworks, styleCategory);
+  const findWrongPictureQuestions = await findThePicture.createFindTheWrongPictureQuestions(epochArtworks, otherEpochArtworks, styleCategory, numOfWrongPictureQuestions);
+  const findCorrectPictureQuestions = await findThePicture.createFindTheCorrectPictureQuestions(epochArtworks, otherEpochArtworks, styleCategory, numOfCorrectPictureQuestions);
+  
+  const questions = [...mcqs, ...findWrongPictureQuestions, ...findCorrectPictureQuestions];
+
   const quiz = await saveQuiz(client, user.id, questions, styleCategory);
   const quizId = quiz[0].id;
   const quizItems = await db.fetchQuizItems(client, quizId);

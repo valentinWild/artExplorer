@@ -3,6 +3,7 @@
       <div class="container">
         <h1>{{ queryParams.style_category }}</h1>
         <UButton @click="initQuiz" class="button">Start new Quiz</UButton>
+        <QuestionsProgressBar :correct="correctAnswersCount" :incorrect="incorrectAnswersCount" :total="quizTotalItems"/>
   
         <QuestionsMCQ class="questionsMCQ"
             v-if="currentQuizItem?.type === 'mcq'"
@@ -14,15 +15,15 @@
             :current-question-index="currentQuizIndex"
         ></QuestionsMCQ>
 
-        <QuestionsFindTheWrongPicture class="findTheWrongPicture"
-        v-if="currentQuizItem?.type === 'find_the_wrong_picture'"
+        <QuestionsFindPicture class="questionsFindPicture"
+        v-if="currentQuizItem?.type === 'find_the_wrong_picture' || currentQuizItem?.type === 'find_the_correct_picture'"
         :quiz-data="currentQuizItem.content"
         @submit-item="handleItemSubmit"
         :question-answered="quizItemAnswered"
         :item-result="quizItemResult"
         :total-questions="quizTotalItems"
         :current-question-index="currentQuizIndex"
-      ></QuestionsFindTheWrongPicture>
+      ></QuestionsFindPicture>
 
         <div class="quiz-result" v-if="quizResultText">
           {{ quizResultText }}
@@ -39,7 +40,6 @@
 import { ref, onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import QuestionsMCQ from '../../components/Questions/MCQ.vue';
-import QuestionsFindTheWrongPicture from '../../components/Questions/FindTheWrongPicture.vue';
 
 
 const route = useRoute();
@@ -60,6 +60,8 @@ const quizItemAnswered = ref(false);
 const quizItemResult = ref();
 const quizTotalItems = ref(0);
 const quizScore = ref(0);
+const correctAnswersCount = ref(0);
+const incorrectAnswersCount = ref(0);
 const quizResultText = ref(null);
 
 onMounted(() => {
@@ -81,7 +83,7 @@ const fetchQuestions = async() => {
       quizTotalItems.value = quizData.value.length;
       console.log(quizData);
     }
-  }
+}
   
   const initQuiz = async () => {
     resetQuiz();
@@ -97,6 +99,8 @@ const fetchQuestions = async() => {
     currentQuizItem.value = null;
     quizItemAnswered.value = false;
     quizItemResult.value = null;
+    correctAnswersCount.value = 0;
+    incorrectAnswersCount.value = 0;
   }
   
   const handleItemSubmit = async (item) => {
@@ -118,12 +122,17 @@ const fetchQuestions = async() => {
     });
   
     if (data[0]?.answered === true) {
+      console.log(data[0]);
     quizItemAnswered.value = true;
-    console.log(data[0]);
     quizItemResult.value = data[0];
     quizScore.value += quizItemResult.value.points;
-      console.log(quizScore.value);
-      console.log(quizTotalItems.value);
+    if (quizItemResult.value.points > 0) {
+      correctAnswersCount.value ++;
+    } else {
+      incorrectAnswersCount.value ++;
+    }
+    console.log(quizScore.value);
+    console.log(quizTotalItems.value);
     }
   }
   
@@ -195,7 +204,8 @@ const generateUrl = () => {
     margin: 10px 0;
   }
   
-  .questionsMCQ {
+  .questionsMCQ,
+  .questionsFindPicture {
     background-color: rgb(255, 255, 255);
     margin: 20px auto;
     padding: 20px;

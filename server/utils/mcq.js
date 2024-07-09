@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import helpers from './helpers';
-import findTheWrongPicture from './findTheWrongPicture';
+import findTheWrongPicture from './findThePicture';
 
 const iiifBaseUrl = 'https://www.artic.edu/iiif/2';
 
@@ -9,8 +9,8 @@ const createQuestions = async (numOfQuestions, artworks, epoch) => {
       let selectedArtworks = helpers.getRandomItems(artworks, numOfQuestions);
       let questions = [];
 
-      // Erstellt 10 MCQ-Fragen
-      for (let i = 0; i < 10; i++) {
+      // Erstellt verschiedene MCQ-Fragen
+      for (let i = 0; i < numOfQuestions; i++) {
           if (i % 3 === 0) {
               questions.push(createMCQType1(selectedArtworks[i], selectedArtworks));
           } else if (i % 3 === 1) {
@@ -21,14 +21,8 @@ const createQuestions = async (numOfQuestions, artworks, epoch) => {
       }
 
       console.log('MCQ Questions:', questions);
-      
-       // Add 2 Find the Wrong Picture questions
-       const findTheWrongPictureQuestions = await findTheWrongPicture.createFindTheWrongPictureQuestions(artworks, epoch, 2);
-       questions = [...questions, ...findTheWrongPictureQuestions];
-
-       console.log('All Questions:', questions);
  
-       return questions;
+      return questions;
   
     } catch (error) {
       console.error('Fehler beim Abrufen der Fragen:', error);

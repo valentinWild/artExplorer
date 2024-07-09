@@ -80,7 +80,8 @@ const generateResultText = () => {
     resultClass.value = "correct";
   } else {
     correctAnswer.value = result.content.correct_answers.map(answer => answer.value).join(', ');
-    resultText.value = `Wrong! The correct answer is: ${correctAnswer.value}`;
+    const correctOptionIndex = options.value.findIndex(option => option.value === result.content.correct_answers[0].id) + 1;
+    resultText.value = `Wrong! The correct answer is: Picture ${correctOptionIndex}`;
     resultClass.value = "wrong";
   }
 }
@@ -95,15 +96,17 @@ const selectOption = (optionValue) => {
   <div class="questions-container">
     <img v-if="props.quizData.image_url" :src="props.quizData.image_url" alt="Quiz Image" class="quiz-image" />
     <div class="question-stem">{{ stem }}</div>
-    <div v-for="option in options" :key="option.value" class="option-container">
-      <UButton
-        class="option-button"
-        :class="{ 'selected': selected === option.value }"
-        @click="selectOption(option.value)"
-        :disabled="questionAnswered"
-      >
-        {{ option.label }}
-      </UButton>
+    <div class="options-wrapper">
+        <div v-for="option in options" :key="option.value" class="option-container">
+            <UButton
+                class="option-button"
+                :class="{ 'selected': selected === option.value }"
+                @click="selectOption(option.value)"
+                :disabled="questionAnswered"
+            >
+                <img :src="option.label" class="quiz-image">
+            </UButton>
+        </div>
     </div>
     <div class="result-container" :class="resultClass">
       <Icons v-if="resultClass === 'correct'" class="result-icon" type="happy" />
@@ -113,34 +116,49 @@ const selectOption = (optionValue) => {
   </div>
 </template>
 
-    <style scoped>
-    .quiz-image {
-    max-height: 500px;
+<style scoped>
+
+.quiz-image {
+    max-height: 300px;
     margin-bottom: 1px;
     align-self: center;
     border-radius: 10px;
-    }
+}
 
 .question-stem {
     text-align: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  color: #333;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.options-wrapper {
+    display: grid;
+    grid-template-columns: 50% 50%;
 }
 
 .option-container {
   margin-bottom: 8px;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
 }
 
 .option-button {
-  background-color: white;
-  color: #333;
-  border: 1px solid #bbb;
-  padding: 10px;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    color: #333;
+    border: 1px solid #bbb;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 .option-button:hover {
