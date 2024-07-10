@@ -95,6 +95,20 @@ const updateQuiz = async (client, quizId, fieldsToUpdate) => {
     return quizItems;
 }
 
+const getUserQuizData = async (client, userId) => {
+
+    const { data: quizzes, error } = await client
+        .from('quizzes')
+        .select("*")
+        .eq('owner', userId)
+        .not('finished', 'is', null);
+    if (error) {
+        console.error(error);
+        return new Error({'Error getting user data': error});
+    }
+    return quizzes;
+}
+
 
 
 export default {
@@ -106,4 +120,5 @@ export default {
     insertQuizItems,
     updateQuiz,
     insertQuiz,
+    getUserQuizData,
 };
