@@ -1,4 +1,5 @@
 <template>
+    <body>
     <div class="timeline-container">
       <h1>Sort the pictures in the correct chronological order:</h1>
       <div class="timeline">
@@ -43,12 +44,14 @@
       </div>
       <button v-if="showNextButton" @click="fetchImages" class="button">Next</button>
     </div>
+</body>
 </template>
 
 <script>
 import { defineComponent, reactive, onMounted } from 'vue'
 import Icons from '../components/Icons.vue'; 
 import axios from 'axios'; 
+import helpers from '../server/utils/helpers.js'; 
 
 const API_URL = 'https://api.artic.edu/api/v1/artworks/search';
 
@@ -73,26 +76,49 @@ export default defineComponent({
   methods: {
     async fetchImages() {
       try {
-        const randomSearchTerms = ['impressionism', 'renaissance', 'baroque', 'modernism'];
-        const randomTerm = randomSearchTerms[Math.floor(Math.random() * randomSearchTerms.length)];
-        const params = {
-          q: randomTerm, // suche
-          fields: 'id,title,image_id,artist_title,date_display',
-          limit: 4 
-        };
-        const response = await axios.get(API_URL, { params });
-        const artworks = response.data.data;
-        this.images = artworks.map((artwork, index) => ({
-          id: artwork.id,
-          src: `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`,
-          artist_title: artwork.artist_title,
-          date_display: artwork.date_display,
-          correct_order: index + 1 // reihenfolge
-        }));
+        const styles = ['impressionism', 'surrealism', 'renaissance', 'modernism', 'popart', '21century'];
+        const imagePromises = styles.map(style => this.fetchImageByStyle(style));
+        const imageResults = await Promise.all(imagePromises);
+
+        const selectedImages = helpers.getRandomItems(imageResults.flat(), 4); 
+        this.images = [];
+        for (let artwork of selectedImages) {
+          const src = `https://www.artic.edu/iiif/2/${artwork.image_id}/full/400,/0/default.jpg`;
+          const validImage = await this.isValidImage(src);
+          if (validImage) {
+            this.images.push({
+              id: artwork.id,
+              src,
+              artist_title: artwork.artist_title,
+              date_display: artwork.date_display,
+              correct_order: this.images.length + 1 //reihenfolge
+            });
+          }
+          if (this.images.length >= 4) break; 
+        }
+
+        helpers.shuffleArray(this.images); 
         this.dates = this.images.map(image => image.date_display);
         this.resetQuizState();
       } catch (error) {
         console.error('Error fetching images:', error);
+      }
+    },
+    async fetchImageByStyle(style) {
+      const params = {
+        q: style, 
+        fields: 'id,title,image_id,artist_title,date_display',
+        limit: 20 //anzahl Bilder zur Auswahl 
+      };
+      const response = await axios.get(API_URL, { params });
+      return response.data.data; 
+    },
+    async isValidImage(url) {
+      try {
+        await axios.get(url);
+        return true;
+      } catch (error) {
+        return false;
       }
     },
     selectImage(image) {
