@@ -41,12 +41,16 @@
         <Icons v-if="messageClass === 'message-error'" class="result-icon" type="sad" />
         {{ message }}
       </div>
+      <button v-if="showNextButton" @click="fetchImages" class="button">Next</button>
     </div>
-  </template>
+</template>
 
 <script>
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, reactive, onMounted } from 'vue'
 import Icons from '../components/Icons.vue'; 
+import axios from 'axios'; 
+
+const API_URL = 'https://api.artic.edu/api/v1/artworks/search';
 
 export default defineComponent({
   components: {
@@ -54,23 +58,43 @@ export default defineComponent({
   },
   data() {
     return {
-      dates: ['date_display1', 'date_display2', 'date_display3', 'date_display4'],
-      images: reactive([
-        { id: 1, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title1', period: 'Impressionismus', correct_order: 1 },
-        { id: 2, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title2', period: 'Impressionismus', correct_order: 2 },
-        { id: 3, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title3', period: 'Moderne', correct_order: 3 },
-        { id: 4, src: 'https://www.artic.edu/iiif/2/381b2912-9769-1e17-8145-0016368f0cc4/full/843,/0/default.jpg', artist_title: 'artist_title4', period: 'Impressionismus', correct_order: 4 },
-      ]),
+      dates: [],
+      images: reactive([]),
       selectedImage: null,
       selectedField: null,
       placedImages: reactive({}),
       checkStatus: false,
       showMessage: false,
       message: '',
-      messageClass: ''
+      messageClass: '',
+      showNextButton: false
     }
   },
   methods: {
+    async fetchImages() {
+      try {
+        const randomSearchTerms = ['impressionism', 'renaissance', 'baroque', 'modernism'];
+        const randomTerm = randomSearchTerms[Math.floor(Math.random() * randomSearchTerms.length)];
+        const params = {
+          q: randomTerm, // suche
+          fields: 'id,title,image_id,artist_title,date_display',
+          limit: 4 
+        };
+        const response = await axios.get(API_URL, { params });
+        const artworks = response.data.data;
+        this.images = artworks.map((artwork, index) => ({
+          id: artwork.id,
+          src: `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`,
+          artist_title: artwork.artist_title,
+          date_display: artwork.date_display,
+          correct_order: index + 1 // reihenfolge
+        }));
+        this.dates = this.images.map(image => image.date_display);
+        this.resetQuizState();
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      }
+    },
     selectImage(image) {
       this.selectedImage = image;
     },
@@ -94,15 +118,30 @@ export default defineComponent({
         this.showMessage = true;
         this.message = 'Correct order!';
         this.messageClass = 'message-success';
+        this.showNextButton = true;
       } else {
         this.showMessage = true;
         this.message = 'Wrong order, try again.';
         this.messageClass = 'message-error';
+        this.showNextButton = false;
       }
       setTimeout(() => {
         this.showMessage = false;
       }, 3000);
+    },
+    resetQuizState() {
+      this.selectedImage = null;
+      this.selectedField = null;
+      this.placedImages = reactive({});
+      this.checkStatus = false;
+      this.showNextButton = false;
+      this.showMessage = false;
+      this.message = '';
+      this.messageClass = '';
     }
+  },
+  mounted() {
+    this.fetchImages();
   }
 })
 </script>
@@ -188,6 +227,7 @@ h1 {
 .date .image-placeholder img {
   max-width: 100%;
   max-height: 100%;
+  height: 100%; 
 }
 
 .timeline-line {
@@ -239,7 +279,7 @@ h1 {
 
 .image img {
   max-width: 100%;
-  height: auto;
+  height: 200px;
   border-radius: 5px;
 }
 
@@ -280,6 +320,3 @@ h1 {
   font-size: 20px; 
 }
 </style>
-
-
-  
