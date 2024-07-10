@@ -3,8 +3,9 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid'
 import { serverSupabaseClient } from '#supabase/server'
 import { serverSupabaseUser } from '#supabase/server'
-import mcq from '../utils/mcq';
 import findThePicture from '../utils/findThePicture';
+import textQuestion from '../utils/textQuestion';
+import mcq from '../utils/mcq'; 
 
 const iiifBaseUrl = 'https://www.artic.edu/iiif/2';
 const baseUrl = 'https://api.artic.edu/api/v1/artworks/search';
@@ -25,19 +26,25 @@ export default defineEventHandler(async (event) => {
   }
   console.log('Create Quiz for Category',styleCategory);
 
-  const numOfMCQs = Math.floor(numOfQuestions / 2);
-  const numOfWrongPictureQuestions = Math.floor((numOfQuestions - numOfMCQs) / 2);
-  const numOfCorrectPictureQuestions = numOfQuestions - numOfMCQs - numOfWrongPictureQuestions;
+  const numOfMCQs = Math.floor(numOfQuestions / 3);
+  const numOfTextQuestions = numOfMCQs;
+  const numOfWrongPictureQuestions = Math.floor((numOfQuestions - numOfMCQs - numOfTextQuestions) / 2);
+  const numOfCorrectPictureQuestions = numOfQuestions - numOfMCQs - numOfTextQuestions - numOfWrongPictureQuestions;
 
   const epochArtworks = await fetchExternalArtworks(numOfQuestions, styleCategory);
   const otherEpochArtworks = await fetchExternalArtworks(numOfQuestions,'');
   console.log('Fetched external Artworks');
 
-  const mcqs = await mcq.createQuestions(numOfMCQs, epochArtworks, styleCategory);
   const findWrongPictureQuestions = await findThePicture.createFindTheWrongPictureQuestions(epochArtworks, otherEpochArtworks, styleCategory, numOfWrongPictureQuestions);
+  console.log('Created findWrongPictureQuestions');
   const findCorrectPictureQuestions = await findThePicture.createFindTheCorrectPictureQuestions(epochArtworks, otherEpochArtworks, styleCategory, numOfCorrectPictureQuestions);
+  console.log('Created findCorrectPictureQuestions');
+  const mcqs = await mcq.createMCQuestions(numOfMCQs, epochArtworks, styleCategory);
+  console.log('Created MCQs');
+  const textQuestions = await textQuestion.createTextQuestions(styleCategory, numOfTextQuestions);
+  console.log('Created text questions');
   
-  const questions = [...mcqs, ...findWrongPictureQuestions, ...findCorrectPictureQuestions];
+  const questions = [...mcqs, ...findWrongPictureQuestions, ...findCorrectPictureQuestions, ...textQuestions];
   console.log('Created questions');
 
   const quiz = await saveQuiz(client, user.id, questions, styleCategory);
@@ -47,11 +54,13 @@ export default defineEventHandler(async (event) => {
   // Remove the correct answers (so they are not exposed to frontend)
   const userQuizItems = quizItems.map(item => {
     const { content, ...rest } = item;
-    delete content.correct_answers;
+    if (content.correct_answers) {
+      delete content.correct_answers;
+    }
     return { ...rest, content };
   });
 
-  return userQuizItems;
+  return helpers.shuffleArray(userQuizItems);
   return quizItems;
   
 });

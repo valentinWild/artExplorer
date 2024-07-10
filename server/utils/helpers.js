@@ -8,7 +8,7 @@ const shuffleArray = (array) => {
     return shuffledArray;
 }
 
-const getRandomItems = (items, amount) => {
+const getRandomItemsOld = (items, amount) => {
     const randomItems = [];
     const totalItems = items.length;
   
@@ -28,6 +28,25 @@ const getRandomItems = (items, amount) => {
   
     return randomItems;
   };
+
+const getRandomItems = (array, numItems) => {
+  // Check if numItems is valid
+  if (numItems < 0 || numItems > array.length) {
+      throw new RangeError("numItems must be between 0 and the length of the array");
+  }
+
+  // Create a copy of the array to avoid modifying the original array
+  const arrCopy = array.slice();
+
+  // Fisher-Yates shuffle
+  for (let i = arrCopy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arrCopy[i], arrCopy[j]] = [arrCopy[j], arrCopy[i]];
+  }
+
+  // Return the first numItems elements from the shuffled array
+  return arrCopy.slice(0, numItems);
+}
 
 
 export default {

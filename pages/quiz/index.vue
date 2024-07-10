@@ -16,14 +16,22 @@
         ></QuestionsMCQ>
 
         <QuestionsFindPicture class="questionsFindPicture"
-        v-if="currentQuizItem?.type === 'find_the_wrong_picture' || currentQuizItem?.type === 'find_the_correct_picture'"
-        :quiz-data="currentQuizItem.content"
-        @submit-item="handleItemSubmit"
-        :question-answered="quizItemAnswered"
-        :item-result="quizItemResult"
-        :total-questions="quizTotalItems"
-        :current-question-index="currentQuizIndex"
-      ></QuestionsFindPicture>
+            v-if="currentQuizItem?.type === 'find_the_wrong_picture' || currentQuizItem?.type === 'find_the_correct_picture'"
+            :quiz-data="currentQuizItem.content"
+            @submit-item="handleItemSubmit"
+            :question-answered="quizItemAnswered"
+            :item-result="quizItemResult"
+            :total-questions="quizTotalItems"
+            :current-question-index="currentQuizIndex"
+        ></QuestionsFindPicture>
+
+        <QuestionsTextQuestion class="questionsText"
+          v-if="currentQuizItem?.type === 'text_question'"
+          :quiz-data="currentQuizItem.content"
+          @submit-item="handleItemSubmit"
+          :question-answered="quizItemAnswered"
+          :item-result="quizItemResult"
+        ></QuestionsTextQuestion>
 
         <div class="quiz-result" v-if="quizResultText">
           {{ quizResultText }}
@@ -111,28 +119,33 @@ const fetchQuestions = async() => {
         "type": currentQuizItem.value.type,
         "quiz_id": quizId.value,
         "answer_ids": [],
+        "answer_text": "",
       }
     };
-    body.item.answer_ids.push(item);
+
+    if (currentQuizItem.value.type === "text_question") {
+      body.item.answer_text = item;  
+    } else {
+      body.item.answer_ids.push(item);
+    }
   
     const data = await $fetch(submitItemQuery, {
       method: 'POST',
       headers: useRequestHeaders(['cookie']),
       body: body,
     });
+
+    console.log(data[0]);
   
     if (data[0]?.answered === true) {
-      console.log(data[0]);
-    quizItemAnswered.value = true;
-    quizItemResult.value = data[0];
-    quizScore.value += quizItemResult.value.points;
-    if (quizItemResult.value.points > 0) {
-      correctAnswersCount.value ++;
-    } else {
-      incorrectAnswersCount.value ++;
-    }
-    console.log(quizScore.value);
-    console.log(quizTotalItems.value);
+      quizItemAnswered.value = true;
+      quizItemResult.value = data[0];
+      quizScore.value += quizItemResult.value.points;
+      if (quizItemResult.value.points > 0.5) {
+        correctAnswersCount.value ++;
+      } else {
+        incorrectAnswersCount.value ++;
+      }
     }
   }
   
@@ -205,7 +218,8 @@ const generateUrl = () => {
   }
   
   .questionsMCQ,
-  .questionsFindPicture {
+  .questionsFindPicture,
+  .questionsText {
     background-color: rgb(255, 255, 255);
     margin: 20px auto;
     padding: 20px;

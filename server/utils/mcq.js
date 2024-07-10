@@ -1,12 +1,11 @@
 import { v4 as uuidv4 } from 'uuid'
 import helpers from './helpers';
-import findTheWrongPicture from './findThePicture';
 
 const iiifBaseUrl = 'https://www.artic.edu/iiif/2';
 
-const createQuestions = async (numOfQuestions, artworks, epoch) => {
+const createMCQuestions = async (numOfQuestions, artworks, epoch) => {
   try {
-      let selectedArtworks = helpers.getRandomItems(artworks, numOfQuestions);
+      let selectedArtworks = helpers.getRandomItems(artworks, numOfQuestions*2);
       let questions = [];
 
       // Erstellt verschiedene MCQ-Fragen
@@ -19,8 +18,6 @@ const createQuestions = async (numOfQuestions, artworks, epoch) => {
               questions.push(createMCQType3(selectedArtworks[i], selectedArtworks));
           }
       }
-
-      console.log('MCQ Questions:', questions);
  
       return questions;
   
@@ -31,6 +28,7 @@ const createQuestions = async (numOfQuestions, artworks, epoch) => {
   };
   
   const createMCQType1 = (artwork, selectedArtworks) => {
+    console.log('create mcq type 1');
     const correctAnswerId = uuidv4();
     return {
       type: 'mcq',
@@ -46,6 +44,7 @@ const createQuestions = async (numOfQuestions, artworks, epoch) => {
   }
   
   const createMCQType2 = (artwork, selectedArtworks) => {
+    console.log('create mcq type 2');
     const correctAnswerId = uuidv4();
     return {
       type: 'mcq',
@@ -62,6 +61,7 @@ const createQuestions = async (numOfQuestions, artworks, epoch) => {
   }
   
   const createMCQType3 = (artwork, selectedArtworks) => {
+    console.log('create mcq type 3');
     const correctAnswerId = uuidv4();
     return {
       type: 'mcq',
@@ -106,8 +106,12 @@ const createAnswers = (artworks, amount, fieldName, correctAnswer, correctAnswer
     return shuffledAnswers;
 };
 
+const test = async(string) => {
+  console.log(string);
+}
 
 
 export default {
-    createQuestions,
+    test,
+    createMCQuestions,
 };
