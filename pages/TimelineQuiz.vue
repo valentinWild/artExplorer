@@ -213,8 +213,8 @@ h1 {
 }
 
 .date {
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   background-color: #4a5568;
   padding: 10px;
   border-radius: 5px;
@@ -251,9 +251,9 @@ h1 {
 }
 
 .date .image-placeholder img {
-  max-width: 100%;
-  max-height: 100%;
-  height: 100%; 
+    max-width: 100%;
+  height: 200px;
+  border-radius: 5px;
 }
 
 .timeline-line {
