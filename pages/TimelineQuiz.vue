@@ -13,7 +13,8 @@
             @click="selectField(index)"
           >
             <div v-if="placedImages[index]" class="image-placeholder">
-              <img :src="placedImages[index].src" :alt="placedImages[index].artist_title">
+              <img :src="placedImages[index].src" :alt="placedImages[index].title">
+              <p class="image-info">{{ placedImages[index].title }} - {{ placedImages[index].artist_title }}</p>
             </div>
             <div v-else class="placeholder"></div>
           </div>
@@ -35,25 +36,31 @@
           :class="{'selected': selectedImage === image}"
           @click="selectImage(image)"
         >
-          <img :src="image.src" :alt="image.artist_title">
-          <p>{{ image.artist_title }}</p>
+          <img :src="image.src" :alt="image.title">
+          <p class="image-info">{{ image.title }} - {{ image.artist_title }}</p>
         </div>
       </div>
-      <button @click="checkOrder" class="button">Done</button>
+      <button v-if="!showNextButton" @click="checkOrder" class="button">Done</button>
+      <button v-if="showNextButton" @click="fetchImages" class="button">Next</button>
       <div v-if="showMessage" :class="['message', messageClass]">
         <Icons v-if="messageClass === 'message-success'" class="result-icon" type="happy" />
         <Icons v-if="messageClass === 'message-error'" class="result-icon" type="sad" />
         {{ message }}
+        <div v-if="messageClass === 'message-error'" class="correct-order">
+          <p>The correct order is:</p>
+          <ul>
+            <li v-for="date in sortedDates" :key="date.id"><strong>{{ date.date_display }}:</strong> {{ date.title }} - {{ date.artist_title }}</li>
+          </ul>
+        </div>
       </div>
-      <button v-if="showNextButton" @click="fetchImages" class="button">Next</button>
     </div>
   </template>
   
   <script>
-  import { defineComponent, reactive, onMounted, computed } from 'vue'
-  import Icons from '../components/Icons.vue'; 
-  import axios from 'axios'; 
-  import helpers from '../server/utils/helpers.js'; 
+  import { defineComponent, reactive, onMounted, computed } from 'vue';
+  import Icons from '../components/Icons.vue';
+  import axios from 'axios';
+  import helpers from '../server/utils/helpers.js';
   
   const API_URL = 'https://api.artic.edu/api/v1/artworks/search';
   
@@ -73,7 +80,7 @@
         message: '',
         messageClass: '',
         showNextButton: false
-      }
+      };
     },
     computed: {
       sortedDates() {
@@ -91,8 +98,23 @@
           const imagePromises = styles.map(style => this.fetchImageByStyle(style));
           const imageResults = await Promise.all(imagePromises);
   
-          const selectedImages = helpers.getRandomItems(imageResults.flat(), 4); 
+          let filteredImages = imageResults.flat().filter(image => image.title && image.artist_title && image.date_display.match(/\d{4}/));
+          filteredImages = this.shuffleArray(filteredImages); // random images 
+  
+          const uniqueYears = new Set();
+          const selectedImages = [];
+  
+          for (let artwork of filteredImages) {
+            let year = artwork.date_display.match(/\d{4}/);
+            if (year && !uniqueYears.has(year[0])) {
+              uniqueYears.add(year[0]);
+              selectedImages.push(artwork);
+              if (selectedImages.length >= 4) break;
+            }
+          }
+  
           this.images = [];
+          let validImageCount = 0;
           for (let artwork of selectedImages) {
             const src = `https://www.artic.edu/iiif/2/${artwork.image_id}/full/400,/0/default.jpg`;
             const validImage = await this.isValidImage(src);
@@ -100,28 +122,38 @@
               this.images.push({
                 id: artwork.id,
                 src,
+                title: artwork.title,
                 artist_title: artwork.artist_title,
-                date_display: artwork.date_display,
+                date_display: this.cleanDateDisplay(artwork.date_display),
               });
+              validImageCount++;
             }
-            if (this.images.length >= 4) break; 
+            if (validImageCount >= 4) break;
           }
   
-          helpers.shuffleArray(this.images); 
-          this.dates = this.images.map(image => ({ id: image.id, date_display: image.date_display }));
+          helpers.shuffleArray(this.images);
+          this.dates = this.images.map(image => ({
+            id: image.id,
+            date_display: image.date_display,
+            title: image.title,
+            artist_title: image.artist_title
+          }));
           this.resetQuizState();
         } catch (error) {
           console.error('Error fetching images:', error);
+          this.message = 'Error fetching images, please try again later.';
+          this.messageClass = 'message-error';
+          this.showMessage = true;
         }
       },
       async fetchImageByStyle(style) {
         const params = {
-          q: style, 
+          q: style,
           fields: 'id,title,image_id,artist_title,date_display',
-          limit: 20 
+          limit: 50 
         };
         const response = await axios.get(API_URL, { params });
-        return response.data.data; 
+        return response.data.data;
       },
       async isValidImage(url) {
         try {
@@ -159,13 +191,15 @@
           this.showNextButton = true;
         } else {
           this.showMessage = true;
-          this.message = 'Wrong order, try again.';
+          this.message = 'Wrong order.';
           this.messageClass = 'message-error';
-          this.showNextButton = false;
+          this.showNextButton = true; 
         }
-        setTimeout(() => {
-          this.showMessage = false;
-        }, 3000);
+      },
+      cleanDateDisplay(dateDisplay) {
+        return dateDisplay
+          .replace(/(modeled|designed|cast|painted|sculpted|created|photographed|published|printed|rebuilt|restored)\s*/gi, '')
+          .replace('c. ', '');
       },
       resetQuizState() {
         this.selectedImage = null;
@@ -176,12 +210,19 @@
         this.showMessage = false;
         this.message = '';
         this.messageClass = '';
+      },
+      shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
       }
     },
     mounted() {
       this.fetchImages();
     }
-  })
+  });
   </script>
   
   <style scoped>
@@ -193,7 +234,7 @@
   }
   
   .timeline-container {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 20px;
     text-align: center;
@@ -225,8 +266,8 @@
   }
   
   .date {
-    width: 220px;
-    height: 220px;
+    width: 250px;
+    height: 300px;
     background-color: #4a5568;
     padding: 10px;
     border-radius: 5px;
@@ -262,15 +303,27 @@
     align-items: center;
   }
   
+  .date .image-placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
   .date .image-placeholder img {
     max-width: 100%;
     height: 200px;
     border-radius: 5px;
   }
   
+  .date .image-placeholder p {
+    margin: 5px 0;
+    font-size: smaller;
+  }
+  
   .timeline-line {
     width: 100%;
-    height: 20px;
+    height: 30px;
     margin-top: 10px;
   }
   
@@ -287,7 +340,7 @@
     color: #e2e8f0;
     font-weight: bold;
     margin-top: 5px;
-    width: 220px;
+    width: 250px;
     text-align: center;
   }
   
@@ -295,17 +348,16 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin-top: 10px;
+    margin-top: 20px;
   }
   
   .image {
-    width: 220px;
+    width: 250px;
     text-align: center;
-    padding: 10px;
+    padding: 8px;
     background-color: #4a5568;
     border-radius: 5px;
     cursor: pointer;
-    margin: 5px;
     transition: border 0.3s, background-color 0.3s;
     color: #e2e8f0;
     
@@ -327,6 +379,11 @@
     border-radius: 5px;
   }
   
+  .image .image-info {
+    margin: 5px 0;
+    font-size: smaller;
+  }
+  
   .button {
     border: none;
     padding: 10px 20px;
@@ -346,6 +403,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column; 
   }
   
   .message-success {
@@ -356,6 +414,15 @@
   .message-error {
     background-color: lightcoral;
     color: #2d3748;
+  }
+  
+  .correct-order {
+    margin-top: 10px;
+    text-align: left;
+  }
+  
+  .correct-order strong {
+    font-weight: bold;
   }
   
   .result-icon {
