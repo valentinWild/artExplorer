@@ -38,7 +38,7 @@ const calculatePercentages = () => {
     const totalScore = props.userData
       .filter(quiz => quiz.style_category === set)
       .reduce((acc, quiz) => acc + quiz.score, 0);
-    const percentage = totalQuizzes ? (totalScore / (totalQuizzes * 10)) * 100 : 0;
+    const percentage = totalQuizzes ? (totalScore / totalQuizzes) * 100 : 0;
     return {
       name: set,
       percentage: percentage.toFixed(2),
