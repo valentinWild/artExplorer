@@ -268,12 +268,11 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 10px; /* Add margin between date containers */
 }
 
 .date {
   width: 250px;
-  height: 300px;
+  height: 270px;
   background-color: #4a5568;
   padding: 10px;
   border-radius: 5px;
@@ -286,6 +285,7 @@ h1 {
   transition: background-color 0.3s;
   position: relative;
   margin-bottom: 5px;
+  margin: 0 10px; 
 }
 
 .date.selected {
@@ -348,6 +348,7 @@ h1 {
   margin-top: 5px;
   width: 250px;
   text-align: center;
+  margin: 0 10px;
 }
 
 .images {
@@ -366,7 +367,7 @@ h1 {
   cursor: pointer;
   transition: border 0.3s, background-color 0.3s;
   color: #e2e8f0;
-  margin: 0 10px; /* Add margin between images */
+
   
   display: flex;
   flex-direction: column;
