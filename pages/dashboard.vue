@@ -10,6 +10,10 @@
     :user-data="userData"
 ></DashboardCalender>
 
+<DashboardQuizCalendar
+    :user-data="userData"
+></DashboardQuizCalendar>
+
 </template>
 
 <script setup>
