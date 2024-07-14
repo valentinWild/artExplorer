@@ -3,8 +3,8 @@
     <h1>Sort the pictures in the correct chronological order:</h1>
     <div class="timeline">
       <div class="date-container" v-for="(date, index) in sortedDates" :key="date.id">
-        <div 
-          class="date" 
+        <div
+          class="date"
           :class="{
             'selected': selectedField === index,
             'correct': checkStatus && placedImages[index] && placedImages[index].id === date.id,
@@ -25,13 +25,13 @@
     </div>
     <svg class="timeline-line" viewBox="0 0 100 10" preserveAspectRatio="none">
       <line x1="0" y1="5" x2="100" y2="5" stroke="white" stroke-width="0.5"/>
-      <polygon points="95,3 100,5 95,7" fill="white" />
-      <polygon points="5,3 0,5 5,7" fill="white" />
+      <polygon points="95,3 100,5 95,7" fill="white"/>
+      <polygon points="5,3 0,5 5,7" fill="white"/>
     </svg>
     <div class="images">
-      <div 
-        class="image" 
-        v-for="image in images" 
+      <div
+        class="image"
+        v-for="image in images"
         :key="image.id"
         :class="{'selected': selectedImage === image}"
         @click="selectImage(image)"
@@ -41,10 +41,10 @@
       </div>
     </div>
     <button v-if="!showNextButton" @click="checkOrder" class="button">Done</button>
-    <button v-if="showNextButton" @click="fetchImages" class="button">Next</button>
+    <button v-if="showNextButton" @click="nextQuiz" class="button">Next</button>
     <div v-if="showMessage" :class="['message', messageClass]">
-      <Icons v-if="messageClass === 'message-success'" class="result-icon" type="happy" />
-      <Icons v-if="messageClass === 'message-error'" class="result-icon" type="sad" />
+      <Icons v-if="messageClass === 'message-success'" class="result-icon" type="happy"/>
+      <Icons v-if="messageClass === 'message-error'" class="result-icon" type="sad"/>
       {{ message }}
       <div v-if="messageClass === 'message-error'" class="correct-order">
         <p>The correct order is:</p>
@@ -94,12 +94,11 @@ export default defineComponent({
   methods: {
     async fetchImages() {
       try {
-        const styles = ['impressionism', 'surrealism', 'renaissance', 'modernism', 'popart', '21century'];
-        const imagePromises = styles.map(style => this.fetchImageByStyle(style));
-        const imageResults = await Promise.all(imagePromises);
+        const styleCategory = this.$route.query.style_category || 'impressionism'; // Default style category
+        const imageResults = await this.fetchImageByStyle(styleCategory);
 
-        let filteredImages = imageResults.flat().filter(image => image.title && image.artist_title && image.date_display.match(/\d{4}/));
-        filteredImages = this.shuffleArray(filteredImages); // random images 
+        let filteredImages = imageResults.filter(image => image.title && image.artist_title && image.date_display.match(/\d{4}/));
+        filteredImages = this.shuffleArray(filteredImages);
 
         const uniqueYears = new Set();
         const selectedImages = [];
@@ -132,6 +131,9 @@ export default defineComponent({
         }
 
         helpers.shuffleArray(this.images);
+        if (this.images.length < 4) {
+          throw new Error('Not enough valid images to create a quiz.');
+        }
         this.dates = this.images.map(image => ({
           id: image.id,
           date_display: image.date_display,
@@ -150,7 +152,7 @@ export default defineComponent({
       const params = {
         q: style,
         fields: 'id,title,image_id,artist_title,date_display',
-        limit: 50 
+        limit: 50
       };
       const response = await axios.get(API_URL, { params });
       return response.data.data;
@@ -193,8 +195,11 @@ export default defineComponent({
         this.showMessage = true;
         this.message = 'Wrong order.';
         this.messageClass = 'message-error';
-        this.showNextButton = true; 
+        this.showNextButton = true;
       }
+    },
+    nextQuiz() {
+      this.$emit('next-quiz');
     },
     cleanDateDisplay(dateDisplay) {
       return dateDisplay
@@ -263,6 +268,7 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 10px; /* Add margin between date containers */
 }
 
 .date {
@@ -360,6 +366,7 @@ h1 {
   cursor: pointer;
   transition: border 0.3s, background-color 0.3s;
   color: #e2e8f0;
+  margin: 0 10px; /* Add margin between images */
   
   display: flex;
   flex-direction: column;
@@ -431,3 +438,5 @@ h1 {
   font-size: 20px; 
 }
 </style>
+
+

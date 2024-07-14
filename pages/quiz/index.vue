@@ -207,7 +207,7 @@ const fetchQuestions = async() => {
   .container {
     background-color: #121421;
     color: #ffffff;
-    max-width: 800px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 20px;
     display: flex;
@@ -241,3 +241,4 @@ const fetchQuestions = async() => {
     border-radius: 10px;
   }
   </style>
+
