@@ -43,6 +43,8 @@ const chartData = ref({
       backgroundColor: 'rgba(54, 162, 235, 0.2)',
       borderColor: 'rgba(54, 162, 235, 1)',
       borderWidth: 1,
+      pointRadius: 3, // Ensure points are visible
+      pointHoverRadius: 5,
       data: [],
     },
   ],
@@ -111,21 +113,6 @@ const updateChart = () => {
     chartData.value.datasets[0].data = data;
     chartData.value.datasets[0].label = 'Quiz Scores';
   }
-
-  // Ensure the Y-axis options are updated
-  chartOptions.value = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      y: {
-        min: 0,
-        max: 1,
-        ticks: {
-          stepSize: 0.2,
-        },
-      },
-    },
-  };
 };
 
 watch(
@@ -163,6 +150,7 @@ select {
 .chart-container {
   width: 800px;
   height: 400px;
+  min-height: 400px; /* Ensure a minimum height */
   position: relative;
 }
 
