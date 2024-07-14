@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h3>Quiz Calendar</h3>
+      <h3>My Contributions</h3>
       <div>
         <label for="year-select">Select Year:</label>
         <select id="year-select" v-model="selectedYear" @change="initCalendar">
@@ -18,7 +18,7 @@
                     class="day" 
                     v-for="day in week.days" 
                     :key="day.date" 
-                    :class="getScoreClass(day.score)"
+                    :class="getQuizCountClass(day.quizCount)"
                     @mouseover="showTooltip(day)" 
                     @mouseleave="hideTooltip"
                   ></div>
@@ -31,21 +31,21 @@
       <div class="legend">
         <div class="legend-item">
           <div class="color-box light-green"></div>
-          <span>0 ≤ Score < 0.4</span>
+          <span>0 ≤ Quizzes < 5</span>
         </div>
         <div class="legend-item">
           <div class="color-box middle-green"></div>
-          <span>0.4 ≤ Score < 0.8</span>
+          <span>5 ≤ Quizzes < 10</span>
         </div>
         <div class="legend-item">
           <div class="color-box dark-green"></div>
-          <span>0.8 ≤ Score ≤ 1</span>
+          <span>10+ Quizzes</span>
         </div>
       </div>
       <div v-if="tooltip.visible" class="tooltip" :style="{ top: tooltip.y + 'px', left: tooltip.x + 'px' }">
         <div>{{ tooltip.date }}</div>
-        <div v-if="tooltip.score !== null">Score: {{ tooltip.score }}</div>
-        <div v-else>No Quiz</div>
+        <div v-if="tooltip.quizCount !== null">Quizzes: {{ tooltip.quizCount }}</div>
+        <div v-else>No Quizzes</div>
       </div>
     </div>
   </template>
@@ -81,7 +81,7 @@
   const tooltip = ref({
     visible: false,
     date: '',
-    score: null,
+    quizCount: null,
     x: 0,
     y: 0
   });
@@ -97,7 +97,7 @@
         week = { index: week.index + 1, days: [] };
       }
   
-      week.days.push({ date: new Date(date), score: null });
+      week.days.push({ date: new Date(date), quizCount: 0 });
       date.setDate(date.getDate() + 1);
     }
   
@@ -112,14 +112,14 @@
     months.value.forEach((month, index) => {
       month.weeks = getWeeksInMonth(index, selectedYear.value);
     });
-    updateScores();
+    updateQuizCounts();
   };
   
-  const updateScores = () => {
+  const updateQuizCounts = () => {
     months.value.forEach(month => {
       month.weeks.forEach(week => {
         week.days.forEach(day => {
-          day.score = null;
+          day.quizCount = 0;
         });
       });
     });
@@ -132,7 +132,7 @@
         month.weeks.forEach(week => {
           week.days.forEach(day => {
             if (day.date.toDateString() === date.toDateString()) {
-              day.score = quiz.score;
+              day.quizCount += 1;
             }
           });
         });
@@ -140,17 +140,17 @@
     });
   };
   
-  const getScoreClass = (score) => {
-    if (score === null) return '';
-    if (score < 0.4) return 'light-green';
-    if (score < 0.8) return 'middle-green';
+  const getQuizCountClass = (quizCount) => {
+    if (quizCount === 0) return '';
+    if (quizCount < 5) return 'light-green';
+    if (quizCount < 10) return 'middle-green';
     return 'dark-green';
   };
   
   const showTooltip = (day) => {
     tooltip.value.visible = true;
     tooltip.value.date = day.date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    tooltip.value.score = day.score;
+    tooltip.value.quizCount = day.quizCount;
     tooltip.value.x = event.clientX + 10;
     tooltip.value.y = event.clientY + 10;
   };

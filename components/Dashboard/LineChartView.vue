@@ -1,5 +1,5 @@
 <template>
-  <h3>Calender</h3>
+  <h3>Scores Chart</h3>
   <div>
     <label for="month-select">Select Month:</label>
     <select id="month-select" v-model="selectedMonth" @change="updateChart">

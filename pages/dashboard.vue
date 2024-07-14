@@ -6,9 +6,9 @@
     :user-data="userData"
 ></DashboardQuizCounter>
 
-<DashboardCalender
+<DashboardLineChartView
     :user-data="userData"
-></DashboardCalender>
+></DashboardLineChartView>
 
 <DashboardQuizCalendar
     :user-data="userData"
