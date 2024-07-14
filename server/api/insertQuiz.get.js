@@ -25,5 +25,5 @@ export default defineEventHandler(async (event) => {
     if (error2) {
         return error2
     } else return quiz;
-
+    
 });
