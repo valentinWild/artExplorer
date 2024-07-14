@@ -94,11 +94,21 @@ export default defineComponent({
   methods: {
     async fetchImages() {
       try {
-        const styleCategory = this.$route.query.style_category || 'impressionism'; // Default style category
-        const imageResults = await this.fetchImageByStyle(styleCategory);
+        // all styles mix:
+        const styles = ['impressionism', 'surrealism', 'renaissance', 'modernism', 'popart', '21century'];
+        const imagePromises = styles.map(style => this.fetchImageByStyle(style));
+        const imageResults = await Promise.all(imagePromises);
 
-        let filteredImages = imageResults.filter(image => image.title && image.artist_title && image.date_display.match(/\d{4}/));
-        filteredImages = this.shuffleArray(filteredImages);
+        let filteredImages = imageResults.flat().filter(image => image.title && image.artist_title && image.date_display.match(/\d{4}/));
+        filteredImages = this.shuffleArray(filteredImages); // random images
+
+
+        //only one style:
+        // const styleCategory = this.$route.query.style_category || 'impressionism'; // Default style category
+        // const imageResults = await this.fetchImageByStyle(styleCategory);
+
+        // let filteredImages = imageResults.filter(image => image.title && image.artist_title && image.date_display.match(/\d{4}/));
+        // filteredImages = this.shuffleArray(filteredImages);
 
         const uniqueYears = new Set();
         const selectedImages = [];
