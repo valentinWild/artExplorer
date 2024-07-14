@@ -8,6 +8,16 @@
       </option>
     </select>
   </div>
+  <div>
+    <label>
+      <input type="radio" v-model="viewMode" value="average" @change="updateChart">
+      Average Scores
+    </label>
+    <label>
+      <input type="radio" v-model="viewMode" value="all" @change="updateChart">
+      All Scores
+    </label>
+  </div>
   <div class="chart-container">
     <line-chart :chart-data="chartData" :options="chartOptions"></line-chart>
   </div>
@@ -29,7 +39,7 @@ const chartData = ref({
   labels: [],
   datasets: [
     {
-      label: 'Average Quiz Scores',
+      label: 'Quiz Scores',
       backgroundColor: 'rgba(54, 162, 235, 0.2)',
       borderColor: 'rgba(54, 162, 235, 1)',
       borderWidth: 1,
@@ -38,7 +48,7 @@ const chartData = ref({
   ],
 });
 
-const chartOptions = {
+const chartOptions = ref({
   responsive: true,
   maintainAspectRatio: false,
   scales: {
@@ -46,13 +56,15 @@ const chartOptions = {
       min: 0,
       max: 1,
       ticks: {
-        stepSize: 0.1,
+        stepSize: 0.2,
       },
     },
   },
-};
+});
 
 const selectedMonth = ref(new Date().getMonth() + 1);
+const viewMode = ref('average'); // Toggle between 'average' and 'all'
+
 const months = [
   { value: 1, text: 'January' },
   { value: 2, text: 'February' },
@@ -74,21 +86,46 @@ const updateChart = () => {
     return quizDate.getMonth() + 1 === selectedMonth.value;
   });
 
-  const groupedData = filteredData.reduce((acc, quiz) => {
-    const date = new Date(quiz.created_at).toLocaleDateString();
-    if (!acc[date]) {
-      acc[date] = { totalScore: 0, count: 0 };
-    }
-    acc[date].totalScore += quiz.score;
-    acc[date].count += 1;
-    return acc;
-  }, {});
+  if (viewMode.value === 'average') {
+    const groupedData = filteredData.reduce((acc, quiz) => {
+      const date = new Date(quiz.created_at).toLocaleDateString();
+      if (!acc[date]) {
+        acc[date] = { totalScore: 0, count: 0 };
+      }
+      acc[date].totalScore += quiz.score;
+      acc[date].count += 1;
+      return acc;
+    }, {});
 
-  const labels = Object.keys(groupedData);
-  const data = labels.map(date => (groupedData[date].totalScore / groupedData[date].count).toFixed(2));
+    const labels = Object.keys(groupedData);
+    const data = labels.map(date => (groupedData[date].totalScore / groupedData[date].count).toFixed(2));
 
-  chartData.value.labels = labels;
-  chartData.value.datasets[0].data = data;
+    chartData.value.labels = labels;
+    chartData.value.datasets[0].data = data;
+    chartData.value.datasets[0].label = 'Average Quiz Scores';
+  } else {
+    const labels = filteredData.map(quiz => new Date(quiz.created_at).toLocaleDateString());
+    const data = filteredData.map(quiz => quiz.score.toFixed(2));
+
+    chartData.value.labels = labels;
+    chartData.value.datasets[0].data = data;
+    chartData.value.datasets[0].label = 'Quiz Scores';
+  }
+
+  // Ensure the Y-axis options are updated
+  chartOptions.value = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        min: 0,
+        max: 1,
+        ticks: {
+          stepSize: 0.2,
+        },
+      },
+    },
+  };
 };
 
 watch(
@@ -101,6 +138,13 @@ watch(
 
 watch(
   () => selectedMonth.value,
+  () => {
+    updateChart();
+  }
+);
+
+watch(
+  () => viewMode.value,
   () => {
     updateChart();
   }
@@ -118,14 +162,12 @@ select {
 
 .chart-container {
   width: 800px;
-  height: 200px;
-  overflow-x: scroll;
-  overflow-y: hidden;
+  height: 400px;
   position: relative;
 }
 
 .chart-container canvas {
-  width: 1000px !important; /* or a dynamic value based on the number of data points */
+  width: 100% !important;
   height: 100% !important;
 }
 </style>
