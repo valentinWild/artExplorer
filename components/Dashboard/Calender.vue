@@ -8,7 +8,9 @@
       </option>
     </select>
   </div>
-  <line-chart :chart-data="chartData" :options="chartOptions"></line-chart>
+  <div class="chart-container">
+    <line-chart :chart-data="chartData" :options="chartOptions"></line-chart>
+  </div>
 </template>
 
 <script setup>
@@ -112,5 +114,18 @@ h3 {
 
 select {
   margin-bottom: 20px;
+}
+
+.chart-container {
+  width: 800px;
+  height: 200px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  position: relative;
+}
+
+.chart-container canvas {
+  width: 1000px !important; /* or a dynamic value based on the number of data points */
+  height: 100% !important;
 }
 </style>
