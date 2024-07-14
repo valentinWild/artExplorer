@@ -11,7 +11,6 @@
   <div>
     <label for="learning-set-select">Select Learning Set:</label>
     <select id="learning-set-select" v-model="selectedLearningSet" @change="updateChart">
-      <!--<option value="All">All</option> -->
       <option v-for="set in learningSets" :key="set" :value="set">
         {{ set }}
       </option>
@@ -33,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { defineProps } from 'vue';
 import LineChart from './LineChart.vue';
 
@@ -64,7 +63,8 @@ const chartOptions = ref({
 });
 
 const selectedMonth = ref(new Date().getMonth() + 1);
-const selectedLearningSet = ref('All');
+const learningSets = ref([...new Set(props.userData.map(quiz => quiz.style_category))]);
+const selectedLearningSet = ref(learningSets.value[learningSets.value.length - 1] || '');
 const viewMode = ref('average'); // Toggle between 'average' and 'all'
 
 const months = [
@@ -81,8 +81,6 @@ const months = [
   { value: 11, text: 'November' },
   { value: 12, text: 'December' },
 ];
-
-const learningSets = ref([...new Set(props.userData.map(quiz => quiz.style_category))]);
 
 const colors = {
   Impressionism: 'rgba(255, 99, 132, 0.2)',
@@ -102,102 +100,56 @@ const updateChart = () => {
   const filteredData = props.userData.filter((quiz) => {
     const quizDate = new Date(quiz.created_at);
     const isMonthMatch = quizDate.getMonth() + 1 === selectedMonth.value;
-    const isLearningSetMatch = selectedLearningSet.value === 'All' || quiz.style_category === selectedLearningSet.value;
+    const isLearningSetMatch = quiz.style_category === selectedLearningSet.value;
     return isMonthMatch && isLearningSetMatch;
   });
 
   const datasets = [];
 
-  if (selectedLearningSet.value === 'All') {
-    learningSets.value.forEach(set => {
-      const setData = filteredData.filter(quiz => quiz.style_category === set);
-      if (viewMode.value === 'average') {
-        const groupedData = setData.reduce((acc, quiz) => {
-          const date = new Date(quiz.created_at).toLocaleDateString();
-          if (!acc[date]) {
-            acc[date] = { totalScore: 0, count: 0 };
-          }
-          acc[date].totalScore += quiz.score;
-          acc[date].count += 1;
-          return acc;
-        }, {});
-
-        const labels = Object.keys(groupedData);
-        const data = labels.map(date => (groupedData[date].totalScore / groupedData[date].count).toFixed(2));
-
-        datasets.push({
-          label: `${set} Average Scores`,
-          backgroundColor: colors[set],
-          borderColor: borderColor[set],
-          borderWidth: 1,
-          pointRadius: 3,
-          pointHoverRadius: 5,
-          data: data,
-        });
-      } else {
-        const labels = setData.map(quiz => new Date(quiz.created_at).toLocaleDateString());
-        const data = setData.map(quiz => quiz.score.toFixed(2));
-
-        datasets.push({
-          label: `${set} Scores`,
-          backgroundColor: colors[set],
-          borderColor: borderColor[set],
-          borderWidth: 1,
-          pointRadius: 3,
-          pointHoverRadius: 5,
-          data: data,
-        });
+  if (viewMode.value === 'average') {
+    const groupedData = filteredData.reduce((acc, quiz) => {
+      const date = new Date(quiz.created_at).toLocaleDateString();
+      if (!acc[date]) {
+        acc[date] = { totalScore: 0, count: 0 };
       }
+      acc[date].totalScore += quiz.score;
+      acc[date].count += 1;
+      return acc;
+    }, {});
+
+    const labels = Object.keys(groupedData);
+    const data = labels.map(date => (groupedData[date].totalScore / groupedData[date].count).toFixed(2));
+
+    datasets.push({
+      label: `${selectedLearningSet.value} Average Scores`,
+      backgroundColor: colors[selectedLearningSet.value],
+      borderColor: borderColor[selectedLearningSet.value],
+      borderWidth: 1,
+      pointRadius: 3,
+      pointHoverRadius: 5,
+      data: data,
+      fill: false,
     });
 
-    const allLabels = datasets.length > 0 ? datasets[0].data.map((_, index) => datasets[0].data[index].date) : [];
-
-    chartData.value.labels = allLabels;
+    chartData.value.labels = labels;
     chartData.value.datasets = datasets;
   } else {
-    if (viewMode.value === 'average') {
-      const groupedData = filteredData.reduce((acc, quiz) => {
-        const date = new Date(quiz.created_at).toLocaleDateString();
-        if (!acc[date]) {
-          acc[date] = { totalScore: 0, count: 0 };
-        }
-        acc[date].totalScore += quiz.score;
-        acc[date].count += 1;
-        return acc;
-      }, {});
+    const labels = filteredData.map(quiz => new Date(quiz.created_at).toLocaleDateString());
+    const data = filteredData.map(quiz => quiz.score.toFixed(2));
 
-      const labels = Object.keys(groupedData);
-      const data = labels.map(date => (groupedData[date].totalScore / groupedData[date].count).toFixed(2));
+    datasets.push({
+      label: `${selectedLearningSet.value} Scores`,
+      backgroundColor: colors[selectedLearningSet.value],
+      borderColor: borderColor[selectedLearningSet.value],
+      borderWidth: 1,
+      pointRadius: 3,
+      pointHoverRadius: 5,
+      data: data,
+      fill: false,
+    });
 
-      datasets.push({
-        label: `${selectedLearningSet.value} Average Scores`,
-        backgroundColor: colors[selectedLearningSet.value],
-        borderColor: borderColor[selectedLearningSet.value],
-        borderWidth: 1,
-        pointRadius: 3,
-        pointHoverRadius: 5,
-        data: data,
-      });
-
-      chartData.value.labels = labels;
-      chartData.value.datasets = datasets;
-    } else {
-      const labels = filteredData.map(quiz => new Date(quiz.created_at).toLocaleDateString());
-      const data = filteredData.map(quiz => quiz.score.toFixed(2));
-
-      datasets.push({
-        label: `${selectedLearningSet.value} Scores`,
-        backgroundColor: colors[selectedLearningSet.value],
-        borderColor: borderColor[selectedLearningSet.value],
-        borderWidth: 1,
-        pointRadius: 3,
-        pointHoverRadius: 5,
-        data: data,
-      });
-
-      chartData.value.labels = labels;
-      chartData.value.datasets = datasets;
-    }
+    chartData.value.labels = labels;
+    chartData.value.datasets = datasets;
   }
 
   // Ensure the Y-axis options are updated
@@ -215,6 +167,10 @@ const updateChart = () => {
     },
   };
 };
+
+onMounted(() => {
+  updateChart();
+});
 
 watch(
   () => props.userData,
@@ -267,4 +223,3 @@ select {
   height: 100% !important;
 }
 </style>
-
