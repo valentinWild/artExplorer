@@ -9,6 +9,15 @@
     </select>
   </div>
   <div>
+    <label for="learning-set-select">Select Learning Set:</label>
+    <select id="learning-set-select" v-model="selectedLearningSet" @change="updateChart">
+      <!--<option value="All">All</option> -->
+      <option v-for="set in learningSets" :key="set" :value="set">
+        {{ set }}
+      </option>
+    </select>
+  </div>
+  <div>
     <label>
       <input type="radio" v-model="viewMode" value="average" @change="updateChart">
       Average Scores
@@ -37,17 +46,7 @@ const props = defineProps({
 
 const chartData = ref({
   labels: [],
-  datasets: [
-    {
-      label: 'Quiz Scores',
-      backgroundColor: 'rgba(54, 162, 235, 0.2)',
-      borderColor: 'rgba(54, 162, 235, 1)',
-      borderWidth: 1,
-      pointRadius: 3, // Ensure points are visible
-      pointHoverRadius: 5,
-      data: [],
-    },
-  ],
+  datasets: [],
 });
 
 const chartOptions = ref({
@@ -65,6 +64,7 @@ const chartOptions = ref({
 });
 
 const selectedMonth = ref(new Date().getMonth() + 1);
+const selectedLearningSet = ref('All');
 const viewMode = ref('average'); // Toggle between 'average' and 'all'
 
 const months = [
@@ -82,37 +82,138 @@ const months = [
   { value: 12, text: 'December' },
 ];
 
+const learningSets = ref([...new Set(props.userData.map(quiz => quiz.style_category))]);
+
+const colors = {
+  Impressionism: 'rgba(255, 99, 132, 0.2)',
+  Renaissance: 'rgba(54, 162, 235, 0.2)',
+  Modernism: 'rgba(75, 192, 192, 0.2)',
+  // Add more colors as needed for other learning sets
+};
+
+const borderColor = {
+  Impressionism: 'rgba(255, 99, 132, 1)',
+  Renaissance: 'rgba(54, 162, 235, 1)',
+  Modernism: 'rgba(75, 192, 192, 1)',
+  // Add more border colors as needed for other learning sets
+};
+
 const updateChart = () => {
   const filteredData = props.userData.filter((quiz) => {
     const quizDate = new Date(quiz.created_at);
-    return quizDate.getMonth() + 1 === selectedMonth.value;
+    const isMonthMatch = quizDate.getMonth() + 1 === selectedMonth.value;
+    const isLearningSetMatch = selectedLearningSet.value === 'All' || quiz.style_category === selectedLearningSet.value;
+    return isMonthMatch && isLearningSetMatch;
   });
 
-  if (viewMode.value === 'average') {
-    const groupedData = filteredData.reduce((acc, quiz) => {
-      const date = new Date(quiz.created_at).toLocaleDateString();
-      if (!acc[date]) {
-        acc[date] = { totalScore: 0, count: 0 };
+  const datasets = [];
+
+  if (selectedLearningSet.value === 'All') {
+    learningSets.value.forEach(set => {
+      const setData = filteredData.filter(quiz => quiz.style_category === set);
+      if (viewMode.value === 'average') {
+        const groupedData = setData.reduce((acc, quiz) => {
+          const date = new Date(quiz.created_at).toLocaleDateString();
+          if (!acc[date]) {
+            acc[date] = { totalScore: 0, count: 0 };
+          }
+          acc[date].totalScore += quiz.score;
+          acc[date].count += 1;
+          return acc;
+        }, {});
+
+        const labels = Object.keys(groupedData);
+        const data = labels.map(date => (groupedData[date].totalScore / groupedData[date].count).toFixed(2));
+
+        datasets.push({
+          label: `${set} Average Scores`,
+          backgroundColor: colors[set],
+          borderColor: borderColor[set],
+          borderWidth: 1,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          data: data,
+        });
+      } else {
+        const labels = setData.map(quiz => new Date(quiz.created_at).toLocaleDateString());
+        const data = setData.map(quiz => quiz.score.toFixed(2));
+
+        datasets.push({
+          label: `${set} Scores`,
+          backgroundColor: colors[set],
+          borderColor: borderColor[set],
+          borderWidth: 1,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          data: data,
+        });
       }
-      acc[date].totalScore += quiz.score;
-      acc[date].count += 1;
-      return acc;
-    }, {});
+    });
 
-    const labels = Object.keys(groupedData);
-    const data = labels.map(date => (groupedData[date].totalScore / groupedData[date].count).toFixed(2));
+    const allLabels = datasets.length > 0 ? datasets[0].data.map((_, index) => datasets[0].data[index].date) : [];
 
-    chartData.value.labels = labels;
-    chartData.value.datasets[0].data = data;
-    chartData.value.datasets[0].label = 'Average Quiz Scores';
+    chartData.value.labels = allLabels;
+    chartData.value.datasets = datasets;
   } else {
-    const labels = filteredData.map(quiz => new Date(quiz.created_at).toLocaleDateString());
-    const data = filteredData.map(quiz => quiz.score.toFixed(2));
+    if (viewMode.value === 'average') {
+      const groupedData = filteredData.reduce((acc, quiz) => {
+        const date = new Date(quiz.created_at).toLocaleDateString();
+        if (!acc[date]) {
+          acc[date] = { totalScore: 0, count: 0 };
+        }
+        acc[date].totalScore += quiz.score;
+        acc[date].count += 1;
+        return acc;
+      }, {});
 
-    chartData.value.labels = labels;
-    chartData.value.datasets[0].data = data;
-    chartData.value.datasets[0].label = 'Quiz Scores';
+      const labels = Object.keys(groupedData);
+      const data = labels.map(date => (groupedData[date].totalScore / groupedData[date].count).toFixed(2));
+
+      datasets.push({
+        label: `${selectedLearningSet.value} Average Scores`,
+        backgroundColor: colors[selectedLearningSet.value],
+        borderColor: borderColor[selectedLearningSet.value],
+        borderWidth: 1,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        data: data,
+      });
+
+      chartData.value.labels = labels;
+      chartData.value.datasets = datasets;
+    } else {
+      const labels = filteredData.map(quiz => new Date(quiz.created_at).toLocaleDateString());
+      const data = filteredData.map(quiz => quiz.score.toFixed(2));
+
+      datasets.push({
+        label: `${selectedLearningSet.value} Scores`,
+        backgroundColor: colors[selectedLearningSet.value],
+        borderColor: borderColor[selectedLearningSet.value],
+        borderWidth: 1,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        data: data,
+      });
+
+      chartData.value.labels = labels;
+      chartData.value.datasets = datasets;
+    }
   }
+
+  // Ensure the Y-axis options are updated
+  chartOptions.value = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        min: 0,
+        max: 1,
+        ticks: {
+          stepSize: 0.2,
+        },
+      },
+    },
+  };
 };
 
 watch(
@@ -125,6 +226,13 @@ watch(
 
 watch(
   () => selectedMonth.value,
+  () => {
+    updateChart();
+  }
+);
+
+watch(
+  () => selectedLearningSet.value,
   () => {
     updateChart();
   }
@@ -159,3 +267,4 @@ select {
   height: 100% !important;
 }
 </style>
+
