@@ -7,7 +7,10 @@
           <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
         </select>
       </div>
-      <div class="calendar">
+      <div>
+        <button @click="toggleAddDeadlineMode">Add Deadline</button>
+      </div>
+      <div class="calendar" @mousemove="updateTooltipPosition">
         <div class="year-row">
           <div class="months">
             <div class="month" v-for="month in months" :key="month.name">
@@ -18,7 +21,7 @@
                     class="day" 
                     v-for="day in week.days" 
                     :key="day.date" 
-                    :class="getQuizCountClass(day.quizCount)"
+                    :class="[getQuizCountClass(day.quizCount), getDeadlineClass(day)]"
                     @mouseover="showTooltip(day)" 
                     @mouseleave="hideTooltip"
                   ></div>
@@ -45,7 +48,31 @@
       <div v-if="tooltip.visible" class="tooltip" :style="{ top: tooltip.y + 'px', left: tooltip.x + 'px' }">
         <div>{{ tooltip.date }}</div>
         <div v-if="tooltip.quizCount !== null">Quizzes: {{ tooltip.quizCount }}</div>
+        <div v-if="tooltip.deadlineTitle">Deadline: {{ tooltip.deadlineTitle }}</div>
         <div v-else>No Quizzes</div>
+      </div>
+      <div v-if="showDeadlineForm" class="deadline-form-overlay">
+        <div class="deadline-form">
+          <h3>Add Deadline</h3>
+          <form @submit.prevent="addDeadline">
+            <label for="deadline-title">Title:</label>
+            <input id="deadline-title" v-model="newDeadline.title" required>
+  
+            <label for="deadline-date">Date:</label>
+            <input type="date" id="deadline-date" v-model="newDeadline.date" required>
+            
+            <label for="deadline-color">Color:</label>
+            <select id="deadline-color" v-model="newDeadline.color" required>
+              <option value="red">Red</option>
+              <option value="blue">Blue</option>
+              <option value="yellow">Yellow</option>
+              <option value="green">Green</option>
+            </select>
+  
+            <button type="submit">OK</button>
+            <button type="button" @click="cancelAddDeadline">Cancel</button>
+          </form>
+        </div>
       </div>
     </div>
   </template>
@@ -78,12 +105,22 @@
     { name: 'December', weeks: [] },
   ]);
   
+  const deadlines = ref([]);
+  
   const tooltip = ref({
     visible: false,
     date: '',
     quizCount: null,
+    deadlineTitle: '',
     x: 0,
     y: 0
+  });
+  
+  const showDeadlineForm = ref(false);
+  const newDeadline = ref({
+    date: '',
+    title: '',
+    color: 'red'
   });
   
   const getWeeksInMonth = (month, year) => {
@@ -147,16 +184,53 @@
     return 'dark-green';
   };
   
+  const getDeadlineClass = (day) => {
+    const deadline = deadlines.value.find(d => d.date === day.date.toISOString().split('T')[0]);
+    return deadline ? deadline.color : '';
+  };
+  
   const showTooltip = (day) => {
     tooltip.value.visible = true;
     tooltip.value.date = day.date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     tooltip.value.quizCount = day.quizCount;
+    const deadline = deadlines.value.find(d => d.date === day.date.toISOString().split('T')[0]);
+    tooltip.value.deadlineTitle = deadline ? deadline.title : '';
     tooltip.value.x = event.clientX + 10;
     tooltip.value.y = event.clientY + 10;
   };
   
   const hideTooltip = () => {
     tooltip.value.visible = false;
+  };
+  
+  const toggleAddDeadlineMode = () => {
+    showDeadlineForm.value = !showDeadlineForm.value;
+  };
+  
+  const addDeadline = () => {
+    deadlines.value.push({ ...newDeadline.value });
+    showDeadlineForm.value = false;
+    newDeadline.value = {
+      date: '',
+      title: '',
+      color: 'red'
+    };
+  };
+  
+  const cancelAddDeadline = () => {
+    showDeadlineForm.value = false;
+    newDeadline.value = {
+      date: '',
+      title: '',
+      color: 'red'
+    };
+  };
+  
+  const updateTooltipPosition = (event) => {
+    if (tooltip.value.visible) {
+      tooltip.value.x = event.clientX + 10;
+      tooltip.value.y = event.clientY + 10;
+    }
   };
   
   onMounted(() => {
@@ -179,9 +253,14 @@
     margin-bottom: 20px;
   }
   
+  button {
+    margin-bottom: 20px;
+  }
+  
   .calendar {
     display: flex;
     flex-direction: column;
+    position: relative;
   }
   
   .year-row {
@@ -236,6 +315,22 @@
     background-color: #74c476;
   }
   
+  .red {
+    background-color: red !important;
+  }
+  
+  .blue {
+    background-color: blue !important;
+  }
+  
+  .yellow {
+    background-color: yellow !important;
+  }
+  
+  .green {
+    background-color: green !important;
+  }
+  
   .legend {
     display: flex;
     margin-top: 20px;
@@ -262,5 +357,46 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     pointer-events: none;
     z-index: 10;
+  }
+  
+  .deadline-form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+  }
+  
+  .deadline-form {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .deadline-form h3 {
+    margin-top: 0;
+  }
+  
+  .deadline-form label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .deadline-form input,
+  .deadline-form select {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+  
+  .deadline-form button {
+    margin-right: 10px;
   }
   </style>
