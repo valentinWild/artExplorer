@@ -19,6 +19,8 @@
                     v-for="day in week.days" 
                     :key="day.date" 
                     :class="getScoreClass(day.score)"
+                    @mouseover="showTooltip(day)" 
+                    @mouseleave="hideTooltip"
                   ></div>
                 </div>
               </div>
@@ -39,6 +41,11 @@
           <div class="color-box dark-green"></div>
           <span>0.8 ≤ Score ≤ 1</span>
         </div>
+      </div>
+      <div v-if="tooltip.visible" class="tooltip" :style="{ top: tooltip.y + 'px', left: tooltip.x + 'px' }">
+        <div>{{ tooltip.date }}</div>
+        <div v-if="tooltip.score !== null">Score: {{ tooltip.score }}</div>
+        <div v-else>No Quiz</div>
       </div>
     </div>
   </template>
@@ -70,6 +77,14 @@
     { name: 'November', weeks: [] },
     { name: 'December', weeks: [] },
   ]);
+  
+  const tooltip = ref({
+    visible: false,
+    date: '',
+    score: null,
+    x: 0,
+    y: 0
+  });
   
   const getWeeksInMonth = (month, year) => {
     const weeks = [];
@@ -130,6 +145,18 @@
     if (score < 0.4) return 'light-green';
     if (score < 0.8) return 'middle-green';
     return 'dark-green';
+  };
+  
+  const showTooltip = (day) => {
+    tooltip.value.visible = true;
+    tooltip.value.date = day.date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    tooltip.value.score = day.score;
+    tooltip.value.x = event.clientX + 10;
+    tooltip.value.y = event.clientY + 10;
+  };
+  
+  const hideTooltip = () => {
+    tooltip.value.visible = false;
   };
   
   onMounted(() => {
@@ -225,5 +252,15 @@
     height: 20px;
     margin-right: 5px;
     border: 1px solid #ddd;
+  }
+  
+  .tooltip {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+    z-index: 10;
   }
   </style>
