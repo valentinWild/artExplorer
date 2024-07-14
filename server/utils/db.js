@@ -1,6 +1,5 @@
-
 const fetchQuizItems = async (client, quizId) => {
-    const { data: quizItems, error: error } = await client
+    const { data: quizItems, error } = await client
         .from('quiz_items')
         .select('*')
         .eq('quiz_id', quizId);
@@ -11,7 +10,7 @@ const fetchQuizItems = async (client, quizId) => {
 }
 
 const fetchQuizItemsResults = async (client, quizId) => {
-    const { data: quizItems, error: error } = await client
+    const { data: quizItems, error } = await client
         .from('quiz_items')
         .select('points')
         .eq('quiz_id', quizId);
@@ -22,7 +21,7 @@ const fetchQuizItemsResults = async (client, quizId) => {
 }
 
 const fetchSingleQuizItem = async (client, itemId) => {
-    const { data: quizItem, error: error } = await client
+    const { data: quizItem, error } = await client
         .from('quiz_items')
         .select('*')
         .eq('id', itemId);
@@ -33,7 +32,7 @@ const fetchSingleQuizItem = async (client, itemId) => {
 }
 
 const updateQuizItems = async (client, fieldsToUpdate) => {
-    const { data: quizItems, error: error } = await client
+    const { data: quizItems, error } = await client
         .from('quiz_items')
         .upsert(fieldsToUpdate, { onConflict: 'id' }) 
         .select('*');
@@ -44,7 +43,7 @@ const updateQuizItems = async (client, fieldsToUpdate) => {
 }
 
 const updateSingleQuizItem = async (client, itemId, fieldsToUpdate) => {
-    const { data: quizItems, error: error } = await client
+    const { data: quizItems, error } = await client
         .from('quiz_items')
         .update(fieldsToUpdate) 
         .eq('id', itemId)
@@ -54,7 +53,6 @@ const updateSingleQuizItem = async (client, itemId, fieldsToUpdate) => {
     } 
     return quizItems;
 }
-
 
 const insertQuizItems = async(client, quizItems) => {
     const {data: items, error: itemError} = await client
@@ -83,7 +81,7 @@ const insertQuiz = async(client, userId, styleCategory) => {
 }
 
 const updateQuiz = async (client, quizId, fieldsToUpdate) => {
-    const { data: quizItems, error: error } = await client
+    const { data: quizItems, error } = await client
         .from('quizzes')
         .update(fieldsToUpdate)
         .eq('id', quizId)
@@ -94,8 +92,6 @@ const updateQuiz = async (client, quizId, fieldsToUpdate) => {
     } 
     return quizItems;
 }
-
-
 
 export default {
     fetchSingleQuizItem,
