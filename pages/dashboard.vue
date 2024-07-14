@@ -14,6 +14,11 @@
     :user-data="userData"
 ></DashboardQuizCalendar>
 
+<DashboardLearningSetProgress
+    :user-data="userData"
+></DashboardLearningSetProgress>
+
+
 </template>
 
 <script setup>
