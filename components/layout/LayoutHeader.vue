@@ -49,6 +49,15 @@
                         Learning Sets
                     </ULink>
                 </li>
+                <li>
+                    <ULink 
+                        to="/dashboard"
+                        active-class="text-primary font-semibold"
+                        inactive-class="text-stone-100 hover:text-primary font-semibold"
+                    >
+                        Dashboard
+                    </ULink>
+                </li>
            </ul>
            <div class="auth-buttons">
                 <UButton
