@@ -31,6 +31,8 @@
           @submit-item="handleItemSubmit"
           :question-answered="quizItemAnswered"
           :item-result="quizItemResult"
+          :total-questions="quizTotalItems"
+          :current-question-index="currentQuizIndex"
         ></QuestionsTextQuestion>
 
         <TimelineQuiz class="timelineQuiz" 
@@ -130,6 +132,7 @@ const fetchQuestions = async() => {
         "type": currentQuizItem.value.type,
         "quiz_id": quizId.value,
         "answer_ids": [],
+        "image_order": [],
         "answer_text": "",
       }
     };
@@ -137,7 +140,7 @@ const fetchQuestions = async() => {
     if (currentQuizItem.value.type === "text_question") {
       body.item.answer_text = item;  
     } else if (currentQuizItem.value.type === "timeline_quiz") {
-      body.item.answer_ids = item.map(image => image.id); 
+      body.item.image_order = item.image_order; 
     } else {
       body.item.answer_ids.push(item);
     }
@@ -241,4 +244,3 @@ const fetchQuestions = async() => {
     border-radius: 10px;
   }
   </style>
-

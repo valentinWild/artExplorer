@@ -57,17 +57,15 @@
 </template>
 
 <script>
-import { defineComponent, reactive, onMounted, computed } from 'vue';
+import { defineComponent, reactive, computed, watch } from 'vue';
 import Icons from '../components/Icons.vue';
-import axios from 'axios';
 import helpers from '../server/utils/helpers.js';
-
-const API_URL = 'https://api.artic.edu/api/v1/artworks/search';
 
 export default defineComponent({
   components: {
     Icons
   },
+  props: ['quizData', 'questionAnswered', 'itemResult', 'totalQuestions', 'currentQuestionIndex'],
   data() {
     return {
       dates: [],
@@ -91,88 +89,37 @@ export default defineComponent({
       });
     }
   },
+  watch: {
+    quizData: {
+      handler(newValue) {
+        this.loadQuizData();
+      },
+      immediate: true
+    }
+  },
   methods: {
-    async fetchImages() {
-      try {
-        // all styles mix:
-        const styles = ['impressionism', 'surrealism', 'renaissance', 'modernism', 'popart', '21century'];
-        const imagePromises = styles.map(style => this.fetchImageByStyle(style));
-        const imageResults = await Promise.all(imagePromises);
-
-        let filteredImages = imageResults.flat().filter(image => image.title && image.artist_title && image.date_display.match(/\d{4}/));
-        filteredImages = this.shuffleArray(filteredImages); // random images
-
-
-        //only one style:
-        // const styleCategory = this.$route.query.style_category || 'impressionism'; // Default style category
-        // const imageResults = await this.fetchImageByStyle(styleCategory);
-
-        // let filteredImages = imageResults.filter(image => image.title && image.artist_title && image.date_display.match(/\d{4}/));
-        // filteredImages = this.shuffleArray(filteredImages);
-
-        const uniqueYears = new Set();
-        const selectedImages = [];
-
-        for (let artwork of filteredImages) {
-          let year = artwork.date_display.match(/\d{4}/);
-          if (year && !uniqueYears.has(year[0])) {
-            uniqueYears.add(year[0]);
-            selectedImages.push(artwork);
-            if (selectedImages.length >= 4) break;
-          }
-        }
-
-        this.images = [];
-        let validImageCount = 0;
-        for (let artwork of selectedImages) {
-          const src = `https://www.artic.edu/iiif/2/${artwork.image_id}/full/400,/0/default.jpg`;
-          const validImage = await this.isValidImage(src);
-          if (validImage) {
-            this.images.push({
-              id: artwork.id,
-              src,
-              title: artwork.title,
-              artist_title: artwork.artist_title,
-              date_display: this.cleanDateDisplay(artwork.date_display),
-            });
-            validImageCount++;
-          }
-          if (validImageCount >= 4) break;
-        }
-
-        helpers.shuffleArray(this.images);
-        if (this.images.length < 4) {
-          throw new Error('Not enough valid images to create a quiz.');
-        }
+    loadQuizData() {
+      console.log("Loading quiz data:", this.quizData); // Debugging
+      if (this.quizData && this.quizData.images) {
+        this.images = this.quizData.images.map(image => ({
+          id: image.id,
+          src: image.src,
+          title: image.title,
+          artist_title: image.artist_title,
+          date_display: image.date_display
+        }));
         this.dates = this.images.map(image => ({
           id: image.id,
           date_display: image.date_display,
           title: image.title,
           artist_title: image.artist_title
         }));
+        helpers.shuffleArray(this.images);
         this.resetQuizState();
-      } catch (error) {
-        console.error('Error fetching images:', error);
-        this.message = 'Error fetching images, please try again later.';
-        this.messageClass = 'message-error';
-        this.showMessage = true;
-      }
-    },
-    async fetchImageByStyle(style) {
-      const params = {
-        q: style,
-        fields: 'id,title,image_id,artist_title,date_display',
-        limit: 50
-      };
-      const response = await axios.get(API_URL, { params });
-      return response.data.data;
-    },
-    async isValidImage(url) {
-      try {
-        await axios.get(url);
-        return true;
-      } catch (error) {
-        return false;
+        console.log("Loaded images:", this.images); // Debugging
+        console.log("Loaded dates:", this.dates); // Debugging
+      } else {
+        console.error('Quiz data is not correctly formatted:', this.quizData);
       }
     },
     selectImage(image) {
@@ -189,13 +136,21 @@ export default defineComponent({
     checkOrder() {
       this.checkStatus = true;
       let correct = true;
+      const userOrder = [];
+
       for (let i = 0; i < this.sortedDates.length; i++) {
         const expectedDate = this.sortedDates[i];
         const placedImage = this.placedImages[i];
+        if (placedImage) {
+          userOrder.push(placedImage.date_display);
+        } else {
+          userOrder.push(null);  // Sicherstellen, dass das Array die richtige Länge hat
+        }
         if (!placedImage || placedImage.id !== expectedDate.id) {
           correct = false;
         }
       }
+
       if (correct) {
         this.showMessage = true;
         this.message = 'Correct order!';
@@ -207,14 +162,13 @@ export default defineComponent({
         this.messageClass = 'message-error';
         this.showNextButton = true;
       }
+
+      console.log("User Order:", userOrder);  // Debugging
+
+      this.$emit('submitItem', { id: this.quizData.id, image_order: userOrder });
     },
     nextQuiz() {
       this.$emit('next-quiz');
-    },
-    cleanDateDisplay(dateDisplay) {
-      return dateDisplay
-        .replace(/(modeled|designed|cast|painted|sculpted|created|photographed|published|printed|rebuilt|restored)\s*/gi, '')
-        .replace('c. ', '');
     },
     resetQuizState() {
       this.selectedImage = null;
@@ -225,17 +179,7 @@ export default defineComponent({
       this.showMessage = false;
       this.message = '';
       this.messageClass = '';
-    },
-    shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
     }
-  },
-  mounted() {
-    this.fetchImages();
   }
 });
 </script>
@@ -449,5 +393,3 @@ h1 {
   font-size: 20px; 
 }
 </style>
-
-
