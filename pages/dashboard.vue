@@ -24,6 +24,10 @@
             :user-data="userData"
         ></DashboardQuizzesGeneralInformation>
 
+        <DashboardTimeStudied   
+            :user-data="userData"
+        ></DashboardTimeStudied>
+
        
 
         <div class="carousel">
