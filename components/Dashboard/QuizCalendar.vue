@@ -1,7 +1,7 @@
 <template>
   <div class="calendar-container">
     <h3>My Contributions</h3>
-    <div>
+    <div class="year-select-container">
       <label for="year-select">Select Year:</label>
       <select id="year-select" v-model="selectedYear" @change="initCalendar">
         <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
@@ -242,20 +242,26 @@ watch(selectedYear, initCalendar);
 
 <style scoped>
 h3 {
-  font-weight: 600;
-  color: #FFFFFF;
-  margin-bottom: 1rem;
+  font-weight: 800;
+  font-size: 1.3em;
+  color: #FFFFFF; 
+  text-align: center; 
+  width: 100%; 
+  margin-bottom: 1rem; 
+  margin-top: 1rem;
 }
 
 label {
   margin-right: 10px;
   color: #00bfff;
+  font-weight: bolder;
 }
 
 select, button {
   background-color: #1e1e2d;
   color: #ffffff;
-  margin-bottom: 20px;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
 }
 
 .calendar-container {
@@ -272,12 +278,15 @@ select, button {
   max-width: 1800px; 
   width: calc(100% - 2rem); 
   margin-left: 5rem;
+  height: 550px;
 }
 
 .calendar {
   display: flex;
   flex-direction: column;
+  align-items: center; /* Hier werden die Monate und Tage zentriert */
   position: relative;
+  margin-left: 2rem;
 }
 
 .year-row {
@@ -372,6 +381,7 @@ select, button {
   position: absolute;
   bottom: 2px; /* Abstand vom unteren Rand */
   left: 1250px; /* Abstand vom linken Rand */
+  top: 450px;
 }
 
 .add-deadline-button button {
@@ -389,18 +399,18 @@ select, button {
 
 .tooltip {
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.6); 
+  background-color: rgba(0, 0, 0, 0.9); 
   color: #ffffff; 
   padding: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   pointer-events: none;
   z-index: 10;
-  border-radius: 5px; /* Abgerundete Ecken */
-  border: none; /* Keine Border */
+  border-radius: 5px;
+  border: none; 
 }
 
 .tooltip div {
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 
