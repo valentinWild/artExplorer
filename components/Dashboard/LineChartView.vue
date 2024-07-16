@@ -1,33 +1,35 @@
 <template>
-  <h3>Scores Chart</h3>
-  <div>
-    <label for="month-select">Select Month:</label>
-    <select id="month-select" v-model="selectedMonth" @change="updateChart">
-      <option v-for="month in months" :key="month.value" :value="month.value">
-        {{ month.text }}
-      </option>
-    </select>
-  </div>
-  <div>
-    <label for="learning-set-select">Select Learning Set:</label>
-    <select id="learning-set-select" v-model="selectedLearningSet" @change="updateChart">
-      <option v-for="set in learningSets" :key="set" :value="set">
-        {{ set }}
-      </option>
-    </select>
-  </div>
-  <div>
-    <label>
-      <input type="radio" v-model="viewMode" value="average" @change="updateChart">
-      Average Scores
-    </label>
-    <label>
-      <input type="radio" v-model="viewMode" value="all" @change="updateChart">
-      All Scores
-    </label>
-  </div>
-  <div class="chart-container">
-    <line-chart :chart-data="chartData" :options="chartOptions"></line-chart>
+  <div class="score-chart-container">
+    <h3>Scores Chart</h3>
+    <div>
+      <label for="month-select">Select Month:</label>
+      <select id="month-select" v-model="selectedMonth" @change="updateChart">
+        <option v-for="month in months" :key="month.value" :value="month.value">
+          {{ month.text }}
+        </option>
+      </select>
+    </div>
+    <div>
+      <label for="learning-set-select">Select Learning Set:</label>
+      <select id="learning-set-select" v-model="selectedLearningSet" @change="updateChart">
+        <option v-for="set in learningSets" :key="set" :value="set">
+          {{ set }}
+        </option>
+      </select>
+    </div>
+    <div>
+      <label>
+        <input type="radio" v-model="viewMode" value="average" @change="updateChart">
+        Average Scores
+      </label>
+      <label>
+        <input type="radio" v-model="viewMode" value="all" @change="updateChart">
+        All Scores
+      </label>
+    </div>
+    <div class="chart-container">
+      <line-chart :chart-data="chartData" :options="chartOptions"></line-chart>
+    </div>
   </div>
 </template>
 
@@ -52,11 +54,30 @@ const chartOptions = ref({
   responsive: true,
   maintainAspectRatio: false,
   scales: {
+    x: {
+      ticks: {
+        color: '#FFFFFF', // White color for X-axis labels
+      },
+      grid: {
+        color: '#FFFFFF', // White color for grid lines
+      },
+    },
     y: {
       min: 0,
       max: 1,
       ticks: {
         stepSize: 0.2,
+        color: '#FFFFFF', // White color for Y-axis labels
+      },
+      grid: {
+        color: '#FFFFFF', // White color for grid lines
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      labels: {
+        color: '#FFFFFF', // White color for legend labels
       },
     },
   },
@@ -83,17 +104,12 @@ const months = [
 ];
 
 const colors = {
-  Impressionism: 'rgba(255, 99, 132, 0.2)',
-  Renaissance: 'rgba(54, 162, 235, 0.2)',
-  Modernism: 'rgba(75, 192, 192, 0.2)',
-  // Add more colors as needed for other learning sets
-};
-
-const borderColor = {
-  Impressionism: 'rgba(255, 99, 132, 1)',
-  Renaissance: 'rgba(54, 162, 235, 1)',
-  Modernism: 'rgba(75, 192, 192, 1)',
-  // Add more border colors as needed for other learning sets
+  Impressionism: 'rgba(72, 207, 173, 1)', // Strong Light Green-Blue
+  Renaissance: 'rgba(249, 105, 14, 1)', // Strong Bright Orange
+  Modernism: 'rgba(255, 195, 0, 1)', // Strong Yellow
+  Surrealism: 'rgba(128, 128, 128, 1)', // Strong Gray
+  'Pop Art': 'rgba(0, 174, 239, 1)', // Strong Bright Blue
+  '21st Century': 'rgba(33, 150, 243, 1)', // Strong Dark Blue
 };
 
 const updateChart = () => {
@@ -123,10 +139,10 @@ const updateChart = () => {
     datasets.push({
       label: `${selectedLearningSet.value} Average Scores`,
       backgroundColor: colors[selectedLearningSet.value],
-      borderColor: borderColor[selectedLearningSet.value],
-      borderWidth: 1,
-      pointRadius: 3,
-      pointHoverRadius: 5,
+      borderColor: colors[selectedLearningSet.value],
+      borderWidth: 2,
+      pointRadius: 5,
+      pointHoverRadius: 7,
       data: data,
       fill: false,
     });
@@ -140,10 +156,10 @@ const updateChart = () => {
     datasets.push({
       label: `${selectedLearningSet.value} Scores`,
       backgroundColor: colors[selectedLearningSet.value],
-      borderColor: borderColor[selectedLearningSet.value],
-      borderWidth: 1,
-      pointRadius: 3,
-      pointHoverRadius: 5,
+      borderColor: colors[selectedLearningSet.value],
+      borderWidth: 2,
+      pointRadius: 5,
+      pointHoverRadius: 7,
       data: data,
       fill: false,
     });
@@ -157,11 +173,30 @@ const updateChart = () => {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
+      x: {
+        ticks: {
+          color: '#FFFFFF', // White color for X-axis labels
+        },
+        grid: {
+          color: '#FFFFFF', // White color for grid lines
+        },
+      },
       y: {
         min: 0,
         max: 1,
         ticks: {
           stepSize: 0.2,
+          color: '#FFFFFF', // White color for Y-axis labels
+        },
+        grid: {
+          color: '#FFFFFF', // White color for grid lines
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: '#FFFFFF', // White color for legend labels
         },
       },
     },
@@ -205,14 +240,21 @@ watch(
 <style scoped>
 h3 {
   font-weight: 600;
+  color: #00bfff; /* Adjust to match the theme */
 }
 
 select {
   margin-bottom: 20px;
+  background-color: #1e1e2d; /* Adjust to match the theme */
+  color: #ffffff; /* Adjust to match the theme */
+}
+
+label {
+  color: #00bfff; /* Adjust to match the theme */
 }
 
 .chart-container {
-  width: 800px;
+  width: 100%;
   height: 400px;
   min-height: 400px; /* Ensure a minimum height */
   position: relative;
@@ -221,5 +263,21 @@ select {
 .chart-container canvas {
   width: 100% !important;
   height: 100% !important;
+}
+
+.score-chart-container {
+  display: flex;
+  flex-direction: column; /* Arrange items in a column */
+  align-items: flex-start; /* Align items to the start of the container */
+  gap: 1rem; /* Add space between items */
+  padding: 2rem; /* Reduce padding for smaller container */
+  background: rgba(255, 255, 255, 0.09); 
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
+  max-width: 850px; /* Set maximum width for the container */
+  width: calc(100% - 2rem); /* Ensure the container is slightly wider than the chart */
+  margin-left: 5rem;
 }
 </style>

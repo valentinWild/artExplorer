@@ -1,5 +1,9 @@
 <template>
 
+<body>
+
+    
+
 <h1>Dashboard of {{user.email}}</h1>
 
 <DashboardQuizCounter
@@ -18,6 +22,7 @@
     :user-data="userData"
 ></DashboardLearningSetProgress>
 
+</body>
 
 </template>
 
@@ -54,3 +59,10 @@ onMounted(() => {
 });
 
 </script>
+
+<style scoped>
+
+body{
+    background-color: #121421;
+}
+</style>
