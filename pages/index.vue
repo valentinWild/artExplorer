@@ -72,7 +72,7 @@
                 </div>
 
             
-                <UButton>Visit Learnsets</UButton>
+                <UButton to="/user/login">Visit Learnsets</UButton>
             </div>
 
             <div class="videoContainer">
