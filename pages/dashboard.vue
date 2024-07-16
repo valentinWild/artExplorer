@@ -30,6 +30,13 @@
 ></DashboardLearningSetProgress>
 </div>
 
+<div class="barChart">
+
+<DashboardBarChartView
+    :user-data="userData"
+></DashboardBarChartView>
+</div>
+
 </body>
 
 </template>

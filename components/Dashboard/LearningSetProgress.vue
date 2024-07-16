@@ -108,7 +108,7 @@ watch(
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem; 
+  margin-bottom: 2rem; 
 }
 
 h3 {
@@ -168,6 +168,7 @@ h3 {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  margin-top: 5px;
 }
 
 .progress-bar-label {
