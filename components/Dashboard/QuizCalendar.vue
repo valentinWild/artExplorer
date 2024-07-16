@@ -21,6 +21,7 @@
                   :class="[getQuizCountClass(day.quizCount), getDeadlineClass(day)]"
                   @mouseover="showTooltip(day)" 
                   @mouseleave="hideTooltip"
+                  @click="editDeadline(day)"
                 ></div>
               </div>
             </div>
@@ -53,8 +54,8 @@
     </div>
     <div v-if="showDeadlineForm" class="deadline-form-overlay">
       <div class="deadline-form">
-        <h3>Add Deadline</h3>
-        <form @submit.prevent="addDeadline">
+        <h3>{{ editingDeadline ? 'Edit Deadline' : 'Add Deadline' }}</h3>
+        <form @submit.prevent="saveDeadline">
           <label for="deadline-title">Title:</label>
           <input id="deadline-title" v-model="newDeadline.title" required>
 
@@ -71,6 +72,7 @@
 
           <button type="submit">OK</button>
           <button type="button" @click="cancelAddDeadline">Cancel</button>
+          <button type="button" v-if="editingDeadline" @click="deleteDeadline">Delete</button>
         </form>
       </div>
     </div>
@@ -117,11 +119,13 @@ const tooltip = ref({
 });
 
 const showDeadlineForm = ref(false);
+const editingDeadline = ref(false);
 const newDeadline = ref({
   date: '',
   title: '',
   color: 'red'
 });
+const currentEditingDeadline = ref(null);
 
 const getWeeksInMonth = (month, year) => {
   const weeks = [];
@@ -204,13 +208,47 @@ const hideTooltip = () => {
 };
 
 const toggleAddDeadlineMode = () => {
+  newDeadline.value = {
+    date: '',
+    title: '',
+    color: 'red'
+  };
+  editingDeadline.value = false;
   showDeadlineForm.value = !showDeadlineForm.value;
 };
 
-const addDeadline = () => {
-  // Ensure date is formatted correctly in ISO format
+const editDeadline = (day) => {
+  const deadline = deadlines.value.find(d => d.date === day.date.toISOString().split('T')[0]);
+  if (deadline) {
+    newDeadline.value = { ...deadline };
+    editingDeadline.value = true;
+    showDeadlineForm.value = true;
+    currentEditingDeadline.value = deadline;
+  }
+};
+
+const saveDeadline = () => {
   const formattedDate = new Date(newDeadline.value.date).toISOString().split('T')[0];
-  deadlines.value.push({ ...newDeadline.value, date: formattedDate });
+  if (editingDeadline.value) {
+    const index = deadlines.value.findIndex(d => d.date === currentEditingDeadline.value.date);
+    deadlines.value.splice(index, 1, { ...newDeadline.value, date: formattedDate });
+  } else {
+    deadlines.value.push({ ...newDeadline.value, date: formattedDate });
+  }
+  showDeadlineForm.value = false;
+  newDeadline.value = {
+    date: '',
+    title: '',
+    color: 'red'
+  };
+  initCalendar();
+};
+
+const deleteDeadline = () => {
+  const index = deadlines.value.findIndex(d => d.date === currentEditingDeadline.value.date);
+  if (index !== -1) {
+    deadlines.value.splice(index, 1);
+  }
   showDeadlineForm.value = false;
   newDeadline.value = {
     date: '',
@@ -331,6 +369,7 @@ select, button {
   height: 14px;
   margin: 1px;
   border: 1px solid #ddd;
+  cursor: pointer;
 }
 
 .light-green {
@@ -415,7 +454,6 @@ select, button {
 .tooltip div {
   margin-bottom: 14px;
 }
-
 
 .deadline-form-overlay {
   position: fixed;
