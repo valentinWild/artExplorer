@@ -42,8 +42,8 @@
         <span>10+ Quizzes</span>
       </div>
       <div class="add-deadline-button">
-      <button @click="toggleAddDeadlineMode">Add Deadline</button>
-    </div>
+        <button @click="toggleAddDeadlineMode">Add Deadline</button>
+      </div>
     </div>
     <div v-if="tooltip.visible" class="tooltip" :style="{ top: tooltip.y + 'px', left: tooltip.x + 'px' }">
       <div>{{ tooltip.date }}</div>
@@ -125,17 +125,17 @@ const newDeadline = ref({
 
 const getWeeksInMonth = (month, year) => {
   const weeks = [];
-  let date = new Date(year, month, 1);
+  let date = new Date(Date.UTC(year, month, 1));
   let week = { index: 0, days: [] };
 
-  while (date.getMonth() === month) {
-    if (date.getDay() === 0 && week.days.length) {
+  while (date.getUTCMonth() === month) {
+    if (date.getUTCDay() === 0 && week.days.length) {
       weeks.push(week);
       week = { index: week.index + 1, days: [] };
     }
 
     week.days.push({ date: new Date(date), quizCount: 0 });
-    date.setDate(date.getDate() + 1);
+    date.setUTCDate(date.getUTCDate() + 1);
   }
 
   if (week.days.length) {
@@ -163,12 +163,12 @@ const updateQuizCounts = () => {
 
   props.userData.forEach(quiz => {
     const date = new Date(quiz.created_at);
-    if (date.getFullYear() === selectedYear.value) {
-      const monthIndex = date.getMonth();
+    if (date.getUTCFullYear() === selectedYear.value) {
+      const monthIndex = date.getUTCMonth();
       const month = months.value[monthIndex];
       month.weeks.forEach(week => {
         week.days.forEach(day => {
-          if (day.date.toDateString() === date.toDateString()) {
+          if (day.date.toISOString().split('T')[0] === date.toISOString().split('T')[0]) {
             day.quizCount += 1;
           }
         });
@@ -208,13 +208,16 @@ const toggleAddDeadlineMode = () => {
 };
 
 const addDeadline = () => {
-  deadlines.value.push({ ...newDeadline.value });
+  // Ensure date is formatted correctly in ISO format
+  const formattedDate = new Date(newDeadline.value.date).toISOString().split('T')[0];
+  deadlines.value.push({ ...newDeadline.value, date: formattedDate });
   showDeadlineForm.value = false;
   newDeadline.value = {
     date: '',
     title: '',
     color: 'red'
   };
+  initCalendar();
 };
 
 const cancelAddDeadline = () => {
@@ -465,5 +468,4 @@ select, button {
   cursor: pointer;
   border-radius: 3px;
 }
-
 </style>
