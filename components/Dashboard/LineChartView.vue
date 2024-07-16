@@ -1,6 +1,6 @@
 <template>
   <div class="score-chart-container">
-    <h3>Your Learning Success per Art Epoch Over Time</h3>
+    <h3>My Learning Success per Art Epoch Over Time</h3>
     <div class="dropdown-container">
       <div class="dropdown">
         <label for="month-select">Select Month:</label>
