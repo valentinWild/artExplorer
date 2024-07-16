@@ -1,23 +1,25 @@
 <template>
   <div class="score-chart-container">
-    <h3>Scores Chart</h3>
-    <div>
-      <label for="month-select">Select Month:</label>
-      <select id="month-select" v-model="selectedMonth" @change="updateChart">
-        <option v-for="month in months" :key="month.value" :value="month.value">
-          {{ month.text }}
-        </option>
-      </select>
+    <h3>Your Learning Success per Art Epoch Over Time</h3>
+    <div class="dropdown-container">
+      <div>
+        <label for="month-select">Select Month:</label>
+        <select id="month-select" v-model="selectedMonth" @change="updateChart">
+          <option v-for="month in months" :key="month.value" :value="month.value">
+            {{ month.text }}
+          </option>
+        </select>
+      </div>
+      <div>
+        <label for="learning-set-select">Select Learning Set:</label>
+        <select id="learning-set-select" v-model="selectedLearningSet" @change="updateChart">
+          <option v-for="set in learningSets" :key="set" :value="set">
+            {{ set }}
+          </option>
+        </select>
+      </div>
     </div>
-    <div>
-      <label for="learning-set-select">Select Learning Set:</label>
-      <select id="learning-set-select" v-model="selectedLearningSet" @change="updateChart">
-        <option v-for="set in learningSets" :key="set" :value="set">
-          {{ set }}
-        </option>
-      </select>
-    </div>
-    <div>
+    <div class="radio-buttons-container">
       <label>
         <input type="radio" v-model="viewMode" value="average" @change="updateChart">
         Average Scores
@@ -239,24 +241,41 @@ watch(
 
 <style scoped>
 h3 {
-  font-weight: 600;
-  color: #00bfff; /* Adjust to match the theme */
+  font-weight: 800;
+  font-size: 1.3em;
+  color: #FFFFFF; 
+  text-align: center; 
+  width: 100%; 
+  margin-bottom: 3rem; 
+  margin-top: 1em;
+}
+
+.dropdown-container {
+  display: flex;
+  gap: 2rem; /* Space between the dropdowns */
+  margin-bottom: 2rem; 
+  margin-left: 10rem;
 }
 
 select {
-  margin-bottom: 20px;
-  background-color: #1e1e2d; /* Adjust to match the theme */
-  color: #ffffff; /* Adjust to match the theme */
+  background-color: #1e1e2d; 
+  color: #ffffff; 
 }
 
 label {
-  color: #00bfff; /* Adjust to match the theme */
+  color: #00bfff; 
+}
+
+.radio-buttons-container {
+  display: flex;
+  gap: 2rem; /* Space between the radio buttons */
+  margin-bottom: 3rem; 
+  margin-left: 16rem;
 }
 
 .chart-container {
   width: 100%;
-  height: 400px;
-  min-height: 400px; /* Ensure a minimum height */
+  min-height: 200px; /* Ensure a minimum height */
   position: relative;
 }
 
@@ -268,9 +287,9 @@ label {
 .score-chart-container {
   display: flex;
   flex-direction: column; /* Arrange items in a column */
-  align-items: flex-start; /* Align items to the start of the container */
-  gap: 1rem; /* Add space between items */
-  padding: 2rem; /* Reduce padding for smaller container */
+  align-items: flex-start; 
+  gap: 0.5rem; /* Reduce space between items */
+  padding: 1rem; 
   background: rgba(255, 255, 255, 0.09); 
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
@@ -278,6 +297,6 @@ label {
   -webkit-backdrop-filter: blur(10px); 
   max-width: 850px; /* Set maximum width for the container */
   width: calc(100% - 2rem); /* Ensure the container is slightly wider than the chart */
-  margin-left: 5rem;
+  margin-left: 3rem;
 }
 </style>
