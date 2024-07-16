@@ -37,6 +37,14 @@
 ></DashboardBarChartView>
 </div>
 
+
+<div class="timeChart">
+
+<DashboardTimeBarChartView
+    :user-data="userData"
+></DashboardTimeBarChartView>
+</div>
+
 </body>
 
 </template>
@@ -94,6 +102,14 @@ body{
 }
 
 .progressBar{
+    margin-bottom: 3rem;
+}
+
+.barChart{
+    margin-bottom: 3rem;
+}
+
+.timeChart {
     margin-bottom: 3rem;
 }
 
