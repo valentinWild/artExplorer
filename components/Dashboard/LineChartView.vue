@@ -20,13 +20,13 @@
       </div>
     </div>
     <div class="radio-buttons-container">
-      <label>
+      <label class="custom-radio">
         <input type="radio" v-model="viewMode" value="average" @change="updateChart">
-        Average Scores
+        <span class="radio-label">Average Scores</span>
       </label>
-      <label>
+      <label class="custom-radio">
         <input type="radio" v-model="viewMode" value="all" @change="updateChart">
-        All Scores
+        <span class="radio-label">All Scores</span>
       </label>
     </div>
     <div class="chart-container">
@@ -246,15 +246,13 @@ h3 {
   color: #FFFFFF; 
   text-align: center; 
   width: 100%; 
-  margin-bottom: 3rem; 
-  margin-top: 1em;
+  margin-bottom: 2rem; 
 }
 
 .dropdown-container {
   display: flex;
-  gap: 2rem; /* Space between the dropdowns */
+  gap: 1rem; 
   margin-bottom: 2rem; 
-  margin-left: 10rem;
 }
 
 select {
@@ -268,14 +266,62 @@ label {
 
 .radio-buttons-container {
   display: flex;
-  gap: 2rem; /* Space between the radio buttons */
-  margin-bottom: 3rem; 
-  margin-left: 16rem;
+  gap: 2rem; 
+  margin-bottom: 2rem; 
+}
+
+.custom-radio {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.custom-radio input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.custom-radio .radio-label {
+  position: relative;
+  padding-left: 30px;
+  margin-right: 10px;
+  color: #00bfff;
+}
+
+.custom-radio .radio-label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #00bfff;
+  background-color: transparent;
+}
+
+.custom-radio input:checked ~ .radio-label::before {
+  background-color: #00bfff;
+}
+
+.custom-radio input:checked ~ .radio-label::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: white;
 }
 
 .chart-container {
   width: 100%;
-  min-height: 200px; /* Ensure a minimum height */
+  min-height: 300px;
   position: relative;
 }
 
@@ -286,8 +332,8 @@ label {
 
 .score-chart-container {
   display: flex;
-  flex-direction: column; /* Arrange items in a column */
-  align-items: flex-start; 
+  flex-direction: column; 
+  align-items: center; 
   gap: 0.5rem; /* Reduce space between items */
   padding: 1rem; 
   background: rgba(255, 255, 255, 0.09); 
@@ -297,6 +343,6 @@ label {
   -webkit-backdrop-filter: blur(10px); 
   max-width: 850px; /* Set maximum width for the container */
   width: calc(100% - 2rem); /* Ensure the container is slightly wider than the chart */
-  margin-left: 3rem;
+  margin-left: 5rem;
 }
 </style>
