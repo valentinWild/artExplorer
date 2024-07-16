@@ -2,7 +2,7 @@
   <div class="score-chart-container">
     <h3>Your Learning Success per Art Epoch Over Time</h3>
     <div class="dropdown-container">
-      <div>
+      <div class="dropdown">
         <label for="month-select">Select Month:</label>
         <select id="month-select" v-model="selectedMonth" @change="updateChart">
           <option v-for="month in months" :key="month.value" :value="month.value">
@@ -10,7 +10,7 @@
           </option>
         </select>
       </div>
-      <div>
+      <div class="dropdown">
         <label for="learning-set-select">Select Learning Set:</label>
         <select id="learning-set-select" v-model="selectedLearningSet" @change="updateChart">
           <option v-for="set in learningSets" :key="set" :value="set">
@@ -247,12 +247,25 @@ h3 {
   text-align: center; 
   width: 100%; 
   margin-bottom: 2rem; 
+  margin-top: 1rem;
 }
 
 .dropdown-container {
   display: flex;
-  gap: 1rem; 
+  gap: 2rem; 
   margin-bottom: 2rem; 
+}
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+label {
+  color: #00bfff;
+  margin-bottom: 0.3rem; 
+  font-weight: bolder;
 }
 
 select {
@@ -260,14 +273,11 @@ select {
   color: #ffffff; 
 }
 
-label {
-  color: #00bfff; 
-}
-
 .radio-buttons-container {
   display: flex;
-  gap: 2rem; 
+  gap: 2rem;
   margin-bottom: 2rem; 
+
 }
 
 .custom-radio {
@@ -321,7 +331,7 @@ label {
 
 .chart-container {
   width: 100%;
-  min-height: 300px;
+  min-height: 200px; /* Ensure a minimum height */
   position: relative;
 }
 
@@ -334,7 +344,7 @@ label {
   display: flex;
   flex-direction: column; 
   align-items: center; 
-  gap: 0.5rem; /* Reduce space between items */
+  gap: 0.5rem; 
   padding: 1rem; 
   background: rgba(255, 255, 255, 0.09); 
   border-radius: 15px;
