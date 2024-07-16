@@ -49,7 +49,7 @@
       <div>{{ tooltip.date }}</div>
       <div v-if="tooltip.quizCount !== null">Quizzes: {{ tooltip.quizCount }}</div>
       <div v-if="tooltip.deadlineTitle">Deadline: {{ tooltip.deadlineTitle }}</div>
-      <div v-else>No Quizzes</div>
+      <div v-else>No Deadline</div>
     </div>
     <div v-if="showDeadlineForm" class="deadline-form-overlay">
       <div class="deadline-form">
@@ -428,7 +428,7 @@ select, button {
 }
 
 .deadline-form {
-  background: white;
+  background: #1e1e2d;
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -436,11 +436,13 @@ select, button {
 
 .deadline-form h3 {
   margin-top: 0;
+  color: white;
 }
 
 .deadline-form label {
   display: block;
   margin-bottom: 5px;
+  color: white;
 }
 
 .deadline-form input,
@@ -449,9 +451,19 @@ select, button {
   margin-bottom: 10px;
   padding: 5px;
   box-sizing: border-box;
+  border: 1px solid #00bfff;
+  background: #1e1e2d;
+  color: white;
 }
 
 .deadline-form button {
   margin-right: 10px;
+  background: #00bfff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
 }
+
 </style>
