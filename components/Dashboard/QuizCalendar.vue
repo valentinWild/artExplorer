@@ -316,7 +316,7 @@ select, button {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
   backdrop-filter: blur(10px); 
   -webkit-backdrop-filter: blur(10px); 
-  max-width: 1800px; 
+  max-width: 1600px; 
   width: calc(100% - 2rem); 
   margin-left: 5rem;
   height: 550px;

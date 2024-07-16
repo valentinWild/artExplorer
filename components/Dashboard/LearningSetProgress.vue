@@ -102,6 +102,7 @@ watch(
   margin-left: 5rem;
   padding: 1rem;
   position: relative; /* Ensure tooltip is positioned relative to this container */
+  height: 480px;
 }
 
 .header {
@@ -109,6 +110,7 @@ watch(
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem; 
+  margin-top: 1rem;
 }
 
 h3 {
@@ -168,7 +170,7 @@ h3 {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  margin-top: 5px;
+  margin-top: 25px;
 }
 
 .progress-bar-label {

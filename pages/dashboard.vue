@@ -1,117 +1,123 @@
 <template>
 
-<body>
-
-<h1>Dashboard of {{user.email}}</h1>
-
-<div class="quizCounter">
-
-<DashboardQuizCounter
-    :user-data="userData"
-></DashboardQuizCounter>
-</div>
-
-<div class="lineChart"><
-<DashboardLineChartView
-    :user-data="userData"
-></DashboardLineChartView>
-</div>
-
-<div class="quizCalender">
-<DashboardQuizCalendar
-    :user-data="userData"
-></DashboardQuizCalendar>
-</div>
-
-<div class="progressBar">
-
-<DashboardLearningSetProgress
-    :user-data="userData"
-></DashboardLearningSetProgress>
-</div>
-
-<div class="barChart">
-
-<DashboardBarChartView
-    :user-data="userData"
-></DashboardBarChartView>
-</div>
-
-
-<div class="timeChart">
-
-<DashboardTimeBarChartView
-    :user-data="userData"
-></DashboardTimeBarChartView>
-</div>
-
-</body>
-
-</template>
-
-<script setup>
-
-definePageMeta({
-    middleware: ['auth'],
-});
-
-const user = useSupabaseUser();
-const baseUrl = '/api/userData';
-const userData = ref();
-
-const fetchUserData = async () => {
-
-    const data = await $fetch(baseUrl, {
-      method: 'GET',
-      headers: useRequestHeaders(['cookie']),
+    <body>
+    
+    <h1>Dashboard of {{user.email}}</h1>
+    
+    <div class="quizCounter">
+        <DashboardQuizCounter
+            :user-data="userData"
+        ></DashboardQuizCounter>
+    </div>
+    
+    <div class="row">
+        <div class="lineChart">
+            <DashboardLineChartView
+                :user-data="userData"
+            ></DashboardLineChartView>
+        </div>
+    
+        <div class="progressBar">
+            <DashboardLearningSetProgress
+                :user-data="userData"
+            ></DashboardLearningSetProgress>
+        </div>
+    </div>
+    
+    <div class="quizCalender">
+        <DashboardQuizCalendar
+            :user-data="userData"
+        ></DashboardQuizCalendar>
+    </div>
+    
+    <div class="row">
+        <div class="barChart">
+            <DashboardBarChartView
+                :user-data="userData"
+            ></DashboardBarChartView>
+        </div>
+    
+        <div class="timeChart">
+            <DashboardTimeBarChartView
+                :user-data="userData"
+            ></DashboardTimeBarChartView>
+        </div>
+    </div>
+    
+    </body>
+    
+    </template>
+    
+    <script setup>
+    
+    definePageMeta({
+        middleware: ['auth'],
     });
-
-    return data;
-}
-
-userData.value = await fetchUserData();
-
-
-
-onMounted(() => {
-    watchEffect(() => {
-        if (!user.value) {
-            navigateTo('/user/login');
-        }
+    
+    const user = useSupabaseUser();
+    const baseUrl = '/api/userData';
+    const userData = ref();
+    
+    const fetchUserData = async () => {
+    
+        const data = await $fetch(baseUrl, {
+          method: 'GET',
+          headers: useRequestHeaders(['cookie']),
+        });
+    
+        return data;
+    }
+    
+    userData.value = await fetchUserData();
+    
+    onMounted(() => {
+        watchEffect(() => {
+            if (!user.value) {
+                navigateTo('/user/login');
+            }
+        });
     });
-});
-
-</script>
-
-<style scoped>
-
-body{
-    background-color: #121421;
-}
-
-.quizCounter{
-    margin-bottom: 3rem;
-}
-
-.lineChart{
-    margin-bottom: 3rem;
-}
-
-.quizCalender{
-    margin-bottom: 3rem;
-}
-
-.progressBar{
-    margin-bottom: 3rem;
-}
-
-.barChart{
-    margin-bottom: 3rem;
-}
-
-.timeChart {
-    margin-bottom: 3rem;
-}
-
-
-</style>
+    
+    </script>
+    
+    <style scoped>
+    
+    body {
+        background-color: #121421;
+    }
+    
+    .quizCounter {
+        margin-bottom: 3rem;
+    }
+    
+    .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 3rem;
+    }
+    
+    .lineChart,
+    .progressBar {
+        flex: 1;
+        margin-right: 1rem;
+    }
+    
+    .lineChart:last-child {
+        margin-right: 0;
+    }
+    
+    .barChart,
+    .timeChart {
+        flex: 1;
+        margin-right: 1rem;
+    }
+    
+    .barChart:last-child {
+        margin-right: 0;
+    }
+    
+    .quizCalender {
+        margin-bottom: 3rem;
+    }
+    
+    </style>
