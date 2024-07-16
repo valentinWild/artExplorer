@@ -2,25 +2,33 @@
 
 <body>
 
-    
-
 <h1>Dashboard of {{user.email}}</h1>
+
+<div class="quizCounter">
 
 <DashboardQuizCounter
     :user-data="userData"
 ></DashboardQuizCounter>
+</div>
 
+<div class="lineChart"><
 <DashboardLineChartView
     :user-data="userData"
 ></DashboardLineChartView>
+</div>
 
+<div class="quizCalender">
 <DashboardQuizCalendar
     :user-data="userData"
 ></DashboardQuizCalendar>
+</div>
+
+<div class="progressBar">
 
 <DashboardLearningSetProgress
     :user-data="userData"
 ></DashboardLearningSetProgress>
+</div>
 
 </body>
 
@@ -65,4 +73,22 @@ onMounted(() => {
 body{
     background-color: #121421;
 }
+
+.quizCounter{
+    margin-bottom: 3rem;
+}
+
+.lineChart{
+    margin-bottom: 3rem;
+}
+
+.quizCalender{
+    margin-bottom: 3rem;
+}
+
+.progressBar{
+    margin-bottom: 3rem;
+}
+
+
 </style>
