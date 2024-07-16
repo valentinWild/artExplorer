@@ -7,9 +7,6 @@
         <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
       </select>
     </div>
-    <div>
-      <button @click="toggleAddDeadlineMode">Add Deadline</button>
-    </div>
     <div class="calendar" @mousemove="updateTooltipPosition">
       <div class="year-row">
         <div class="months">
@@ -44,6 +41,9 @@
         <div class="color-box dark-green"></div>
         <span>10+ Quizzes</span>
       </div>
+      <div class="add-deadline-button">
+      <button @click="toggleAddDeadlineMode">Add Deadline</button>
+    </div>
     </div>
     <div v-if="tooltip.visible" class="tooltip" :style="{ top: tooltip.y + 'px', left: tooltip.x + 'px' }">
       <div>{{ tooltip.date }}</div>
@@ -269,7 +269,7 @@ select, button {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
   backdrop-filter: blur(10px); 
   -webkit-backdrop-filter: blur(10px); 
-  max-width: 850px; 
+  max-width: 1800px; 
   width: calc(100% - 2rem); 
   margin-left: 5rem;
 }
@@ -322,15 +322,15 @@ select, button {
 }
 
 .light-green {
-  background-color: #d4edda;
+  background-color: #87eb9e;
 }
 
 .middle-green {
-  background-color: #a8e0a3;
+  background-color: #1ccf46;
 }
 
 .dark-green {
-  background-color: #74c476;
+  background-color: #107928;
 }
 
 .red {
@@ -368,15 +368,41 @@ select, button {
   border: 1px solid #ddd;
 }
 
+.add-deadline-button {
+  position: absolute;
+  bottom: 2px; /* Abstand vom unteren Rand */
+  left: 1250px; /* Abstand vom linken Rand */
+}
+
+.add-deadline-button button {
+  background-color: #00bfff;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-deadline-button button:hover {
+  background-color: #00a3da;
+}
+
 .tooltip {
   position: absolute;
-  background-color: white;
-  border: 1px solid #ddd;
+  background-color: rgba(0, 0, 0, 0.6); 
+  color: #ffffff; 
   padding: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   pointer-events: none;
   z-index: 10;
+  border-radius: 5px; /* Abgerundete Ecken */
+  border: none; /* Keine Border */
 }
+
+.tooltip div {
+  margin-bottom: 10px;
+}
+
 
 .deadline-form-overlay {
   position: fixed;
