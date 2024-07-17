@@ -57,22 +57,35 @@ export default defineEventHandler(async (event) => {
                 throw new Error('Could not validate the Question!');
             }
         }
+    } else if (quizItem.type === "fill_in_the_blanks") {
+        if (userSolutions.answer_text) {
+            const correctAnswers = quizItem.content.correct_answers.map(answer => answer.toLowerCase().trim());
+            const userAnswerText = userSolutions.answer_text.split(', ').map(ans => ans.toLowerCase().trim());
+            let score = 0;
+            correctAnswers.forEach(correctAnswer => {
+                if (userAnswerText.includes(correctAnswer)) {
+                    score += 1;
+                }
+            });
+            score = score / correctAnswers.length;
+            quizItem.points = score;
+            quizItem.user_answers = userSolutions.answer_text;
+            quizItem.answered = true;
+            return quizItem;
+        }
     } else if (quizItem.type === "timeline_quiz") {
         const correctOrder = quizItem.content.correct_order;
         const userOrder = userSolutions.image_order || userSolutions.answer_order;
-        console.log("HIER userOrder: ", userOrder);
-        console.log("HIER correctOrder: ", correctOrder);
         const valuesEqual = correctOrder.every((id, index) => id === userOrder[index]);
         quizItem.user_answers = userOrder;
         quizItem.answered = true;
         quizItem.points = valuesEqual ? 1.0 : 0.0;
-        console.log("HIER Points: ", quizItem.points);
         return quizItem;
     } else {
         const correctAnswerIds = quizItem.content.correct_answers.map(answer => answer.id);
         let userAnswerIds = [];
         if (userSolutions) {
-        userAnswerIds = userSolutions.answer_ids;
+            userAnswerIds = userSolutions.answer_ids;
         }
         const valuesEqual = correctAnswerIds.every(answerId => userAnswerIds.includes(answerId));
         quizItem.user_answers = userAnswerIds;
@@ -80,7 +93,7 @@ export default defineEventHandler(async (event) => {
         quizItem.points = valuesEqual ? 1.0 : 0.0;
         return quizItem;
     }
-    };
+};
 
 const exampleSolution = {
     quiz_id: 28,

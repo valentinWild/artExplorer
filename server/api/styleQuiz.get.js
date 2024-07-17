@@ -7,6 +7,7 @@ import findThePicture from '../utils/findThePicture';
 import textQuestion from '../utils/textQuestion';
 import timelineQuiz from '../utils/timelineQuiz'; 
 import mcq from '../utils/mcq';
+import fillInTheBlanks from '../utils/FillInTheBlanks';
 import db from "../utils/db";
 import helpers from "../utils/helpers";
 
@@ -34,6 +35,7 @@ export default defineEventHandler(async (event) => {
   const numOfWrongPictureQuestions = Math.floor((numOfQuestions - numOfMCQs - numOfTextQuestions) / 2);
   const numOfCorrectPictureQuestions = numOfQuestions - numOfMCQs - numOfTextQuestions - numOfWrongPictureQuestions;
   const numOfTimelineQuestions = Math.floor(numOfQuestions / 4);
+  const numOfFillInTheBlanksQuestions = Math.floor(numOfQuestions / 4);
 
   const epochArtworks = await fetchExternalArtworks(numOfQuestions, styleCategory);
   const otherEpochArtworks = await fetchExternalArtworks(numOfQuestions, '');
@@ -49,8 +51,10 @@ export default defineEventHandler(async (event) => {
   console.log('Created text questions');
   const timelineQuestions = await timelineQuiz.createTimelineQuestions(styleCategory, numOfTimelineQuestions);
   console.log('Created timeline questions');
+  const fillInTheBlanksQuestions = await fillInTheBlanks.createFillInTheBlanksQuestions(styleCategory, numOfFillInTheBlanksQuestions);
+  console.log('Created fill in the blanks questions');
   
-  const questions = [...mcqs, ...findWrongPictureQuestions, ...findCorrectPictureQuestions, ...textQuestions, ...timelineQuestions];
+  const questions = [...mcqs, ...findWrongPictureQuestions, ...findCorrectPictureQuestions, ...textQuestions, ...timelineQuestions, ...fillInTheBlanksQuestions];
   console.log('Created questions');
 
   const quiz = await saveQuiz(client, user.id, questions, styleCategory);

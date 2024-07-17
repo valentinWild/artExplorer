@@ -48,8 +48,24 @@ const getRandomItems = (array, numItems) => {
   return arrCopy.slice(0, numItems);
 }
 
+const getRandomIndices = (words, num, minWordLength) => {
+  const indices = [];
+  while (indices.length < num) {
+    const index = Math.floor(Math.random() * words.length);
+    if (!indices.includes(index) && words[index].length > minWordLength && !words[index].includes('<')) {
+      indices.push(index);
+    }
+  }
+  return indices.sort((a, b) => a - b);
+};
+
+
+
 
 export default {
+  getRandomIndices,
     shuffleArray,
     getRandomItems,
 }
+
+

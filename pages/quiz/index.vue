@@ -45,6 +45,16 @@
           :current-question-index="currentQuizIndex"
       ></TimelineQuiz>
 
+      <FillInTheBlanks
+      v-if="currentQuizItem?.type === 'fill_in_the_blanks'"
+      :quiz-data="currentQuizItem.content"
+      @submit-item="handleItemSubmit"
+      :question-answered="quizItemAnswered"
+      :item-result="quizItemResult"
+      :total-questions="quizTotalItems"
+      :current-question-index="currentQuizIndex"
+    ></FillInTheBlanks>
+
         <div class="quiz-result" v-if="quizResultText">
           {{ quizResultText }}
         </div>
@@ -63,6 +73,7 @@ import QuestionsMCQ from '../../components/Questions/MCQ.vue';
 import QuestionsFindPicture from '../../components/Questions/FindPicture.vue';
 import QuestionsTextQuestion from '../../components/Questions/TextQuestion.vue';
 import TimelineQuiz from '../../components/Questions/TimelineQuiz.vue'; 
+import FillInTheBlanks from '../../components/Questions/FillInTheBlanks.vue';
 
 const route = useRoute();
 
@@ -138,7 +149,9 @@ const fetchQuestions = async() => {
     };
 
     if (currentQuizItem.value.type === "text_question") {
-      body.item.answer_text = item;  
+      body.item.answer_text = item; 
+    } else if (currentQuizItem.value.type === "fill_in_the_blanks") {
+      body.item.answer_text = item.answer_text;  
     } else if (currentQuizItem.value.type === "timeline_quiz") {
       body.item.image_order = item.image_order; 
     } else {
