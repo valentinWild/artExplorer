@@ -14,8 +14,8 @@ const sort = ref({
 
 const columns = [
   { label: 'First Name', key: 'firstname', sortable: true },
-  { label: 'Last Name', key: 'lastname', sortable: true },
-  { label: 'Mean Score', key: 'mean_score', sortable: true }
+  { label: 'Mean Score', key: 'mean_score', sortable: true },
+  { label: 'Total Quizzes', key: 'totalquizzes', sortable: true }
 ];
 
 const users = ref(0);
