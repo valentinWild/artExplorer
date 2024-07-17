@@ -109,6 +109,33 @@ const getUserQuizData = async (client, userId) => {
     return quizzes;
 }
 
+const getUserInfoData = async (client, userId) => {
+
+    const { data: userData, error } = await client
+        .from('users_info')
+        .select("*")
+        .eq('userID', userId)
+    if (error) {
+        console.error(error);
+        return new Error({'Error getting user Info data': error});
+    }
+    return userData;
+}
+
+const getUsersInfoData = async (client) => {
+
+    const { data: userData, error } = await client
+        .from('users_info')
+        .select("*")
+    if (error) {
+        console.error(error);
+        return new Error({'Error getting user Info data': error});
+    }
+    return userData;
+}
+
+
+
 
 
 export default {
@@ -121,4 +148,6 @@ export default {
     updateQuiz,
     insertQuiz,
     getUserQuizData,
+    getUserInfoData,
+    getUsersInfoData,
 };

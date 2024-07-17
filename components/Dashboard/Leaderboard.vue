@@ -1,77 +1,49 @@
 <template>
-    <div class="cards-container">
-    <UCard class="counter">
-      <template #header>
-        <Placeholder class="one">Total Quizzes</Placeholder>
-      </template>
-      <Placeholder class="two">{{ totalQuizzes }}</Placeholder>
-    </UCard>
-    <UCard class="counter">
-      <template #header>
-        <Placeholder class="one">Overall Score</Placeholder>
-      </template>
-      <Placeholder class="two">{{ score }}</Placeholder>
-    </UCard>
-    <UCard class="counter">
-      <template #header>
-        <Placeholder class="one">Time Studied</Placeholder>
-      </template>
-      <Placeholder class="two">{{ timeSpent }}</Placeholder>
-    </UCard>
-  </div>
-  </template>
-  
-  <script setup>
-  
-  const totalQuizzes = ref(0);
-  const timeSpent = ref(0);
-  const score = ref(0);
-  
-  const props = defineProps({
-  userData: {
-    type: Object,
-    required: true,
-  }
+  <h1>Leaderboard</h1>
+  <UTable :sort="sort" :columns="columns" :rows="users"/>
+</template>
+
+<script setup>
+
+const sort = ref({
+  column: 'firstname',
+  direction: 'asc'
+});
+
+const columns = [
+  { label: 'First Name', key: 'firstname', sortable: true },
+  { label: 'Last Name', key: 'lastname', sortable: true },
+  { label: 'Mean Score', key: 'mean_score', sortable: true }
+];
+
+const users = ref(0);
+
+const props = defineProps({
+  usersInfoData: {
+      type: Object,
+      required: true,
+    },
   });
-  
-  totalQuizzes.value = props.userData.length;
-  timeSpent.value = props.userData.reduce((acc, curr) => {
-        if (curr.finished) {
-            const quizTime = curr.finishTime - curr.startTime;
-            return acc + quizTime;
-        }
-        return acc;
-    }, 0);
-    score.value = ((props.userData.reduce((acc, curr) => acc + curr.score, 0) / props.userData.length) * 100).toFixed(2) + ' %';
 
-  </script>
-  
-  <style scoped>
-  
-  .cards-container {
-  display: flex;
-  justify-content: space-between;
-  gap: 30px; 
-}
+  users.value = props.usersInfoData;
+</script>
 
-  .counter {
-    flex: 1;
-    max-width: 200px; /* Optional: Adjust max width of each card */
-    background-color: #121421;
-    border: 1px solid rgb(var(--color-primary-500) / var(--tw-bg-opacity));
-  }
-
-
-.one {
-  font-weight: 600;
-  color: rgb(var(--color-primary-500) / var(--tw-bg-opacity));
-}
-
-.two {
+<style scoped>  
+h1 {
+  font-size: 2em;
+  font-weight: bold;
   color: white;
-  font-size: 1.5rem;
-  font-weight: 800;
-
 }
-  
-  </style>
+table {
+  background-color: aliceblue;
+}
+tr {
+  background-color: white;
+  color: black;
+}
+td {
+  background-color: white;
+  color: white;
+  font-weight: bold;
+}
+</style>
