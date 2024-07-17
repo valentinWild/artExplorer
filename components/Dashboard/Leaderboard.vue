@@ -1,6 +1,8 @@
 <template>
-  <h1>Leaderboard</h1>
-  <UTable :sort="sort" :columns="columns" :rows="users"/>
+  <div class="leaderboard-card">
+    <h1>Leaderboard</h1>
+    <UTable :sort="sort" :columns="columns" :rows="users" class="table"/>
+  </div>
 </template>
 
 <script setup>
@@ -32,18 +34,23 @@ const props = defineProps({
 h1 {
   font-size: 2em;
   font-weight: bold;
-  color: white;
-}
-table {
-  background-color: aliceblue;
-}
-tr {
-  background-color: white;
   color: black;
 }
-td {
-  background-color: white;
-  color: white;
-  font-weight: bold;
-}
+.leaderboard-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: white;
+    border: 2px solid white;
+    border-radius: 10px;
+    color:aquamarine;
+  }
+
+  .table {
+    width: 100%;
+    margin-top: 20px;
+    color: white;
+  }
 </style>

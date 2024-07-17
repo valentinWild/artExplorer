@@ -1,5 +1,6 @@
 <template>
-  <h1 class="font-semibold font-sans text-xl text-stone-100">Your time studied</h1>
+  <div class="container-all">
+    <h1>Your time studied</h1>
     <div class="cards-container">
     <UCard class="counter">
       <template #header>
@@ -19,6 +20,7 @@
       </template>
       <Placeholder class="two">{{ total }}</Placeholder>
     </UCard>
+  </div>
   </div>
   </template>
   
@@ -95,18 +97,39 @@
   
   <style scoped>
   
+  .container-all {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: white;
+    border: 2px solid white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+
   .cards-container {
-  display: flex;
-  justify-content: space-between;
-  gap: 30px; 
-}
+    display: flex;
+    flex-direction: row;  
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: white;
+    gap: 20px;
+  }
 
   .counter {
     flex: 1;
     min-width: 200px;
     max-width: 300px; 
     background-color: #121421;
-    border: 1px solid rgb(var(--color-primary-500) / var(--tw-bg-opacity));
+    border: black;
+  }
+
+  h1 {
+    font-size: 2em;
+    font-weight: bold;
   }
 
 

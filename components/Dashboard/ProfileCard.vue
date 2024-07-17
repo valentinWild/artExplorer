@@ -3,7 +3,7 @@
   <div class="profile-card">
     <div class="profile-info">
       <img src="public/pictures/Logo.png"></img>
-      <h3 style="color: white; font-size: 24px;">{{firstname}} {{lastname}}</h3>
+      <h3 style="color: black; font-size: 2em;">{{firstname}} {{lastname}}</h3>
     </div>
     <div class="profile-stats">
       <div class="stat">
@@ -88,9 +88,10 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
-    background-color: #121421;
+    background-color: white;
     border: 2px solid white;
     border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   }
 
   .profile-info {
@@ -120,22 +121,21 @@
 
   .stat {
     flex: 1;
-    border: 1px solid #06B6D4; 
     padding: 10px;
     border-radius: 10px;
-    background-color: white;
+    background-color: #121421;
     min-width: 100px;
   }
 
   h3 {
     font-size: 25px;
     font-weight: bold;
-    color: #06B6D4;
+    color: white;
     
   }
 
   h2 {
-    color: black;
+    color: white;
     font-size: 15px;
   }
 
