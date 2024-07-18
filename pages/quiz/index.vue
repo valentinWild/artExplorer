@@ -1,10 +1,10 @@
-<template>
+  <template>
     <body>
       <div class="container">
         <h1>{{ queryParams.style_category }}</h1>
         <UButton @click="initQuiz" class="button">Start new Quiz</UButton>
         <QuestionsProgressBar :correct="correctAnswersCount" :incorrect="incorrectAnswersCount" :total="quizTotalItems"/>
-  
+
         <QuestionsMCQ class="questionsMCQ"
             v-if="currentQuizItem?.type === 'mcq'"
             :quiz-data="currentQuizItem.content"
@@ -33,22 +33,34 @@
           :item-result="quizItemResult"
         ></QuestionsTextQuestion>
 
+        <TimelineQuiz class="timelineQuiz" 
+          v-if="currentQuizItem?.type === 'timeline_quiz'"
+          :quiz-data="currentQuizItem.content"
+          @submit-item="handleItemSubmit"
+          :question-answered="quizItemAnswered"
+          :item-result="quizItemResult"
+          :total-questions="quizTotalItems"
+          :current-question-index="currentQuizIndex"
+      ></TimelineQuiz>
+
         <div class="quiz-result" v-if="quizResultText">
           {{ quizResultText }}
         </div>
-  
+
         <div>
           <UButton @click="loadNextItem" class="button">Next Question</UButton>
         </div>
       </div>
     </body>
   </template>
-  
+
 <script setup>
 import { ref, onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import QuestionsMCQ from '../../components/Questions/MCQ.vue';
-
+import QuestionsFindPicture from '../../components/Questions/FindPicture.vue';
+import QuestionsTextQuestion from '../../components/Questions/TextQuestion.vue';
+import TimelineQuiz from '../../components/Questions/TimelineQuiz.vue'; 
 
 const route = useRoute();
 
@@ -78,7 +90,6 @@ onMounted(() => {
     }
 });
 
-
 const fetchQuestions = async() => {
     const url = generateUrl();
     const { data } = await useFetch(url, {
@@ -92,13 +103,13 @@ const fetchQuestions = async() => {
       console.log(quizData);
     }
 }
-  
+
   const initQuiz = async () => {
     resetQuiz();
     quizResultText.value = null;
     await fetchQuestions();
   }
-  
+
   const resetQuiz = () => {
     currentQuizIndex.value = 0;
     quizData.value = null;
@@ -110,7 +121,7 @@ const fetchQuestions = async() => {
     correctAnswersCount.value = 0;
     incorrectAnswersCount.value = 0;
   }
-  
+
   const handleItemSubmit = async (item) => {
     let body = {
       "quiz_id": quizId.value,
@@ -125,10 +136,12 @@ const fetchQuestions = async() => {
 
     if (currentQuizItem.value.type === "text_question") {
       body.item.answer_text = item;  
+    } else if (currentQuizItem.value.type === "timeline_quiz") {
+      body.item.answer_ids = item.map(image => image.id); 
     } else {
       body.item.answer_ids.push(item);
     }
-  
+
     const data = await $fetch(submitItemQuery, {
       method: 'POST',
       headers: useRequestHeaders(['cookie']),
@@ -136,7 +149,7 @@ const fetchQuestions = async() => {
     });
 
     console.log(data[0]);
-  
+
     if (data[0]?.answered === true) {
       quizItemAnswered.value = true;
       quizItemResult.value = data[0];
@@ -148,7 +161,7 @@ const fetchQuestions = async() => {
       }
     }
   }
-  
+
   const loadNextItem = async () => {
     currentQuizIndex.value++;
     console.log(currentQuizIndex.value);
@@ -162,14 +175,14 @@ const fetchQuestions = async() => {
     }
   }
 
-const generateUrl = () => {
+  const generateUrl = () => {
     if (route.query.style_category) {
-        queryParams.style_category = route.query.style_category;
+      queryParams.style_category = route.query.style_category;
     }
     const queryString = new URLSearchParams(queryParams).toString()
     return `${baseQuery}${queryString}`
-}
-  
+  }
+
   const submitQuizResult = async () => {
     let body = {
       "quiz_id": quizId.value,
@@ -183,32 +196,32 @@ const generateUrl = () => {
     resetQuiz();
   }
   </script>
-  
+
   <style scoped>
   body {
     background-color: #121421;
     color: #ffffff;
     margin: 0;
   }
-  
+
   .container {
     background-color: #121421;
     color: #ffffff;
-    max-width: 800px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-  
+
   h1 {
     color: #ffffff;
     font-weight: bold;
     font-size: x-large;
     margin-bottom: 20px;
   }
-  
+
   .button {
     border: none;
     padding: 10px 20px;
@@ -216,10 +229,11 @@ const generateUrl = () => {
     cursor: pointer;
     margin: 10px 0;
   }
-  
+
   .questionsMCQ,
   .questionsFindPicture,
-  .questionsText {
+  .questionsText,
+  .questionsTimeline {
     background-color: rgb(255, 255, 255);
     margin: 20px auto;
     padding: 20px;
@@ -227,4 +241,4 @@ const generateUrl = () => {
     border-radius: 10px;
   }
   </style>
-  
+

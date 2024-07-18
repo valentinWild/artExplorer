@@ -59,6 +59,26 @@ const checkQuizItem = async(quizItem, userSolutions) => {
                 throw new Error('Could not validate the Question!');
             }
         }
+    } else if (quizItem.type === "timeline_quiz") {
+        const correctAnswerIds = quizItem.content.correct_answers.map(answer => answer.id);
+        const userAnswerIds = userSolutions.answer_ids;
+        const valuesEqual = correctAnswerIds.every((id, index) => id === userAnswerIds[index]);
+        quizItem.user_answers = userAnswerIds;
+        quizItem.answered = true;
+        quizItem.points = valuesEqual ? 1.0 : 0.0;
+        return quizItem;
+    
+    } else if (quizItem.type === "timeline_quiz") {
+        const correctOrder = quizItem.content.correct_order;
+        const userOrder = userSolutions.answer_order;
+        
+        const valuesEqual = correctOrder.every((date, index) => userOrder[index] === date);
+        
+        quizItem.user_answers = userOrder;
+        quizItem.answered = true;
+        quizItem.points = valuesEqual ? 1.0 : 0.0;
+        return quizItem;
+
     } else {
         const correctAnswerIds = quizItem.content.correct_answers.map(answer => answer.id);
         let userAnswerIds = [];
