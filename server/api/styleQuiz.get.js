@@ -29,12 +29,12 @@ export default defineEventHandler(async (event) => {
   }
   console.log('Create Quiz for Category', styleCategory);
 
-  const numOfMCQs = Math.floor(numOfQuestions / 3);
-  const numOfTextQuestions = numOfMCQs;
-  const numOfWrongPictureQuestions = Math.floor((numOfQuestions - numOfMCQs - numOfTextQuestions) / 2);
-  const numOfCorrectPictureQuestions = numOfQuestions - numOfMCQs - numOfTextQuestions - numOfWrongPictureQuestions;
-  const numOfTimelineQuestions = Math.floor(numOfQuestions / 4);
-
+  const numOfTextQuestions = Math.floor(numOfQuestions / 4);
+  const numOfTimelineQuestions = numOfTextQuestions;
+  const numOfWrongPictureQuestions = Math.floor(numOfTextQuestions / 2);
+  const numOfCorrectPictureQuestions = Math.floor(numOfTextQuestions / 2);
+  const numOfMCQs  = (numOfQuestions - numOfTextQuestions - numOfTimelineQuestions - numOfCorrectPictureQuestions - numOfWrongPictureQuestions);
+  
   const epochArtworks = await fetchExternalArtworks(numOfQuestions, styleCategory);
   const otherEpochArtworks = await fetchExternalArtworks(numOfQuestions, '');
   console.log('Fetched external Artworks');

@@ -106,12 +106,8 @@ const createAnswers = (artworks, amount, fieldName, correctAnswer, correctAnswer
     return shuffledAnswers;
 };
 
-const test = async(string) => {
-  console.log(string);
-}
 
 
 export default {
-    test,
     createMCQuestions,
 };
