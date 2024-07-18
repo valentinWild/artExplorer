@@ -18,10 +18,8 @@
           </div>
           <div v-else class="placeholder"></div>
         </div>
+        <span class="date-label">{{ formatDate(date.date_display) }}</span>
       </div>
-    </div>
-    <div class="dates">
-      <span class="date-label" v-for="(date, index) in sortedDates" :key="date.id">{{ date.date_display }}</span>
     </div>
     <svg class="timeline-line" viewBox="0 0 100 10" preserveAspectRatio="none">
       <line x1="0" y1="5" x2="100" y2="5" stroke="white" stroke-width="0.5"/>
@@ -40,8 +38,7 @@
         <p class="image-info">{{ image.title }} - {{ image.artist_title }}</p>
       </div>
     </div>
-    <button v-if="!showNextButton" @click="checkOrder" class="button">Done</button>
-    <button v-if="showNextButton" @click="nextQuiz" class="button">Next</button>
+    <button @click="checkOrder" class="button">Done</button>
     <div v-if="showMessage" :class="['message', messageClass]">
       <Icons v-if="messageClass === 'message-success'" class="result-icon" type="happy"/>
       <Icons v-if="messageClass === 'message-error'" class="result-icon" type="sad"/>
@@ -49,7 +46,7 @@
       <div v-if="messageClass === 'message-error'" class="correct-order">
         <p>The correct order is:</p>
         <ul>
-          <li v-for="date in sortedDates" :key="date.id"><strong>{{ date.date_display }}:</strong> {{ date.title }} - {{ date.artist_title }}</li>
+          <li v-for="date in sortedDates" :key="date.id"><strong>{{ formatDate(date.date_display) }}:</strong> {{ date.title }} - {{ date.artist_title }}</li>
         </ul>
       </div>
     </div>
@@ -155,30 +152,27 @@ export default defineComponent({
         this.showMessage = true;
         this.message = 'Correct order!';
         this.messageClass = 'message-success';
-        this.showNextButton = true;
       } else {
         this.showMessage = true;
         this.message = 'Wrong order.';
         this.messageClass = 'message-error';
-        this.showNextButton = true;
       }
 
       console.log("User Order:", userOrder);  // Debugging
 
       this.$emit('submitItem', { id: this.quizData.id, image_order: userOrder });
     },
-    nextQuiz() {
-      this.$emit('next-quiz');
-    },
     resetQuizState() {
       this.selectedImage = null;
       this.selectedField = null;
       this.placedImages = reactive({});
       this.checkStatus = false;
-      this.showNextButton = false;
       this.showMessage = false;
       this.message = '';
       this.messageClass = '';
+    },
+    formatDate(date) {
+      return date.replace(/c\.|molded| /g, '').trim();
     }
   }
 });
@@ -193,7 +187,7 @@ body {
 }
 
 .timeline-container {
-  max-width: 1100px;
+  max-width: 1150px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
@@ -226,7 +220,7 @@ h1 {
 
 .date {
   width: 250px;
-  height: 270px;
+  height: 280px;
   background-color: #4a5568;
   padding: 10px;
   border-radius: 5px;
@@ -287,22 +281,15 @@ h1 {
   margin-top: 10px;
 }
 
-.dates {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
 .date-label {
   background-color: #4a5568;
   padding: 5px;
   border-radius: 5px;
   color: #e2e8f0;
   font-weight: bold;
-  margin-top: 5px;
+  margin-top: 10px;
   width: 250px;
   text-align: center;
-  margin: 0 10px;
 }
 
 .images {
@@ -322,12 +309,11 @@ h1 {
   transition: border 0.3s, background-color 0.3s;
   color: #e2e8f0;
 
-  
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
- position: relative;
+  position: relative;
 }
 
 .image.selected {
@@ -342,7 +328,7 @@ h1 {
 }
 
 .image .image-info {
-  margin: 5px 0;
+  margin: 2px 0;
   font-size: smaller;
 }
 
