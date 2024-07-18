@@ -35,13 +35,14 @@
   
   <style scoped>
   .progress-bar {
-    width: 100%;
+    width: 60%;
     height: 10px;
     background-color: #e0e0e0;
     border-radius: 10px;
     overflow: hidden;
     position: relative;
     margin-top: 10px; 
+    margin: 10px;
   }
   .progress-bar-inner {
     height: 100%;
