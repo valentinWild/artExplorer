@@ -43,10 +43,39 @@ import { Bar }  from 'vue-chartjs'
             </UCarousel>
         </div>
 
-
-        
-
-        
+        <div class="row">
+        <div class="lineChart">
+            <DashboardLineChartView
+                :user-data="userData"
+            ></DashboardLineChartView>
+        </div>
+    
+        <div class="progressBar">
+            <DashboardLearningSetProgress
+                :user-data="userData"
+            ></DashboardLearningSetProgress>
+        </div>
+    </div>
+    
+    <div class="quizCalender">
+        <DashboardQuizCalendar
+            :user-data="userData"
+        ></DashboardQuizCalendar>
+    </div>
+    
+    <div class="row">
+        <div class="barChart">
+            <DashboardBarChartView
+                :user-data="userData"
+            ></DashboardBarChartView>
+        </div>
+    
+        <div class="timeChart">
+            <DashboardTimeBarChartView
+                :user-data="userData"
+            ></DashboardTimeBarChartView>
+        </div>
+    </div>
 
 
     </section>
@@ -95,16 +124,6 @@ const fetchUserInfoData = async () => {
 }
 userInfoData.value = await fetchUserInfoData();
 
-// Get Infos from all users from table users_info
-const fetchUsersInfoData = async () => {
-    const usersInfoData = await $fetch(baseUrlUsersInfoData, {
-        method: 'GET',
-        headers: useRequestHeaders(['cookie']),
-    });
-
-    return usersInfoData;
-}
-usersInfoData.value = await fetchUsersInfoData();
 
 onMounted(() => {
     watchEffect(() => {
@@ -159,9 +178,43 @@ body{
     color: white;
 }
 
-
-
-
+body {
+        background-color: #121421;
+    }
+    
+    .quizCounter {
+        margin-bottom: 3rem;
+    }
+    
+    .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 3rem;
+    }
+    
+    .lineChart,
+    .progressBar {
+        flex: 1;
+        margin-right: 1rem;
+    }
+    
+    .lineChart:last-child {
+        margin-right: 0;
+    }
+    
+    .barChart,
+    .timeChart {
+        flex: 1;
+        margin-right: 1rem;
+    }
+    
+    .barChart:last-child {
+        margin-right: 0;
+    }
+    
+    .quizCalender {
+        margin-bottom: 3rem;
+    }
 
 
 </style>
