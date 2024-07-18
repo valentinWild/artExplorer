@@ -64,7 +64,7 @@
   };
   </script>
   
-  <style scoped>
+  <style>
   .circular-progress {
     position: relative;
     display: flex;
@@ -79,10 +79,12 @@
   }
   .progress-text {
     position: absolute;
+    top: calc(50% - 0.9rem);
+    left: calc(50% -0.5rem);
     text-align: center;
     font-size: 1.5em;
     font-weight: bold;
-    color: #ffffff;
+    color: #ffff !important;
   }
   </style>
   

@@ -47,7 +47,7 @@
 
       <div class="quiz-result" v-if="quizFinished">
         {{ quizResultText }}
-        <CircularProgress 
+<!--         <CircularProgress 
           :percentage="quizPercentage"
           :stroke="10"
           :size="150"
@@ -57,7 +57,7 @@
           <div class="progress-text">
             {{ quizPercentage }}%
           </div>
-        </CircularProgress>
+        </CircularProgress> -->
       </div>
 
       <div>
