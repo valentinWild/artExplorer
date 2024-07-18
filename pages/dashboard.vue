@@ -124,6 +124,17 @@ const fetchUserInfoData = async () => {
 }
 userInfoData.value = await fetchUserInfoData();
 
+// Get Infos from all users from table users_info
+const fetchUsersInfoData = async () => {
+    const usersInfoData = await $fetch(baseUrlUsersInfoData, {
+        method: 'GET',
+        headers: useRequestHeaders(['cookie']),
+    });
+
+    return usersInfoData;
+}
+usersInfoData.value = await fetchUsersInfoData();
+
 
 onMounted(() => {
     watchEffect(() => {
