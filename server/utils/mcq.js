@@ -33,7 +33,7 @@ const createMCQuestions = async (numOfQuestions, artworks, epoch) => {
     return {
       type: 'mcq',
       content: {
-        stem: `Welches dieser Kunstwerke stammt von ${artwork.artist_title}?`,
+        stem: `Which of these artworks is made by the artist ${artwork.artist_title}?`,
         correct_answers: [{
           id: correctAnswerId,
           value: artwork.title || 'Titel unbekannt'
@@ -49,7 +49,7 @@ const createMCQuestions = async (numOfQuestions, artworks, epoch) => {
     return {
       type: 'mcq',
       content: {
-        stem: `Welchen Titel trägt dieses Kunstwerk von ${artwork.artist_title}?`,
+        stem: `Which title has this artwork by ${artwork.artist_title}?`,
         correct_answers: [{
           id: correctAnswerId,
           value: artwork.title || 'Titel unbekannt'
@@ -66,7 +66,7 @@ const createMCQuestions = async (numOfQuestions, artworks, epoch) => {
     return {
       type: 'mcq',
       content: {
-        stem: `Wer hat das Kunstwerk "${artwork.title}" geschaffen?`,
+        stem: `Who created the artwork named "${artwork.title}"?`,
         correct_answers: [{
           id: correctAnswerId,
           value: artwork.artist_title || 'Künstler unbekannt'

@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
   }
   console.log('Create Quiz for Category', styleCategory);
 
-  const numOfTextQuestions = Math.floor(numOfQuestions / 4);
+  const numOfTextQuestions = Math.floor(numOfQuestions / 5);
   const numOfTimelineQuestions = numOfTextQuestions;
   const numOfWrongPictureQuestions = Math.floor(numOfTextQuestions / 2);
   const numOfCorrectPictureQuestions = Math.floor(numOfTextQuestions / 2);
