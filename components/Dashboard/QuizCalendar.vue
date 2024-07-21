@@ -422,7 +422,7 @@ select, button {
 .add-deadline-button {
   position: absolute;
   bottom: 2px; /* Abstand vom unteren Rand */
-  left: 1250px; /* Abstand vom linken Rand */
+  left: 1050px; /* Abstand vom linken Rand */
   top: 450px;
 }
 
