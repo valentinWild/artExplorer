@@ -5,11 +5,11 @@ import { serverSupabaseUser } from '#supabase/server';
 export default defineEventHandler(async (event) => {
     const client = await serverSupabaseClient(event);
     const user = await serverSupabaseUser(event);
-  
+
     try {
         const body = await readBody(event);
         if (!body.quiz_id || !body.item) {
-            throw new Error("Invalid quiz data. Quiz ID and item is required.");
+        throw new Error("Invalid quiz data. Quiz ID and item is required.");
         }
 
         const userSolution = body.item;
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
         // Get the checked QuizItems, were the solution is compared to the user's answer
         const result = await checkQuizItem(quizItem, userSolution);
         // Save the User's results for each quiz item to Database
-        const updatedQuizItem = await db.updateSingleQuizItem(client, quizItem.id, result); 
+        const updatedQuizItem = await db.updateSingleQuizItem(client, quizItem.id, result);
 
         return updatedQuizItem;
 
@@ -27,15 +27,13 @@ export default defineEventHandler(async (event) => {
         console.error('Error in submitItem handler:', error);
         return { error: error.message };
     }
-    
-});
+    });
 
 // Check single quizItem (if solved correctly) -> return the quizItem with updated points and userAnswerIds
-const checkQuizItem = async(quizItem, userSolutions) => {
-
+ const checkQuizItem = async(quizItem, userSolutions) => {
     if (quizItem.type === "text_question") {
         if (userSolutions.answer_text) {
-            const prompt = `Question: ${quizItem.content.stem}\nUser Answer: ${userSolutions.answer_text}\nEvaluate the user answer and provide a JSON response in the form:\n[{ "score": score from 0 (bad answer) to 1 (good answer), "correct_answer": Short scentece with correct answer}]`;
+            const prompt = `Question: ${quizItem.content.stem}\nUser Answer: ${userSolutions.answer_text}\nEvaluate the user answer and provide a JSON response in the form:\n[{ "score": score from 0 (bad answer) to 1 (good answer), "correct_answer": Short sentence with correct answer}]`;
             const response = await openAI.getChatCompletion(prompt);
             const responseContent = response.choices[0].message.content.trim();
             const responseObject = JSON.parse(responseContent);
@@ -60,46 +58,29 @@ const checkQuizItem = async(quizItem, userSolutions) => {
             }
         }
     } else if (quizItem.type === "timeline_quiz") {
-        const correctAnswerIds = quizItem.content.correct_answers.map(answer => answer.id);
-        const userAnswerIds = userSolutions.answer_ids;
-        const valuesEqual = correctAnswerIds.every((id, index) => id === userAnswerIds[index]);
-        quizItem.user_answers = userAnswerIds;
-        quizItem.answered = true;
-        quizItem.points = valuesEqual ? 1.0 : 0.0;
-        return quizItem;
-    
-    } else if (quizItem.type === "timeline_quiz") {
         const correctOrder = quizItem.content.correct_order;
-        const userOrder = userSolutions.answer_order;
-        
-        const valuesEqual = correctOrder.every((date, index) => userOrder[index] === date);
-        
+        const userOrder = userSolutions.image_order || userSolutions.answer_order;
+        console.log("HIER userOrder: ", userOrder);
+        console.log("HIER correctOrder: ", correctOrder);
+        const valuesEqual = correctOrder.every((id, index) => id === userOrder[index]);
         quizItem.user_answers = userOrder;
         quizItem.answered = true;
         quizItem.points = valuesEqual ? 1.0 : 0.0;
+        console.log("HIER Points: ", quizItem.points);
         return quizItem;
-
     } else {
         const correctAnswerIds = quizItem.content.correct_answers.map(answer => answer.id);
         let userAnswerIds = [];
         if (userSolutions) {
-            userAnswerIds = userSolutions.answer_ids;
+        userAnswerIds = userSolutions.answer_ids;
         }
-        let itemScore = 0;
         const valuesEqual = correctAnswerIds.every(answerId => userAnswerIds.includes(answerId));
         quizItem.user_answers = userAnswerIds;
         quizItem.answered = true;
-        if (valuesEqual) {
-            itemScore = 1.0
-        } else {
-            itemScore = 0.0
-        }
-        quizItem.points = itemScore;
-    
+        quizItem.points = valuesEqual ? 1.0 : 0.0;
         return quizItem;
     }
-}
-
+    };
 
 const exampleSolution = {
     quiz_id: 28,
