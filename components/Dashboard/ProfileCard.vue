@@ -32,6 +32,17 @@
   const score = ref(0);
   const firstname = ref(0);
   const lastname = ref(0);
+  const baseUrl = '/api/userData';
+
+  const updateUserData = async (fields) => {
+    const data = await $fetch(baseUrl, {
+      method: 'POST',
+      headers: useRequestHeaders(['cookie']),
+      body: fields,
+    });
+
+    return data;
+}
   
   const props = defineProps({
   userData: {
@@ -76,7 +87,11 @@
 
   avgTime.value = formatTime(avgTime.value);
 
-  score.value = ((props.userData.reduce((acc, curr) => acc + curr.score, 0) / props.userData.length) * 100).toFixed(1) + '%';
+  const scoreNumber = ((props.userData.reduce((acc, curr) => acc + curr.score, 0) / props.userData.length)).toFixed(4);
+  updateUserData({ mean_score: scoreNumber, totalquizzes: totalQuizzes.value}, props.userData[0]);
+
+  score.value = ((scoreNumber * 100).toFixed(2)) + "%";
+
 
   </script>
   
