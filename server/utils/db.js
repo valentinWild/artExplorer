@@ -132,7 +132,19 @@ const getUsersInfoData = async (client) => {
     return userData;
 }
 
-
+const updateUserData = async (client, userId, fieldsToUpdate) => {
+    console.log('receivedFieldsToUpdate : ', fieldsToUpdate);
+    const { data: userData, error: error } = await client
+        .from('users_info')
+        .update(fieldsToUpdate)
+        .eq('userID', userId)
+        .select('*');
+    if (error) {
+        console.error(error);
+        return new Error({'Error updating user data': error});
+    }
+    return userData;
+}
 
 
 
@@ -148,4 +160,5 @@ export default {
     getUserQuizData,
     getUserInfoData,
     getUsersInfoData,
+    updateUserData,
 };

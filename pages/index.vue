@@ -44,7 +44,9 @@
                 <h1 class="text-2xl font-sans font-semibold text-cyan-200">All Tools & Learning Materials for Maximum Learning Success</h1>
                 <p class="text-stone-100 font-normal" style="text-align: justify;"> Stay organized and motivated with us!</p>
                 <br>
-                <p class="text-stone-100 text-sm" style="text-align: justify;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                <p class="text-stone-100 text-sm" style="text-align: justify;">Discover the fascinating world of art with ArtExplorer! Our app offers you an interactive and entertaining way to learn. Test your knowledge with exciting quizzes and learn all about famous artists, artworks and eras in a fun way.
+                    Join our growing community of over 150+ art lovers and benefit from exclusive learning sets that will help you expand and deepen your knowledge. Whether you are a beginner or an advanced art connoisseur, you will find the right content to improve your knowledge.
+                    <br>Analyze and understand your own learning journey with our dashboard. It helps you to track your progress and work specifically on your weaknesses.</p>
 
                 <div class="avatar-text-group">
                     <div class="avatars">
@@ -143,8 +145,8 @@
 
 import { ref, onMounted } from 'vue';
 
-const items = ref([]); // State to hold the images
-const iiifBaseUrl = 'https://www.artic.edu/iiif/2'; // Base URL for IIIF images
+const items = ref([]); 
+const iiifBaseUrl = 'https://www.artic.edu/iiif/2'; 
 
 // Function to fetch images from the API
 async function fetchImages() {

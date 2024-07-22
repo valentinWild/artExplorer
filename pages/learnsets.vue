@@ -1,5 +1,6 @@
   <template>
     <body>
+    <section class="learnsets">
       <div>
         <div class="container">
           <header>
@@ -18,7 +19,8 @@
           </div>
         </div>
       </div>
-    </body>
+    </section>
+  </body>
   </template>
 
   <script>
@@ -98,6 +100,20 @@ const openQuiz = (styleTitle) => {
 </script>
 
   <style scoped>
+
+  body {
+    background-color: #121421;
+  }
+
+
+.learnsets {
+    background-color: #121421;
+    color: #fff;
+    background-image: url('/pictures/Background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
   body {
     background-color: #121421;
     color: #ffffff; 

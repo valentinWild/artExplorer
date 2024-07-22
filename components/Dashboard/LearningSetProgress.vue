@@ -109,7 +109,7 @@ watch(
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem; 
+  margin-bottom: 3rem; 
   margin-top: 1rem;
 }
 
@@ -149,7 +149,7 @@ h3 {
 .legend {
   display: flex;
   justify-content: center;
-  margin-top: 3rem; 
+  margin-top: 5rem; 
 }
 
 .legend-item {
@@ -171,6 +171,7 @@ h3 {
   align-items: center;
   margin-bottom: 10px;
   margin-top: 25px;
+  margin-right: 25px;
 }
 
 .progress-bar-label {

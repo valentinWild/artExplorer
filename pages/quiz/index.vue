@@ -2,7 +2,7 @@
   <body>
     <div class="container">
       <h1>{{ queryParams.style_category }}</h1>
-      <UButton v-if="!quizStarted" @click="initQuiz" class="button">Start new Quiz</UButton>
+      <UButton v-if="!quizStarted || quizFinished" @click="initQuiz" class="button">Start new Quiz</UButton>
       <QuestionsProgressBar v-if="quizStarted && !quizFinished" :correct="correctAnswersCount" :incorrect="incorrectAnswersCount" :total="quizTotalItems"/>
 
       <QuestionsMCQ class="questionsMCQ"
@@ -46,18 +46,12 @@
       ></TimelineQuiz>
 
       <div class="quiz-result" v-if="quizFinished">
-        {{ quizResultText }}
-<!--         <CircularProgress 
-          :percentage="quizPercentage"
-          :stroke="10"
-          :size="150"
-          foregroundStroke="#00FF00"
-          backgroundStroke="#FF4500"
-        >
-          <div class="progress-text">
-            {{ quizPercentage }}%
-          </div>
-        </CircularProgress> -->
+        <img src="/pictures/Pokal.png" alt="Trophy" class="trophy-image" />
+        <QuestionsProgressBar :correct="correctAnswersCount" :incorrect="incorrectAnswersCount" :total="quizTotalItems"/>
+        <div class="quiz-summary">
+          <p>{{ quizResultText }} <br><br> 
+          Correct answers: <br> <span class="correct">{{ correctAnswersCount }}</span> out of <span class="total">{{ quizTotalItems }}</span></p>
+        </div>
       </div>
 
       <div>
@@ -75,7 +69,6 @@ import QuestionsFindPicture from '../../components/Questions/FindPicture.vue';
 import QuestionsTextQuestion from '../../components/Questions/TextQuestion.vue';
 import TimelineQuiz from '../../components/Questions/TimelineQuiz.vue';
 import QuestionsProgressBar from '../../components/Questions/ProgressBar.vue';
-import CircularProgress from '../../components/CircularProgress.vue';
 
 const route = useRoute();
 
@@ -102,7 +95,7 @@ const quizStarted = ref(false);
 const quizFinished = ref(false);
 
 const quizPercentage = computed(() => {
-  const maxScore = quizTotalItems.value; // Angenommen, die maximale Punktzahl ist gleich der Anzahl der Fragen
+  const maxScore = quizTotalItems.value; 
   return Math.round((quizScore.value / maxScore) * 100);
 });
 
@@ -128,6 +121,7 @@ const fetchQuestions = async () => {
 
 const initQuiz = async () => {
   resetQuiz();
+  resetQuizData();
   quizResultText.value = null;
   quizStarted.value = true;
   quizFinished.value = false;
@@ -142,6 +136,9 @@ const resetQuiz = () => {
   currentQuizItem.value = null;
   quizItemAnswered.value = false;
   quizItemResult.value = null;
+};
+
+const resetQuizData = () => {
   correctAnswersCount.value = 0;
   incorrectAnswersCount.value = 0;
 };
@@ -219,7 +216,6 @@ const submitQuizResult = async () => {
   });
   quizResultText.value = `You have finished the Quiz with ${quizScore.value} points in total!`;
   quizFinished.value = true;
-  resetQuiz();
 };
 </script>
 
@@ -267,14 +263,36 @@ h1 {
   border-radius: 10px;
 }
 
-.circular-progress {
-  margin-top: 20px;
-}
-.progress-text {
-  position: absolute;
+.quiz-result {
   text-align: center;
-  font-size: 1.5em;
-  font-weight: bold;
-  color: #000;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.trophy-image {
+  width: 220px;
+  height: auto;
+  margin: 20px 0;
+}
+
+.quiz-summary {
+  margin-top: 20px;
+  font-size: medium;
+  font-weight: bold;
+  text-align: center;
+}
+
+.correct {
+
+  font-size: large;
+}
+
+.total {
+
+  font-size: large;
+}
+
+
 </style>

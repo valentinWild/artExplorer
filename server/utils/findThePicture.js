@@ -56,8 +56,7 @@ const createFindTheCorrectPictureQuestions = async (epochArtworks, otherEpochArt
     }
 
     for (let i = 0; i < numOfQuestions; i++) {
-
-      // Find one artwork from a different epoch
+      
       const correctArtwork = helpers.getRandomItems(epochArtworks, 1)[0];
       // Create the correct answer option
       const correctAnswer = {
