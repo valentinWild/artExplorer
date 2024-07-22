@@ -1,6 +1,7 @@
-# Nuxt 3 Minimal Starter
+# Run the ArtExplorer Application
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Make sure you have installed Node.js (https://nodejs.org/en) on your device.
 
 ## Setup
 
@@ -38,38 +39,9 @@ yarn dev
 bun run dev
 ```
 
-## Production
+## Login 
 
-Build the application for production:
+You can login to artExplorer via this user data:
 
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+E-Mail: user2@eala.de
+Password: ealaUser2
