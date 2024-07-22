@@ -273,7 +273,7 @@ h1 {
 }
 
 .trophy-image {
-  width: 150px;
+  width: 220px;
   height: auto;
   margin: 20px 0;
 }

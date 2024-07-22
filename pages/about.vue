@@ -71,7 +71,7 @@
   .about-us {
     min-height: 100vh;
     text-align: center;
-    padding: 3rem 2rem; /* Adjust padding to start content higher */
+    padding: 3rem 2rem; 
     background-color: #121421;
     color: #fff;
     background-image: url('/pictures/Background.png');
@@ -119,7 +119,7 @@
     -webkit-backdrop-filter: blur(10px);
     padding: 2rem;
     text-align: center;
-    width: 250px; /* Keep the width consistent */
+    width: 250px; 
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   
@@ -135,7 +135,7 @@
   }
   
   .team-member-image {
-    width: 100%; /* Increase the size of the images */
+    width: 100%; 
     height: 100%;
     border-radius: 50%;
     margin-bottom: 1rem;
