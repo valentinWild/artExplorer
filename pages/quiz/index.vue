@@ -49,8 +49,8 @@
         <img src="/pictures/Pokal.png" alt="Trophy" class="trophy-image" />
         <QuestionsProgressBar :correct="correctAnswersCount" :incorrect="incorrectAnswersCount" :total="quizTotalItems"/>
         <div class="quiz-summary">
-          <p>{{ quizResultText }}</p>
-          <p>Correct answers: {{ correctAnswersCount }} out of {{ quizTotalItems }}</p>
+          <p>{{ quizResultText }} <br><br> 
+          Correct answers: <br> <span class="correct">{{ correctAnswersCount }}</span> out of <span class="total">{{ quizTotalItems }}</span></p>
         </div>
       </div>
 
@@ -69,7 +69,6 @@ import QuestionsFindPicture from '../../components/Questions/FindPicture.vue';
 import QuestionsTextQuestion from '../../components/Questions/TextQuestion.vue';
 import TimelineQuiz from '../../components/Questions/TimelineQuiz.vue';
 import QuestionsProgressBar from '../../components/Questions/ProgressBar.vue';
-
 
 const route = useRoute();
 
@@ -96,7 +95,7 @@ const quizStarted = ref(false);
 const quizFinished = ref(false);
 
 const quizPercentage = computed(() => {
-  const maxScore = quizTotalItems.value; // Angenommen, die maximale Punktzahl ist gleich der Anzahl der Fragen
+  const maxScore = quizTotalItems.value; 
   return Math.round((quizScore.value / maxScore) * 100);
 });
 
@@ -285,11 +284,15 @@ h1 {
   text-align: center;
 }
 
-.progress-text {
-  position: absolute;
-  text-align: center;
-  font-size: 1.5em;
-  font-weight: bold;
-  color: #000;
+.correct {
+
+  font-size: large;
 }
+
+.total {
+
+  font-size: large;
+}
+
+
 </style>
