@@ -2,6 +2,7 @@
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 Make sure you have installed Node.js (https://nodejs.org/en) on your device.
+To run the project you have to add a .env File in the root directory of the Project which contains the Keys and URLs for OpenAPI and Supabase (Database). Ask the Development team and we send you the data.
 
 ## Setup
 
